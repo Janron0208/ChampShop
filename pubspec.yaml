@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.17.0
   rflutter_alert: ^1.0.2
   google_maps_flutter: ^2.2.0
+  location: ^4.4.0
+  dropdown_button2: ^1.8.2
 
 
 dev_dependencies:

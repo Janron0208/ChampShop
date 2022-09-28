@@ -24,6 +24,16 @@ class MyStyle {
         width: 8.0,
         height: 12.0,
       );
+  SizedBox mySizebox2() => SizedBox(
+        width: 8.0,
+        height: 20.0,
+      );
+
+  Widget showProgress() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
 
   Widget titleCenter(BuildContext context, String string) {
     return Center(
@@ -62,6 +72,44 @@ class MyStyle {
             color: Color.fromARGB(255, 177, 201, 122),
             fontWeight: FontWeight.bold),
       );
+
+      Text showerror1(String title) => Text(
+        title,
+        style: TextStyle(
+            fontSize: 20.0,
+            color: Color.fromARGB(255, 202, 79, 79),
+            fontWeight: FontWeight.bold),
+      );
+
+  TextStyle headText16 = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+  );
+  TextStyle headText18 = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+  );
+  TextStyle headText20 = TextStyle(
+    fontSize: 20.0,
+    fontWeight: FontWeight.bold,
+  );
+  TextStyle headText25 = TextStyle(
+    fontSize: 25.0,
+    fontWeight: FontWeight.bold,
+  );
+
+   TextStyle Text16 = TextStyle(
+    fontSize: 16.0,
+  );
+  TextStyle Text18 = TextStyle(
+    fontSize: 18.0,
+  );
+  TextStyle Text20 = TextStyle(
+    fontSize: 20.0,
+  );
+  TextStyle Text25 = TextStyle(
+    fontSize: 25.0,
+  );
 
   Container showLogo() {
     return Container(

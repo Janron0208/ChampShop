@@ -1,3 +1,4 @@
+import 'package:champshop/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class OrderListShop extends StatefulWidget {
@@ -8,10 +9,17 @@ class OrderListShop extends StatefulWidget {
 }
 
 class _OrderListShopState extends State<OrderListShop> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'แสดงสินค้าที่ลูกค้าสั่ง'
-    );
+    return Text('แสดงสินค้าที่ลูกค้าสั่ง');
   }
 }

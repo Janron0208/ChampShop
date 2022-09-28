@@ -13,7 +13,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final String chooseType = 'Buyer';
+  final String chooseType = 'User';
   String? name, user, password;
 
   @override
