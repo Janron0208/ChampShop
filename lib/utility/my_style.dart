@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/show_cart.dart';
+
 class MyStyle {
   Color fontColor1 = Color.fromARGB(255, 78, 108, 6);
   Color fontColor2 = Color.fromARGB(255, 131, 172, 35);
@@ -28,6 +30,18 @@ class MyStyle {
         width: 8.0,
         height: 20.0,
       );
+
+  Widget iconShowCart(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.add_shopping_cart),
+      onPressed: () {
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => ShowCart(),
+        );
+        Navigator.push(context, route);
+      },
+    );
+  }
 
   Widget showProgress() {
     return Center(
@@ -73,11 +87,18 @@ class MyStyle {
             fontWeight: FontWeight.bold),
       );
 
-      Text showerror1(String title) => Text(
+  Text showerror1(String title) => Text(
         title,
         style: TextStyle(
             fontSize: 20.0,
             color: Color.fromARGB(255, 202, 79, 79),
+            fontWeight: FontWeight.bold),
+      );
+  Text showHeadText1(String title) => Text(
+        title,
+        style: TextStyle(
+            fontSize: 16.0,
+            color: Color.fromARGB(255, 74, 138, 9),
             fontWeight: FontWeight.bold),
       );
 
@@ -98,7 +119,7 @@ class MyStyle {
     fontWeight: FontWeight.bold,
   );
 
-   TextStyle Text16 = TextStyle(
+  TextStyle Text16 = TextStyle(
     fontSize: 16.0,
   );
   TextStyle Text18 = TextStyle(

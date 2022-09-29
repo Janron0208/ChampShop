@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:champshop/screens/show_cart.dart';
 import 'package:champshop/screens/show_shop_product_menu.dart';
 import 'package:champshop/utility/my_constant.dart';
 import 'package:champshop/utility/signout_process.dart';
@@ -45,6 +46,9 @@ class _MainUserState extends State<MainUser> {
     return Scaffold(
         appBar: AppBar(
           title: Text(nameUser == null ? 'ลูกค้า' : 'ยินดีต้อนรับ $nameUser'),
+          actions: [
+            MyStyle().iconShowCart(context)
+          ],
         ),
         drawer: showDrawer(),
         body: currentWidget);
@@ -58,6 +62,7 @@ class _MainUserState extends State<MainUser> {
               children: <Widget>[
                 showHead(),
                 menuListShop(),
+                menuCart(),
                 menuStatusProductOrder(),
               ],
             ),
@@ -125,6 +130,20 @@ class _MainUserState extends State<MainUser> {
         'Login',
         style: TextStyle(color: MyStyle().fontColor3),
       ),
+    );
+  }
+  
+  Widget menuCart() {
+    return ListTile(
+      leading: Icon(Icons.add_shopping_cart),
+      title: Text('ตะกร้าสินค้า'),
+      onTap: () {
+        Navigator.pop(context);
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => ShowCart(),
+        );
+        Navigator.push(context, route);
+      },
     );
   }
 }

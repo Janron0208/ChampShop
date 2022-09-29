@@ -5,12 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:toast/toast.dart';
 
 import '../model/cart_model.dart';
 import '../model/product_model.dart';
 import '../utility/my_api.dart';
 import '../utility/my_constant.dart';
 import '../utility/my_style.dart';
+import '../utility/normal_dialog.dart';
 import '../utility/sqlite_helper.dart';
 
 class ShowMenuProduct extends StatefulWidget {
@@ -220,7 +222,7 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
                             addOrderToCart(index);
                           },
                           child: Text(
-                            'สั่งซื้อ',
+                            'ใส่ตะกร้า',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -261,12 +263,12 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
     var myFormat = NumberFormat('##0.0#', 'en_US');
     String distanceString = myFormat.format(distance);
 
-     int transport = MyAPI().calculateTransport(distance);
+    int transport = MyAPI().calculateTransport(distance);
 
 // , distance = $distanceString, transport = $transport
     print(
         'idShop = $idShop, nameShop = $nameShop, idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sumInt, distance = $distanceString, transport = $transport');
-  
+
     Map<String, dynamic> map = Map();
 
     map['idShop'] = idShop;
@@ -279,15 +281,40 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
     map['distance'] = distanceString;
     map['transport'] = transport.toString();
 
-     print('map ==> ${map.toString()}');
+    print('map ==> ${map.toString()}');
 
-     CartModel cartModel = CartModel.fromJson(map);
+    CartModel cartModel = CartModel.fromJson(map);
 
+    var object = await SQLiteHelper().readAllDataFromSQLite();
+    print('object = ${object.length}');
+
+    if (object.length == 0) {
       await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
         print('Insert Success');
-        // showToast('Insert Success');
+        showToast("เพิ่มลงในตะกร้าแล้ว");
       });
-  
-  
+    } else {
+      String? idShopSQLite = object[0].idShop;
+      print('idShopSQLite ==> $idShopSQLite');
+      if (idShop == idShopSQLite) {
+        await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
+          print('Insert Success');
+          showToast("เพิ่มลงในตะกร้าแล้ว");
+        });
+      } else {
+        normalDialog(context,
+            'ตะกร้ามีรายการสินค้าของร้าน ${object[0].nameShop} กรุณาซื้อจากร้านนี่ให้จบก่อน');
+      }
+    }
+    
   }
+   void showToast(String? string) {
+       final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('เพิ่มลงในตะกร้าแล้ว'),
+        action: SnackBarAction(label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+    }
 }
