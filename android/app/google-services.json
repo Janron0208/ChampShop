@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "685081981204",
+    "project_id": "champshop",
+    "storage_bucket": "champshop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685081981204:android:578eb2aee83b5e616e5201",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.champshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "685081981204-53tf8om05cjj5e25g4pb9mtgi2046u0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqm425fHjhktBO0JUwvyo1iAte5BgV0IA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "685081981204-53tf8om05cjj5e25g4pb9mtgi2046u0h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

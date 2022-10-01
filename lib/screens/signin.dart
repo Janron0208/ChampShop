@@ -90,10 +90,10 @@ class _SignInState extends State<SignIn> {
   Future<Null> checkAuthen() async {
     String url =
         '${MyConstant().domain}/champshop/getUserWhereUser.php?isAdd=true&User=$user';
-    print('url ===>> $url');
+    // print('url ===>> $url');
     try {
       Response response = await Dio().get(url);
-      print('res = $response');
+      // print('res = $response');
 
       var result = json.decode(response.data);
       print('result = $result');
@@ -121,9 +121,11 @@ class _SignInState extends State<SignIn> {
 
   Future<Null> routeTuService(Widget myWidget, UserModel userModel) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('id', userModel.id!);
-    preferences.setString('ChooseType', userModel.chooseType!);
-    preferences.setString('Name', userModel.name!);
+    preferences.setString(MyConstant().keyId, userModel.id!);
+    preferences.setString(MyConstant().keyType, userModel.chooseType!);
+    preferences.setString(MyConstant().keyName, userModel.name!);
+    preferences.setString(MyConstant().keyPhone, userModel.phone!);
+    preferences.setString(MyConstant().keyAddress, userModel.address!);
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,

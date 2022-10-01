@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:champshop/widget/infomation_shop.dart';
 import 'package:champshop/widget/list_product_menu_shop.dart';
 import 'package:champshop/widget/order_list_shop.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../utility/my_style.dart';
@@ -15,6 +18,42 @@ class MainShop extends StatefulWidget {
 
 class _MainShopState extends State<MainShop> {
   Widget currentWidget = OrderListShop();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // aboutNotification();
+  }
+
+  // Future<Null> aboutNotification() async {
+  //   if (Platform.isAndroid) {
+  //     print('aboutNoti Work Android');
+
+  //     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  //     await firebaseMessaging.configure(
+  //       onLaunch: (message) async {
+  //         print('Noti onLaunch');
+  //       },
+  //       onResume: (message) async {
+  //         String title = message['data']['title'];
+  //         String body = message['data']['body'];
+  //         print('Noti onResume ${message.toString()}');
+  //         print('title = $title, body = $body');
+  //         normalDialog2(context, title, body);
+  //       },
+  //       onMessage: (message) async {
+  //         print('Noti onMessage ${message.toString()}');
+  //         String title = message['notification']['title'];
+  //         String notiMessage = message['notification']['body'];
+  //         normalDialog2(context, title, notiMessage);
+  //       },
+  //     );
+  //   } else if (Platform.isIOS) {
+  //     print('aboutNoti Work iOS');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,7 @@
 import 'package:champshop/screens/signin.dart';
 import 'package:champshop/screens/signup.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../utility/my_constant.dart';
 import '../utility/my_style.dart';
 import '../utility/normal_dialog.dart';
 import 'main_shop.dart';
@@ -20,15 +17,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     checkPreferance();
+    
   }
 
-  Future<Null> checkPreferance() async {
+  Future<void> checkPreferance() async {
     try {
-      // FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-      // String token = await firebaseMessaging.getToken();
+      // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      // String? token = await firebaseMessaging.getToken();
       // print('token ====>>> $token');
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -117,4 +114,6 @@ class _HomeState extends State<Home> {
       accountEmail: Text('Please Login'),
     );
   }
+
+ 
 }

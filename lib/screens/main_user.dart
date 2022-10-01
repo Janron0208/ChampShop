@@ -23,6 +23,8 @@ class MainUser extends StatefulWidget {
 
 class _MainUserState extends State<MainUser> {
   String? nameUser;
+  String? phoneUser;
+  String? addressUser;
 
   Widget? currentWidget;
 
@@ -38,6 +40,9 @@ class _MainUserState extends State<MainUser> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       nameUser = preferences.getString('Name');
+      phoneUser = preferences.getString('Phone');
+      addressUser = preferences.getString('Address');
+      print('$nameUser $phoneUser $addressUser');
     });
   }
 
@@ -46,9 +51,7 @@ class _MainUserState extends State<MainUser> {
     return Scaffold(
         appBar: AppBar(
           title: Text(nameUser == null ? 'ลูกค้า' : 'ยินดีต้อนรับ $nameUser'),
-          actions: [
-            MyStyle().iconShowCart(context)
-          ],
+          actions: [MyStyle().iconShowCart(context)],
         ),
         drawer: showDrawer(),
         body: currentWidget);
@@ -132,7 +135,7 @@ class _MainUserState extends State<MainUser> {
       ),
     );
   }
-  
+
   Widget menuCart() {
     return ListTile(
       leading: Icon(Icons.add_shopping_cart),

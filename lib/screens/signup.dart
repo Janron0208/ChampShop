@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:champshop/utility/my_style.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../utility/my_constant.dart';
 import '../utility/normal_dialog.dart';
@@ -14,7 +18,9 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final String chooseType = 'User';
-  String? name, user, password;
+  String? name, user, password, address, phone, urlpicture;
+  String avatar = '';
+  File? file;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +33,13 @@ class _SignUpState extends State<SignUp> {
         children: <Widget>[
           // myLogo(),
           // showAppName(),
-          // buildAvatar(),
+          buildAvatar(),
           MyStyle().mySizebox1(),
           nameForm(),
+          MyStyle().mySizebox1(),
+          phoneForm(),
+          MyStyle().mySizebox1(),
+          addressForm(),
           MyStyle().mySizebox1(),
           userForm(),
           MyStyle().mySizebox1(),
@@ -40,54 +50,54 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  // Column buildAvatar() {
-  //   return Column(
-  //     children: [
-  //       Container(
-  //         margin: EdgeInsets.symmetric(vertical: 16),
-  //         width: 250,
-  //         child: file == null
-  //             ? Container(
-  //                 width: 200.0,
-  //                 height: 200.0,
-  //                 decoration: BoxDecoration(
-  //                     shape: BoxShape.circle,
-  //                     image: DecorationImage(
-  //                       fit: BoxFit.cover,
-  //                       image: ExactAssetImage(MyConstant.avatar),
-  //                     )))
+  Column buildAvatar() {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: 250,
+          child: file == null
+              ? Container(
+                  width: 200.0,
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: ExactAssetImage(MyConstant.avatar),
+                      )))
 
-  //             // ShowImage(path: MyConstant.avatar)
-  //             : Container(
-  //                 width: 200.0,
-  //                 height: 200.0,
-  //                 decoration: BoxDecoration(
-  //                     shape: BoxShape.circle,
-  //                     image: DecorationImage(
-  //                         fit: BoxFit.cover, image: FileImage(file!)))),
-  //       ),
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //         children: [
-  //           IconButton(
-  //               onPressed: () => chooseImage(ImageSource.camera),
-  //               icon: Icon(
-  //                 Icons.add_a_photo,
-  //                 size: 30,
-  //                 color: MyStyle().greenColor3,
-  //               )),
-  //           IconButton(
-  //               onPressed: () => chooseImage(ImageSource.gallery),
-  //               icon: Icon(
-  //                 Icons.add_photo_alternate,
-  //                 size: 30,
-  //                 color: MyStyle().greenColor3,
-  //               )),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
+              // ShowImage(path: MyConstant.avatar)
+              : Container(
+                  width: 200.0,
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover, image: FileImage(file!)))),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+                onPressed: () => chooseImage(ImageSource.camera),
+                icon: Icon(
+                  Icons.add_a_photo,
+                  size: 30,
+                  color: MyStyle().greenColor3,
+                )),
+            IconButton(
+                onPressed: () => chooseImage(ImageSource.gallery),
+                icon: Icon(
+                  Icons.add_photo_alternate,
+                  size: 30,
+                  color: MyStyle().greenColor3,
+                )),
+          ],
+        ),
+      ],
+    );
+  }
 
   Widget registerButton() => Container(
         margin: EdgeInsets.only(bottom: 20, top: 50),
@@ -106,13 +116,20 @@ class _SignUpState extends State<SignUp> {
                 user == null ||
                 user!.isEmpty ||
                 password == null ||
-                password!.isEmpty) {
+                password!.isEmpty ||
+                address == null ||
+                address!.isEmpty ||
+                phone == null ||
+                phone!.isEmpty) {
               print('Have Space');
               normalDialog(context, 'มีช่องว่าง คะ กรุณากรอกทุกช่อง คะ');
-            } else if (chooseType == null) {
-              normalDialog(context, 'โปรด เลือกชนิดของผู้สมัคร');
             } else {
-              checkUser();
+              if (chooseType == null) {
+                normalDialog(context, 'โปรด เลือกชนิดของผู้สมัคร');
+              } else {
+                // uploadpictureThread();
+                checkUser();
+              }
             }
           },
           child: Text(
@@ -122,22 +139,22 @@ class _SignUpState extends State<SignUp> {
         ),
       );
 
-  // Future<Null> uploadpictureThread() async {
-  //   String apiSaveAvatar = '${MyConstant().domain}/champshop/saveAvatar.php';
-  //   int i = Random().nextInt(100000);
-  //   String nameAvatar = 'avatar$i.jpg';
-  //   Map<String, dynamic> map = Map();
-  //   map['file'] =
-  //       await MultipartFile.fromFile(file!.path, filename: nameAvatar);
-  //   FormData data = FormData.fromMap(map);
-  //   await Dio().post(apiSaveAvatar, data: data).then((value) {
-  //     avatar = '/champshop/avatar/$nameAvatar';
-  //   });
-  //   print(
-  //       '## name = $name, address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
-  //   // print('### process Upload Avatar ==> $avatar');
-  //   registerThread();
-  // }
+  Future<Null> uploadpictureThread() async {
+    String apiSaveAvatar = '${MyConstant().domain}/champshop/saveAvatar.php';
+    int i = Random().nextInt(100000);
+    String nameAvatar = 'avatar$i.jpg';
+    Map<String, dynamic> map = Map();
+    map['file'] =
+        await MultipartFile.fromFile(file!.path, filename: nameAvatar);
+    FormData data = FormData.fromMap(map);
+    await Dio().post(apiSaveAvatar, data: data).then((value) {
+      avatar = '/champshop/Avatar/$nameAvatar';
+    });
+    print(
+        '## name = $name, address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+    // print('### process Upload Avatar ==> $avatar');
+    registerThread();
+  }
 
   Future<Null> checkUser() async {
     String url =
@@ -145,7 +162,8 @@ class _SignUpState extends State<SignUp> {
     try {
       Response response = await Dio().get(url);
       if (response.toString() == 'null') {
-        registerThread();
+        uploadpictureThread();
+        // registerThread();
       } else {
         normalDialog(
             context, 'User นี่ $user มีคนอื่นใช้ไปแล้ว กรุณาเปลี่ยน User ใหม่');
@@ -155,7 +173,7 @@ class _SignUpState extends State<SignUp> {
 
   Future<Null> registerThread() async {
     String url =
-        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&User=$user&Password=$password&ChooseType=$chooseType';
+        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&User=$user&Password=$password&ChooseType=$chooseType&Address=$address&Phone=$phone&UrlPicture=$avatar';
 
     try {
       Response response = await Dio().get(url);
@@ -180,6 +198,74 @@ class _SignUpState extends State<SignUp> {
             ),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'ชื่อผู้ใช้',
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
+      );
+
+  Widget addressForm() => Container(
+        width: 300.0,
+        child: TextField(
+          maxLines: 3,
+          onChanged: (value) => address = value.trim(),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.person,
+              color: MyStyle().greenColor5,
+            ),
+            labelStyle: TextStyle(color: MyStyle().fontColor1),
+            labelText: 'ที่อยู่ปัจจุบัน',
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      );
+
+  Widget phoneForm() => Container(
+        width: 300.0,
+        child: TextField(
+          keyboardType: TextInputType.phone,
+          onChanged: (value) => phone = value.trim(),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.person,
+              color: MyStyle().greenColor5,
+            ),
+            labelStyle: TextStyle(color: MyStyle().fontColor1),
+            labelText: 'เบอร์โทรศัพท์',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
@@ -283,4 +369,17 @@ class _SignUpState extends State<SignUp> {
           MyStyle().showLogo(),
         ],
       );
+
+  Future<Null> chooseImage(ImageSource source) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
+  }
 }

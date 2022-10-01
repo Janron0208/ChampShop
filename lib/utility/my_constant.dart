@@ -6,6 +6,8 @@ class MyConstant {
   String keyId = 'id';
   String keyType = 'ChooseType';
   String keyName = 'Name';
+  String keyPhone = 'Phone';
+  String keyAddress = 'Address';
 
   static String avatar = 'images/avatar.png';
 
