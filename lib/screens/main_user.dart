@@ -25,6 +25,10 @@ class _MainUserState extends State<MainUser> {
   String? nameUser;
   String? phoneUser;
   String? addressUser;
+  String? lat;
+  String? lng;
+  String? slip;
+  String? urlPicture;
 
   Widget? currentWidget;
 
@@ -42,9 +46,14 @@ class _MainUserState extends State<MainUser> {
       nameUser = preferences.getString('Name');
       phoneUser = preferences.getString('Phone');
       addressUser = preferences.getString('Address');
-      print('$nameUser $phoneUser $addressUser');
+      lat = preferences.getString('Lat');
+      lng = preferences.getString('Lng');
+      slip = preferences.getString('Slip');
+      urlPicture = preferences.getString('UrlPicture');
+      print('$nameUser $phoneUser $addressUser $lat $lng $slip $urlPicture');
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +63,15 @@ class _MainUserState extends State<MainUser> {
           actions: [MyStyle().iconShowCart(context)],
         ),
         drawer: showDrawer(),
-        body: currentWidget);
+        body: currentWidget
+        );
   }
 
   Drawer showDrawer() => Drawer(
         child: Stack(
           children: [
             Column(
+              
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 showHead(),

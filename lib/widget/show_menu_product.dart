@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:toast/toast.dart';
 
 import '../model/cart_model.dart';
 import '../model/product_model.dart';
@@ -76,53 +75,58 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
             itemCount: productModels.length,
             itemBuilder: (context, index) => GestureDetector(
               onTap: () {
-                // print('You Click index = $index');
                 amount = 1;
                 confirmOrder(index);
               },
+              
               child: Card(
-                child: Row(
-                  children: [
-                    showProductImage(context, index),
-                    Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.width * 0.35,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  productModels[index].nameProduct!,
-                                  style: MyStyle().headText18,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: Text(productModels[index].detail!),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${productModels[index].price!} บาท',
-                                  style: MyStyle().Text16,
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
+                child: showContent(context, index),
               ),
             ),
           );
+  }
+
+// showContent(context, index),
+  Row showContent(BuildContext context, int index) {
+    return Row(
+                children: [
+                  showProductImage(context, index),
+                  Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.width * 0.35,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                productModels[index].nameProduct!,
+                                style: MyStyle().headText18,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width:
+                                    MediaQuery.of(context).size.width * 0.5,
+                                child: Text(productModels[index].detail!),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${productModels[index].price!} บาท',
+                                style: MyStyle().Text16,
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                ],
+              );
   }
 
   Container showProductImage(BuildContext context, int index) {
@@ -143,108 +147,151 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
   Future<Null> confirmOrder(int index) async {
     showDialog(
         context: context,
-        builder: (context) => StatefulBuilder(
-              builder: (context, setState) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      productModels[index].nameProduct!,
-                      style: MyStyle().headText20,
-                    ),
-                  ],
-                ),
-                content: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Container(
-                    width: 160,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[index].pathImage}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_circle,
-                          size: 36,
-                          color: Colors.green,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            amount++;
-                            // print('amount = $amount');
-                          });
-                        },
-                      ),
-                      Text(
-                        // '1',
-                        amount.toString(),
-                        style: MyStyle().headText18,
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.remove_circle,
-                          size: 36,
-                          color: Colors.red,
-                        ),
-                        onPressed: () {
-                          if (amount > 1) {
-                            setState(() {
-                              amount--;
-                            });
-                          }
-                        },
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Container(
-                        width: 110,
-                        child: RaisedButton(
-                          color: MyStyle().greenColor2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            // print(
-                            //     'Order ${productModels[index].nameProduct!} Amount = $amount');
-
-                            addOrderToCart(index);
-                          },
-                          child: Text(
-                            'ใส่ตะกร้า',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 110,
-                        child: RaisedButton(
-                          color: MyStyle().greenColor2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(
-                            'ยกเลิก',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ]),
-              ),
+        builder: (context) => Container(
+              width: 200,
+              height: 500,
+              // color: Colors.white,
+              child: showContentDialog(index),
             ));
+  }
+
+  StatefulBuilder showContentDialog(int index) {
+    return StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(
+            width: 300,
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              image: DecorationImage(
+                  image: NetworkImage(
+                      '${MyConstant().domain}${productModels[index].pathImage}'),
+                  fit: BoxFit.cover),
+            ),
+          ),
+          Container(
+            child: Row(
+              children: [
+                Text(
+                  productModels[index].nameProduct!,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 86, 86, 86)),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Container(
+              child: Row(
+                children: [
+                  Text(
+                    '฿${productModels[index].price!}',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 255, 139, 139)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            // width: 8.0,
+            child: Text(
+              'รายละเอียดสินค้า : ${productModels[index].detail!}',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 92, 92, 92),
+              ),
+            ),
+            height: 200,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.add_circle,
+                    size: 36,
+                    color: Colors.green,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      amount++;
+                      // print('amount = $amount');
+                    });
+                  },
+                ),
+                Text(
+                  // '1',
+                  amount.toString(),
+                  style: MyStyle().headText18,
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.remove_circle,
+                    size: 36,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    if (amount > 1) {
+                      setState(() {
+                        amount--;
+                      });
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                width: 120,
+                height: 50,
+                child: RaisedButton(
+                  color: Color.fromARGB(255, 64, 169, 255),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // print(
+                    //     'Order ${productModels[index].nameProduct!} Amount = $amount');
+
+                    addOrderToCart(index);
+                  },
+                  child: Text(
+                    'ใส่ตะกร้า',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Container(
+                width: 120,
+                height: 50,
+                child: RaisedButton(
+                  color: Color.fromARGB(255, 255, 19, 7),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'ยกเลิก',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+            ],
+          )
+        ]),
+      ),
+    );
   }
 
   Future<Null> addOrderToCart(int index) async {
@@ -306,15 +353,16 @@ class _ShowMenuProductState extends State<ShowMenuProduct> {
             'ตะกร้ามีรายการสินค้าของร้าน ${object[0].nameShop} กรุณาซื้อจากร้านนี่ให้จบก่อน');
       }
     }
-    
   }
-   void showToast(String? string) {
-       final scaffold = ScaffoldMessenger.of(context);
+
+  void showToast(String? string) {
+    final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
         content: const Text('เพิ่มลงในตะกร้าแล้ว'),
-        action: SnackBarAction(label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
+        action: SnackBarAction(
+            label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
-    }
+  }
 }

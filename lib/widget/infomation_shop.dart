@@ -47,15 +47,14 @@ class _InfomationShopState extends State<InfomationShop> {
     });
   }
 
-    void routeToAddInfo() {
-    
-    Widget widget = userModel!.nameShop!.isEmpty ? AddInfoShop()  :EditInfoShop()  ;
+  void routeToAddInfo() {
+    Widget widget =
+        userModel!.nameShop!.isEmpty ? AddInfoShop() : EditInfoShop();
     MaterialPageRoute materialPageRoute = MaterialPageRoute(
       builder: (context) => widget,
     );
     Navigator.push(context, materialPageRoute).then((value) => readDataUser());
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +74,15 @@ class _InfomationShopState extends State<InfomationShop> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            MyStyle().showTitle1('รายละเอียดร้าน ${userModel!.nameShop}'),
+            // MyStyle().showTitle1('${userModel!.nameShop}'),
+            Row(
+              children: [
+                Text(
+                  '${userModel!.nameShop}',
+                  style: TextStyle(fontSize: 30),
+                ),
+              ],
+            ),
             showImage(),
             Row(
               children: <Widget>[
@@ -101,14 +108,9 @@ class _InfomationShopState extends State<InfomationShop> {
       );
 
   Container showImage() {
-    // return Container(
-    //   width: 200.0,
-    //   height: 200.0,
-    //   child: Image.network('${MyConstant().domain}${userModel!.urlPicture}'),
-    // );
     return Container(
-        width: 200.0,
-        height: 200.0,
+        width: 150.0,
+        height: 150.0,
         child: CircleAvatar(
           backgroundImage: CachedNetworkImageProvider(
               '${MyConstant().domain}${userModel!.urlPicture}'),
@@ -138,12 +140,14 @@ class _InfomationShopState extends State<InfomationShop> {
     LatLng latLng = LatLng(lat, lng);
     CameraPosition position = CameraPosition(target: latLng, zoom: 16.0);
 
-    return Expanded(
-      child: GoogleMap(
-        initialCameraPosition: position,
-        mapType: MapType.normal,
-        onMapCreated: (controller) {},
-        markers: shopMarker(),
+    return Container(
+      child: Expanded(
+        child: GoogleMap(
+          initialCameraPosition: position,
+          mapType: MapType.normal,
+          onMapCreated: (controller) {},
+          markers: shopMarker(),
+        ),
       ),
     );
   }
@@ -167,6 +171,7 @@ class _InfomationShopState extends State<InfomationShop> {
                 onPressed: () => routeToAddInfo(),
               ),
             ),
+            
           ],
         ),
       ],

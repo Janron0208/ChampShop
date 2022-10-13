@@ -85,7 +85,10 @@ class _EditInfoShopState extends State<EditInfoShop> {
             showImage(),
             addressForm(),
             phoneForm(),
-            lat == null ? MyStyle().showProgress() : showMap(),
+            lat == null ? MyStyle().showProgress() : Padding(
+              padding: const EdgeInsets.all(20),
+              child: showMap(),
+            ),
             editButton()
           ],
         ),
@@ -93,18 +96,11 @@ class _EditInfoShopState extends State<EditInfoShop> {
 
   Widget editButton() => Container(
         width: MediaQuery.of(context).size.width,
-        child: RaisedButton.icon(
-          color: MyStyle().greenColor3,
-          onPressed: () => confirmDialog(),
-          icon: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-          label: Text(
-            'ปรับปรุงรายละเอียด',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+        height: 50,
+        child: ElevatedButton(
+               onPressed: () => confirmDialog(),
+                child: Text('แก้ไขข้อมูล')),
+     
       );
 
   Future<Null> confirmDialog() async {
@@ -176,6 +172,7 @@ class _EditInfoShopState extends State<EditInfoShop> {
   }
 
   Container showMap() {
+    
     CameraPosition cameraPosition = CameraPosition(
       target: LatLng(lat!, lng!),
       zoom: 16.0,
@@ -206,8 +203,8 @@ class _EditInfoShopState extends State<EditInfoShop> {
               width: 250.0,
               height: 250.0,
               child: file == null
-                  ? Image.network('${MyConstant().domain}$urlPicture')
-                  : Image.file(file!),
+                  ? Image.network('${MyConstant().domain}$urlPicture', fit: BoxFit.cover)
+                  : Image.file(file!, fit: BoxFit.cover,),
             ),
             IconButton(
               icon: Icon(Icons.add_photo_alternate),
@@ -253,6 +250,7 @@ class _EditInfoShopState extends State<EditInfoShop> {
             margin: EdgeInsets.only(top: 16.0),
             width: 250.0,
             child: TextFormField(
+              maxLines: 3,
               onChanged: (value) => address = value,
               initialValue: address,
               decoration: InputDecoration(

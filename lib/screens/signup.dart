@@ -26,40 +26,75 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('สมัครสมาชิก'),
+        backgroundColor: Colors.transparent, elevation: 0.0,
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 50, horizontal: 40),
-        children: <Widget>[
-          // myLogo(),
-          // showAppName(),
-          buildAvatar(),
-          MyStyle().mySizebox1(),
-          nameForm(),
-          MyStyle().mySizebox1(),
-          phoneForm(),
-          MyStyle().mySizebox1(),
-          addressForm(),
-          MyStyle().mySizebox1(),
-          userForm(),
-          MyStyle().mySizebox1(),
-          passwordForm(),
-          registerButton(),
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 213, 201),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    
+                    buildAvatar(),
+                    Divider(),
+                    MyStyle().mySizebox1(),
+                    nameForm(),
+                    MyStyle().mySizebox1(),
+                    phoneForm(),
+                    MyStyle().mySizebox1(),
+                    addressForm(),
+                    MyStyle().mySizebox1(),
+                    userForm(),
+                    MyStyle().mySizebox1(),
+                    passwordForm(),
+                    registerButton(),
+                     MyStyle().mySizebox1(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //เก่า
+        // padding: EdgeInsets.symmetric(vertical: 50, horizontal: 40),
+        // children: <Widget>[
+        //   buildAvatar(),
+        // MyStyle().mySizebox1(),
+        // nameForm(),
+        // MyStyle().mySizebox1(),
+        // phoneForm(),
+        // MyStyle().mySizebox1(),
+        // addressForm(),
+        // MyStyle().mySizebox1(),
+        // userForm(),
+        // MyStyle().mySizebox1(),
+        // passwordForm(),
+        //   registerButton(),
+        // ],
       ),
     );
   }
 
-  Column buildAvatar() {
-    return Column(
+  Row buildAvatar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          margin: EdgeInsets.symmetric(vertical: 16),
-          width: 250,
+          margin: EdgeInsets.only(top: 20,bottom: 20),
+          width: 100,
           child: file == null
               ? Container(
-                  width: 200.0,
-                  height: 200.0,
+                  width: 100.0,
+                  height: 100.0,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -69,32 +104,61 @@ class _SignUpState extends State<SignUp> {
 
               // ShowImage(path: MyConstant.avatar)
               : Container(
-                  width: 200.0,
-                  height: 200.0,
+                  width: 100.0,
+                  height: 100.0,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.cover, image: FileImage(file!)))),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-                onPressed: () => chooseImage(ImageSource.camera),
-                icon: Icon(
-                  Icons.add_a_photo,
-                  size: 30,
-                  color: MyStyle().greenColor3,
-                )),
-            IconButton(
-                onPressed: () => chooseImage(ImageSource.gallery),
-                icon: Icon(
-                  Icons.add_photo_alternate,
-                  size: 30,
-                  color: MyStyle().greenColor3,
-                )),
-          ],
-        ),
+        Container(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => chooseImage(ImageSource.camera),
+                    child: Text('กล้องถ่ายรูป'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 255, 114, 104),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => chooseImage(ImageSource.gallery),
+                    child: Text('อัลบัมภาพ'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 255, 114, 104),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     IconButton(
+        //         onPressed: () => chooseImage(ImageSource.camera),
+        //         icon: Icon(
+        //           Icons.add_a_photo,
+        //           size: 30,
+        //           color: MyStyle().greenColor3,
+        //         )),
+        //     IconButton(
+        //         onPressed: () => chooseImage(ImageSource.gallery),
+        //         icon: Icon(
+        //           Icons.add_photo_alternate,
+        //           size: 30,
+        //           color: MyStyle().greenColor3,
+        //         )),
+        //   ],
+        // ),
       ],
     );
   }
@@ -105,9 +169,9 @@ class _SignUpState extends State<SignUp> {
         height: 50,
         child: RaisedButton(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(10),
           ),
-          color: MyStyle().greenColor9,
+          color: Color.fromARGB(255, 255, 155, 135),
           onPressed: () {
             // print(
             //     '## name = $name, address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
@@ -122,7 +186,7 @@ class _SignUpState extends State<SignUp> {
                 phone == null ||
                 phone!.isEmpty) {
               print('Have Space');
-              normalDialog(context, 'มีช่องว่าง คะ กรุณากรอกทุกช่อง คะ');
+              normalDialog(context, 'กรุณากรอกข้อมูลให้ครบ');
             } else {
               if (chooseType == null) {
                 normalDialog(context, 'โปรด เลือกชนิดของผู้สมัคร');
@@ -133,8 +197,8 @@ class _SignUpState extends State<SignUp> {
             }
           },
           child: Text(
-            'Register',
-            style: TextStyle(color: Colors.white),
+            'สมัครสมาชิก',
+            style: TextStyle(fontSize: 20,color: Colors.white, fontWeight: FontWeight.bold)
           ),
         ),
       );
@@ -192,29 +256,26 @@ class _SignUpState extends State<SignUp> {
         child: TextField(
           onChanged: (value) => name = value.trim(),
           decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.person,
-              color: MyStyle().greenColor5,
-            ),
+            prefixIcon:
+                Icon(Icons.person, color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'ชื่อผู้ใช้',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 244, 54, 54)),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
@@ -226,28 +287,26 @@ class _SignUpState extends State<SignUp> {
           maxLines: 3,
           onChanged: (value) => address = value.trim(),
           decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.person,
-              color: MyStyle().greenColor5,
-            ),
+            prefixIcon: Icon(Icons.location_city,
+                color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'ที่อยู่ปัจจุบัน',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
               borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: BorderSide(color: Color.fromARGB(255, 244, 54, 54)),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -260,29 +319,27 @@ class _SignUpState extends State<SignUp> {
           keyboardType: TextInputType.phone,
           onChanged: (value) => phone = value.trim(),
           decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.person,
-              color: MyStyle().greenColor5,
-            ),
+            prefixIcon:
+                Icon(Icons.phone, color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'เบอร์โทรศัพท์',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
@@ -293,29 +350,27 @@ class _SignUpState extends State<SignUp> {
         child: TextField(
           onChanged: (value) => user = value.trim(),
           decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.person_add_alt_1,
-              color: MyStyle().greenColor5,
-            ),
+            prefixIcon: Icon(Icons.person_add_alt_1,
+                color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'บัญชีผู้ใช้',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 244, 54, 54)),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
@@ -326,29 +381,27 @@ class _SignUpState extends State<SignUp> {
         child: TextField(
           onChanged: (value) => password = value.trim(),
           decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.lock,
-              color: MyStyle().greenColor5,
-            ),
+            prefixIcon:
+                Icon(Icons.lock, color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'รหัสผ่าน',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().greenColor5),
-              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),

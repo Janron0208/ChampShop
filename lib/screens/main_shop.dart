@@ -1,12 +1,17 @@
 import 'dart:io';
 
+import 'package:champshop/widget/user/order_history_shop.dart';
 import 'package:champshop/widget/infomation_shop.dart';
 import 'package:champshop/widget/list_product_menu_shop.dart';
 import 'package:champshop/widget/order_list_shop.dart';
+import 'package:champshop/widget/steporder/order_home.dart';
+import 'package:champshop/widget/steporder/order_list_shop_rider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../utility/my_style.dart';
+import '../utility/normal_dialog.dart';
 import '../utility/signout_process.dart';
 
 class MainShop extends StatefulWidget {
@@ -17,8 +22,7 @@ class MainShop extends StatefulWidget {
 }
 
 class _MainShopState extends State<MainShop> {
-  Widget currentWidget = OrderListShop();
-
+  Widget currentWidget = OrderHome();
 
   @override
   void initState() {
@@ -31,8 +35,15 @@ class _MainShopState extends State<MainShop> {
   //   if (Platform.isAndroid) {
   //     print('aboutNoti Work Android');
 
+  //     FirebaseMessaging.instance.getInitialMessage().then((message) {
+  //       if (message != null) {
+
+  //       }
+  //     }
+
+  //     await Firebase.initializeApp();
   //     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  //     await firebaseMessaging.configure(
+  //     await firebaseMessaging.(
   //       onLaunch: (message) async {
   //         print('Noti onLaunch');
   //       },
@@ -67,13 +78,22 @@ class _MainShopState extends State<MainShop> {
   }
 
   Drawer showDrawer() => Drawer(
-        child: ListView(
+        child: Stack(
           children: <Widget>[
-            showHead(),
-            homeMenu(),
-            productMenu(),
-            infomationMenu(),
-            signOutMenu(),
+            Column(mainAxisSize: MainAxisSize.min,
+              children: [
+                showHead(),
+                homeMenu(),
+                // historyMenu(),
+                productMenu(),
+                infomationMenu(),
+              ],
+            ),
+            Column(mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                signOutMenu(),
+              ],
+            ),
           ],
         ),
       );
@@ -84,7 +104,19 @@ class _MainShopState extends State<MainShop> {
         // subtitle: Text('รายการอาหารที่ยังไม่ได้ ทำส่งลูกค้า'),
         onTap: () {
           setState(() {
-            currentWidget = OrderListShop();
+            currentWidget = OrderHome();
+          });
+          Navigator.pop(context);
+        },
+      );
+
+  ListTile historyMenu() => ListTile(
+        leading: Icon(Icons.verified),
+        title: Text('ประวัติการสั่งซื้อ'),
+        // subtitle: Text('รายการอาหารที่ยังไม่ได้ ทำส่งลูกค้า'),
+        onTap: () {
+          setState(() {
+            currentWidget = OrderHistoryShop();
           });
           Navigator.pop(context);
         },
@@ -125,12 +157,12 @@ class _MainShopState extends State<MainShop> {
     return UserAccountsDrawerHeader(
       // decoration: MyStyle().myBoxDecoration('user.jpg'),
       currentAccountPicture: MyStyle().showLogo(),
-      accountName: Text('Name Login'
+      accountName: Text('ChampShop'
           // nameUser == null ? 'Name Login' : nameUser,
           // style: TextStyle(color: MyStyle().darkColor),
           ),
       accountEmail: Text(
-        'Login',
+        '',
         style: TextStyle(color: MyStyle().fontColor3),
       ),
     );

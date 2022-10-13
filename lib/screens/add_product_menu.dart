@@ -21,13 +21,22 @@ class AddProductMenu extends StatefulWidget {
 
 class _AddProductMenuState extends State<AddProductMenu> {
   File? file;
-  String? nameProduct, price, detail, type;
+  String? nameProduct, price, detail, type, sale, advice;
 
   final List<String> items = [
+    'โครง,ล้อ',
+    'งานประปา',
+    'งานสวน',
     'รถเข็น',
-    'ทราย',
-    'ค้อน',
-    'ขวาน',
+    'โครงรถเข็นปูน',
+    'เปล',
+    'กระเบื้องยาง',
+    'ถังปูน',
+    'ปูน',
+    'เครื่องมือ',
+    'สีทาภายในภายนอก',
+    'งานสีอื่นๆ',
+    'สเปรย์',
     'อื่นๆ',
   ];
   String? selectedValue;
@@ -120,8 +129,12 @@ class _AddProductMenuState extends State<AddProductMenu> {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         String? idShop = preferences.getString('id');
 
+        String? sale = '';
+        String? advice = '';
+
+
         String urlInsertData =
-            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type';
+            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type&Sale=$sale&Advice=$advice';
 
         await Dio().get(urlInsertData).then((value) => Navigator.pop(context));
       });
@@ -130,7 +143,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
 
   Widget nameForm() => Container(
         width: 300,
-        child: TextField(
+        child: TextField(maxLines: 2,
           onChanged: (value) => nameProduct = value.trim(),
           decoration: InputDecoration(
             labelText: 'ชื่อสินค้า',
@@ -194,21 +207,24 @@ class _AddProductMenuState extends State<AddProductMenu> {
       ],
     );
   }
+    
 
   Future<Null> checkType() async {
-    if (selectedValue == 'รถเข็น') {
-      type = 'A';
-    } else if (selectedValue == 'ทราย') {
-      type = 'B';
-    } else if (selectedValue == 'ค้อน') {
-      type = 'C';
-    } else if (selectedValue == 'ขวาน') {
-      type = 'D';
-    } else if (selectedValue == 'อื่นๆ') {
-      type = 'Z';
-    } else {
-      type = 'Z';
-    }
+    if (selectedValue == 'โครง,ล้อ') { type = 'A';  } 
+    else if (selectedValue == 'งานประปา') { type = 'B'; } 
+    else if (selectedValue == 'งานสวน') { type = 'C'; } 
+    else if (selectedValue == 'รถเข็น') { type = 'D'; } 
+    else if (selectedValue == 'โครงรถเข็นปูน') {type = 'E'; } 
+
+    else if (selectedValue == 'เปล') {type = 'F'; } 
+    else if (selectedValue == 'กระเบื้องยาง') {type = 'G'; } 
+    else if (selectedValue == 'ถังปูน') {type = 'H'; } 
+    else if (selectedValue == 'ปูน') {type = 'I'; } 
+    else if (selectedValue == 'เครื่องมือ') {type = 'J'; } 
+    else if (selectedValue == 'สีทาภายในภายนอก') {type = 'K'; } 
+    else if (selectedValue == 'งานสีอื่นๆ') {type = 'L'; } 
+    else if (selectedValue == 'สเปรย์') {type = 'M'; } 
+    else {  type = 'Z'; }
   }
 
   Future<Null> chooseImage(ImageSource source) async {

@@ -1,7 +1,12 @@
 import 'package:champshop/screens/signin.dart';
 import 'package:champshop/screens/signup.dart';
+import 'package:champshop/screens/user/main_buyer.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utility/my_constant.dart';
 import '../utility/my_style.dart';
 import '../utility/normal_dialog.dart';
 import 'main_shop.dart';
@@ -19,7 +24,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     checkPreferance();
-    
   }
 
   Future<void> checkPreferance() async {
@@ -27,23 +31,27 @@ class _HomeState extends State<Home> {
       // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       // String? token = await firebaseMessaging.getToken();
       // print('token ====>>> $token');
+      await Firebase.initializeApp();
+      FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      String? token = await firebaseMessaging.getToken();
+      print('token ==>> $token');
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? chooseType = preferences.getString('ChooseType');
       String? idLogin = preferences.getString('id');
       print('idLogin = $idLogin');
 
-      // if (idLogin != null && idLogin.isNotEmpty) {
-      //   String url =
-      //       '${MyConstant().domain}/champshop/editTokenWhereId.php?isAdd=true&id=$idLogin&Token=$token';
-      //   await Dio()
-      //       .get(url)
-      //       .then((value) => print('###### Update Token Success #####'));
-      // }
+      if (idLogin != null && idLogin.isNotEmpty) {
+        String url =
+            '${MyConstant().domain}/champshop/editTokenWhereId.php?isAdd=true&id=$idLogin&Token=$token';
+        await Dio()
+            .get(url)
+            .then((value) => print('###### Update Token Success #####'));
+      }
 
       if (chooseType != null && chooseType.isNotEmpty) {
         if (chooseType == 'User') {
-          routeToService(MainUser());
+          routeToService(MainBuyer());
         } else if (chooseType == 'Shop') {
           routeToService(MainShop());
         } else if (chooseType == 'Rider') {
@@ -65,8 +73,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      drawer: showDrawer(),
+      // appBar: AppBar(),
+      // drawer: showDrawer(),
+      body: SignIn(),
     );
   }
 
@@ -114,6 +123,4 @@ class _HomeState extends State<Home> {
       accountEmail: Text('Please Login'),
     );
   }
-
- 
 }

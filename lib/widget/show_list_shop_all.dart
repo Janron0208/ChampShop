@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 import '../model/user_model.dart';
 import '../screens/show_shop_product_menu.dart';
 import '../utility/my_constant.dart';
@@ -16,30 +14,24 @@ class ShowListShopAll extends StatefulWidget {
 }
 
 class _ShowListShopAllState extends State<ShowListShopAll> {
-
   List<UserModel> userModels = [];
   List<Widget> shopCards = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    
     readShop();
   }
 
   Future<Null> readShop() async {
     String url =
         '${MyConstant().domain}/champshop/getUserWhereChooseType.php?isAdd=true&ChooseType=Shop';
-
     await Dio().get(url).then((value) {
       // print('$value');
-
       var result = json.decode(value.data);
       int index = 0;
       for (var map in result) {
         UserModel model = UserModel.fromJson(map);
-
         String? nameShop = model.nameShop;
         if (nameShop!.isNotEmpty) {
           print('NameShop = ${model.nameShop}');
@@ -84,17 +76,15 @@ class _ShowListShopAllState extends State<ShowListShopAll> {
     );
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return shopCards.length == 0
-          ? MyStyle().showProgress()
-          : GridView.extent(
-              maxCrossAxisExtent: 250,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: shopCards,
-            );
-    
+        ? MyStyle().showProgress()
+        : GridView.extent(
+            maxCrossAxisExtent: 250,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            children: shopCards,
+          );
   }
 }

@@ -6,6 +6,8 @@ class ProductModel {
   String? price;
   String? detail;
   String? type;
+  String? sale;
+  String? advice;
 
   ProductModel(
       {this.id,
@@ -14,7 +16,9 @@ class ProductModel {
       this.pathImage,
       this.price,
       this.detail,
-      this.type});
+      this.type,
+      this.sale,
+      this.advice});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,6 +28,8 @@ class ProductModel {
     price = json['Price'];
     detail = json['Detail'];
     type = json['Type'];
+    sale = json['Sale'];
+    advice = json['Advice'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +41,8 @@ class ProductModel {
     data['Price'] = this.price;
     data['Detail'] = this.detail;
     data['Type'] = this.type;
+    data['Sale'] = this.sale;
+    data['Advice'] = this.advice;
     return data;
   }
 }

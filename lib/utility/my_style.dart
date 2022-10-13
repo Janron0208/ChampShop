@@ -134,7 +134,7 @@ class MyStyle {
 
   Container showLogo() {
     return Container(
-      width: 180,
+      width: 120,
       child: Image.asset('images/logo.png'),
     );
   }

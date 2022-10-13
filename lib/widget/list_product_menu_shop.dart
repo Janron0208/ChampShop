@@ -4,7 +4,9 @@ import 'package:champshop/model/product_model.dart';
 import 'package:champshop/screens/add_product_menu.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:pluto_menu_bar/pluto_menu_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textfield_search/textfield_search.dart';
 
 import '../screens/edit_product_menu.dart';
 import '../utility/my_constant.dart';
@@ -24,7 +26,6 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     readProductMenu();
   }
@@ -85,70 +86,93 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
 
   Widget showListProduct() => ListView.builder(
       itemCount: productModels.length,
-      itemBuilder: (context, index) => Row(
+      itemBuilder: (context, index) => Column(
             children: [
-              Container(
-                padding: EdgeInsets.all(10.0),
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.width * 0.3,
-                child: Image.network(
-                  '${MyConstant().domain}${productModels[index].pathImage}',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.width * 0.3,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        productModels[index].nameProduct!,
-                        style: MyStyle().headText16,
-                      ),
-                      Text(
-                        'ราคา ${productModels[index].price} บาท',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      Text(productModels[index].detail!),
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    child: Image.network(
+                      '${MyConstant().domain}${productModels[index].pathImage}',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 10),
-                width: MediaQuery.of(context).size.width * 0.20,
-                height: MediaQuery.of(context).size.width * 0.20,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      height: 30,
-                      child: RaisedButton(
-                          color: Color.fromARGB(255, 133, 210, 134),
-                          onPressed: () {
-                            MaterialPageRoute route = MaterialPageRoute(
-                              builder: (context) => EditProductMenu(productModel: productModels[index],),
-                            );
-                            Navigator.push(context, route)
-                                .then((value) => readProductMenu());
-                          },
-                          child: Text('แก้ไข')),
-                    ),
-                    Container(
-                      height: 30,
-                      child: RaisedButton(
-                        color: Color.fromARGB(255, 254, 147, 139),
-                        onPressed: () => deleateProduct(productModels[index]),
-                        child: Text('ลบ'),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            productModels[index].nameProduct!,
+                            style: TextStyle(fontSize: 13),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'ราคา ${productModels[index].price} บาท',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 249, 91, 91)),
+                              ),
+                            ],
+                          ),
+                          Text(productModels[index].detail!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: Color.fromARGB(255, 139, 139, 139))),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(right: 10),
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    height: MediaQuery.of(context).size.width * 0.20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          height: 30,
+                          child: RaisedButton(
+                              color: Color.fromARGB(255, 133, 210, 134),
+                              onPressed: () {
+                                MaterialPageRoute route = MaterialPageRoute(
+                                  builder: (context) => EditProductMenu(
+                                    productModel: productModels[index],
+                                  ),
+                                );
+                                Navigator.push(context, route)
+                                    .then((value) => readProductMenu());
+                              },
+                              child: Text('แก้ไข')),
+                        ),
+                        Container(
+                          height: 30,
+                          child: RaisedButton(
+                            color: Color.fromARGB(255, 254, 147, 139),
+                            onPressed: () =>
+                                deleateProduct(productModels[index]),
+                            child: Text('ลบ'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ],
           ));
 

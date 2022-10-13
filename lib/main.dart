@@ -1,4 +1,5 @@
 import 'package:champshop/screens/home.dart';
+import 'package:champshop/screens/signin.dart';
 import 'package:flutter/material.dart';
 
 main() => runApp(MyApp());
@@ -8,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.deepOrange,
         fontFamily: 'Prompt',
         scaffoldBackgroundColor: Color.fromARGB(255, 246, 241, 233),
       ),

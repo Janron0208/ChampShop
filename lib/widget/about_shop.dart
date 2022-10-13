@@ -39,7 +39,8 @@ class _AboutShopState extends State<AboutShop> {
       lng1 = locationData.longitude!;
       lat2 = double.parse(userModel!.lat!);
       lng2 = double.parse(userModel!.lng!);
-      print('lat1 = $lng1, lng = $lng1, lat2 = $lng2, lng2 = $lng2');
+      print('lat1 = $lng1, lng1 = $lng1, lat2 = $lng2, lng2 = $lng2');
+
       distance = MyAPI().calculateDistance(lat1!, lng1!, lat2!, lng2!);
 
       var myFormat = NumberFormat('#0.0#', 'en_US');
@@ -51,10 +52,6 @@ class _AboutShopState extends State<AboutShop> {
       print('transport = $transport');
     });
   }
-
-  
-
-  
 
   Future<LocationData?> findLocationData() async {
     Location location = Location();
@@ -116,7 +113,7 @@ class _AboutShopState extends State<AboutShop> {
       );
     }
 
-     Marker userMarker() {
+    Marker userMarker() {
       return Marker(
         markerId: MarkerId('userMarker'),
         position: LatLng(lat1!, lng1!),
@@ -125,7 +122,7 @@ class _AboutShopState extends State<AboutShop> {
       );
     }
 
-      Marker shopMarker() {
+    Marker shopMarker() {
       return Marker(
         markerId: MarkerId('shopMarker'),
         position: LatLng(lat2!, lng2!),
@@ -134,10 +131,9 @@ class _AboutShopState extends State<AboutShop> {
       );
     }
 
-     Set<Marker> mySet() {
+    Set<Marker> mySet() {
       return <Marker>[userMarker(), shopMarker()].toSet();
     }
-
 
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),

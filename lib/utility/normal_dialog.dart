@@ -9,6 +9,7 @@ Future<void> normalDialog(BuildContext context, String message) async {
         style: TextStyle(fontSize: 15),
       ),
       children: <Widget>[
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -18,7 +19,7 @@ Future<void> normalDialog(BuildContext context, String message) async {
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
                   primary:
-                      Color.fromARGB(255, 255, 104, 127), // Background color
+                      Color.fromARGB(255, 255, 128, 86), // Background color
                 ),
                 child: Text(
                   'OK',
@@ -58,4 +59,6 @@ Future<void> normalDialog2(
       ],
     ),
   );
+
+  
     }

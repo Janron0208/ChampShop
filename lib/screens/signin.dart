@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
+import 'package:champshop/screens/signup.dart';
+import 'package:champshop/screens/user/main_buyer.dart';
 import 'package:champshop/utility/my_style.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,43 +25,392 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   // Field
   String? user, password;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('เข้าสู่ระบบ'),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color.fromARGB(255, 162, 249, 188),
-              Color.fromARGB(255, 201, 241, 255),
-            ],
-          ),
+      key: scaffoldKey,
+      // appBar: AppBar(
+      //   title: Text('เข้าสู่ระบบ'),
+      // ),
+      // body: Container(
+      //   decoration: BoxDecoration(
+      //     gradient: LinearGradient(
+      //       begin: Alignment.topRight,
+      //       end: Alignment.bottomLeft,
+      //       colors: [
+      //         Color.fromARGB(255, 162, 249, 188),
+      //         Color.fromARGB(255, 201, 241, 255),
+      //       ],
+      //     ),
+      //   ),
+      //   child: Center(
+      //       child: SingleChildScrollView(
+      //     child: Column(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: <Widget>[
+      //         MyStyle().showLogo(),
+      //         MyStyle().showTitle('Champshop'),
+      //         MyStyle().showSubTitle('ร้านจำหน่ายอุปกรณ์ก่อสร้าง'),
+      //         MyStyle().mySizebox(),
+      //         MyStyle().mySizebox(),
+      //         userForm(),
+      //         MyStyle().mySizebox(),
+      //         passwordForm(),
+      //         MyStyle().mySizebox(),
+      //         MyStyle().mySizebox(),
+      //         loginButton()
+      //       ],
+      //     ),
+      //   )),
+      // ),
+
+      //ใหม่
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(30),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 1,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 246, 143, 88),
+                // image: DecorationImage(
+                //   fit: BoxFit.cover,
+                //   image: Image.asset(
+                //     'assets/images/login_BG@2x.jpg',
+                //   ).image,
+                // ),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color.fromARGB(255, 246, 143, 88),
+                    Color.fromARGB(255, 201, 241, 255),
+                  ],
+                ),
+              ),
+              child: Align(
+                alignment: AlignmentDirectional(0, 1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 100, 0, 0),
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(1),
+                      child: Container(
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MyStyle().showLogo(),
+                            
+                            Column(
+                              children: [
+                                Text(
+                                  'ChampShop',
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                Text('ร้านจำหน่ายอุปกรณ์ก่อสร้าง',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 36, 0, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 3, 0, 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    20, 16, 20, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'ยินดีต้อนรับ',
+                                        style: TextStyle(
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 140, 140, 140)),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () async {},
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Color(0xFFDBE2E7),
+                                          ),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () async {},
+                                          child: Icon(
+                                            Icons.call_rounded,
+                                            color: Color(0xFF090F13),
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              newUserForm(),
+                              newPasswordForm(),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    20, 12, 30, 16),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    newChangePass(),
+                                    newLoginBtn(context),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                height: 2,
+                                thickness: 2,
+                                indent: 20,
+                                endIndent: 20,
+                                color: Color(0xFFDBE2E7),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0, 20, 0, 20),
+                                child: Container(
+                                  width: 170,
+                                  height: 40,
+                                  child: FlatButton(
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignUp(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'สมัครสมาชิก',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromARGB(255, 255, 138, 92),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        child: Center(
-            child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              MyStyle().showLogo(),
-              MyStyle().showTitle('Champshop'),
-              MyStyle().showSubTitle('ร้านจำหน่ายอุปกรณ์ก่อสร้าง'),
-              MyStyle().mySizebox(),
-              MyStyle().mySizebox(),
-              userForm(),
-              MyStyle().mySizebox(),
-              passwordForm(),
-              MyStyle().mySizebox(),
-              MyStyle().mySizebox(),
-              loginButton()
-            ],
+      ),
+
+//ใหม่
+    );
+  }
+
+  Container newLoginBtn(BuildContext context) {
+    return Container(
+      width: 130,
+      height: 50,
+      child: ElevatedButton(
+          onPressed: () async {
+            if (user == null ||
+                user!.isEmpty ||
+                password == null ||
+                password!.isEmpty) {
+              normalDialog(context, 'กรุณากรอกข้อมูลให้ครบ');
+            } else {
+              checkAuthen();
+            }
+          },
+          child: Text(
+            'เข้าสู่ระบบ',
+            style: MyStyle().headText18,
           ),
-        )),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 255, 138, 92),
+            onPrimary: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          )),
+    );
+  }
+
+  Container newChangePass() {
+    return Container(
+      width: 140,
+      height: 40,
+      child: FlatButton(
+        onPressed: () async {},
+        child: Text(
+          'เปลี่ยนรหัสผ่าน ?',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Padding newPasswordForm() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: TextFormField(
+              onChanged: (value) => password = value.trim(),
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'รหัสผ่าน',
+                hintText: 'กรอกรหัสผ่าน...',
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFDBE2E7),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFDBE2E7),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsetsDirectional.fromSTEB(16, 24, 0, 24),
+                suffix: InkWell(
+                  onTap: () {},
+                  focusNode: FocusNode(skipTraversal: true),
+                  child: Icon(Icons.visibility_outlined, size: 22),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding newUserForm() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: TextFormField(
+              onChanged: (value) => user = value.trim(),
+              //  controller: emailAddressController,
+              obscureText: false,
+              decoration: InputDecoration(
+                labelText: 'บัญชีผู้ใช้',
+                hintText: 'กรอกบัญชีผู้ใช้ของคุณ...',
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFDBE2E7),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFDBE2E7),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsetsDirectional.fromSTEB(16, 24, 0, 24),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -102,7 +455,7 @@ class _SignInState extends State<SignIn> {
         if (password == userModel.password) {
           String? chooseType = userModel.chooseType;
           if (chooseType == 'User') {
-            routeTuService(MainUser(), userModel);
+            routeTuService(MainBuyer(), userModel);
           } else if (chooseType == 'Shop') {
             routeTuService(MainShop(), userModel);
           } else if (chooseType == 'Rider') {
@@ -127,12 +480,16 @@ class _SignInState extends State<SignIn> {
     preferences.setString(MyConstant().keyPhone, userModel.phone!);
     preferences.setString(MyConstant().keyAddress, userModel.address!);
 
+    preferences.setString(MyConstant().keyLat, userModel.lat!);
+    preferences.setString(MyConstant().keyLng, userModel.lng!);
+    // preferences.setString(MyConstant().keySlip, userModel.slip!);
+    preferences.setString(MyConstant().keyUrlPicture, userModel.urlPicture!);
+
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,
     );
     Navigator.pushAndRemoveUntil(context, route, (route) => false);
   }
-
 
   Widget userForm() => Container(
         width: 300.0,

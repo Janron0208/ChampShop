@@ -5,6 +5,10 @@ class OrderModel {
   String? nameUser;
   String? phoneUser;
   String? addressUser;
+  String? lat;
+  String? lng;
+  String? slip;
+  String? urlPicture;
   String? idShop;
   String? nameShop;
   String? distance;
@@ -24,6 +28,10 @@ class OrderModel {
       this.nameUser,
       this.phoneUser,
       this.addressUser,
+      this.lat,
+      this.lng,
+      this.slip,
+      this.urlPicture,
       this.idShop,
       this.nameShop,
       this.distance,
@@ -43,6 +51,10 @@ class OrderModel {
     nameUser = json['NameUser'];
     phoneUser = json['PhoneUser'];
     addressUser = json['AddressUser'];
+    lat = json['Lat'];
+    lng = json['Lng'];
+    slip = json['Slip'];
+    urlPicture = json['UrlPicture'];
     idShop = json['idShop'];
     nameShop = json['NameShop'];
     distance = json['Distance'];
@@ -64,6 +76,10 @@ class OrderModel {
     data['NameUser'] = this.nameUser;
     data['PhoneUser'] = this.phoneUser;
     data['AddressUser'] = this.addressUser;
+    data['Lat'] = this.lat;
+    data['Lng'] = this.lng;
+    data['Slip'] = this.slip;
+    data['UrlPicture'] = this.urlPicture;
     data['idShop'] = this.idShop;
     data['NameShop'] = this.nameShop;
     data['Distance'] = this.distance;

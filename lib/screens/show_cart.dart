@@ -1,9 +1,11 @@
 import 'dart:convert';
+// import 'dart:html';
 
 import 'package:champshop/utility/my_style.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/cart_model.dart';
@@ -26,18 +28,43 @@ class _ShowCartState extends State<ShowCart> {
   int total = 0;
   bool status = true;
 
-  String? address, phone;
-
+  bool statusOrder = true;
+  bool? haveData;
+  Location location = Location();
+  String? address, phone, slip, urlpicture;
+  double? lat, lng ;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     readSQLite();
+     findLat1Lng1();
+  }
+
+   Future<Null> findLat1Lng1() async {
+    LocationData? locationData = await findLocationData();
+    setState(() {
+      lat = locationData!.latitude!;
+      lng = locationData.longitude!;
+      // lat2 = double.parse(userModel.lat);
+      // lng2 = double.parse(userModel.lng);
+      print('lat1 = $lng, lng1 = $lng');
+      
+    });
+  }
+
+  Future<LocationData?> findLocationData() async {
+    Location location = Location();
+    try {
+      return await location.getLocation();
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<Null> readSQLite() async {
     var object = await SQLiteHelper().readAllDataFromSQLite();
     print('object length ==> ${object.length}');
+
     if (object.length != 0) {
       for (var model in object) {
         String? sumString = model.sum;
@@ -51,25 +78,31 @@ class _ShowCartState extends State<ShowCart> {
     } else {
       setState(() {
         status = true;
+        statusOrder = false;
+        haveData = false;
       });
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ตะกร้าสินค้า'),
+        backgroundColor: Colors.transparent,elevation: 0,
+        title: Text('ตะกร้าสินค้า',
+            style: TextStyle(fontWeight: FontWeight.bold,
+                fontSize: 20, color: Color.fromARGB(255, 255, 147, 147))),
       ),
-      body: status
-          ? Center(
-              child: Text('ไม่มีสินค้าในตะกร้า', style: MyStyle().headText20),
-            )
-          : buildContent(),
+      body: status ? buildNonOrder() : Card(child: buildContent()),
     );
   }
+
+  Center buildNonOrder() => Center(
+          child: Text(
+        'ไม่มีรายการสินค้าในตะกร้า',
+        style:
+            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
+      ));
 
   Widget buildContent() {
     return Padding(
@@ -80,10 +113,11 @@ class _ShowCartState extends State<ShowCart> {
             buildNameShop(),
             buildHeadTitle(),
             buildListProduct(),
-            Divider(),
+            // Divider(),
             showTranspot(),
             buildTotal(),
-            buildClearCartButton(),
+            // buildClearCartButton(),
+
             buildOrderButton(),
           ],
         ),
@@ -93,84 +127,106 @@ class _ShowCartState extends State<ShowCart> {
 
   Widget showTranspot() => Row(
         children: [
-          Expanded(
-            flex: 5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('ค่าส่ง ', style: MyStyle().headText16),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text('ระยะห่างจากร้าน ',
+                  style: TextStyle(
+                      fontSize: 12,
+                      // fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 78, 78, 78))),
+              Text('${cartModels[0].distance}',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 46, 219, 43))),
+              Text(' กม.',
+                  style: TextStyle(
+                      fontSize: 12,
+                      // fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 78, 78, 78))),
+            ],
           ),
-          Expanded(
-            flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('${cartModels[0].transport} ',
-                    style: MyStyle().headText20),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text('บาท', style: MyStyle().headText16),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'ค่าส่ง ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${cartModels[0].transport}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 134, 134)),
+              ),
+              Text(
+                ' บาท',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ],
       );
 
   Widget buildTotal() => Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(
-            flex: 5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('ยอดรวม ', style: MyStyle().headText16),
-              ],
+          Text(
+            'ยอดรวม ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  '$total ',
-                  style: MyStyle().headText20,
-                ),
-              ],
-            ),
+          Text(
+            '$total ',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 255, 134, 134)),
           ),
-          Expanded(
-            flex: 1,
-            child: Text('บาท', style: MyStyle().headText16),
+          Text(
+            'บาท',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       );
 
   Widget buildNameShop() {
     return Container(
-      margin: EdgeInsets.only(top: 10, bottom: 10),
+      margin: EdgeInsets.only(bottom: 10),
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
                 'ร้านจำหน่ายอุปกรณ์ก่อสร้าง',
-                style: MyStyle().headText20,
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('ระยะห่างจากร้าน '),
-              Text(
-                '${cartModels[0].distance}',
-                style: MyStyle().headText16,
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 149, 123)),
               ),
-              Text(' กม.'),
+              Spacer(),
+              Container(
+                  height: 25,
+                  child: RaisedButton(
+                      color: Color.fromARGB(255, 245, 90, 105),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      onPressed: () {
+                        confirmDeleteAllData();
+                      },
+                      child: Text(
+                        'ล้างตะกร้า',
+                        style: TextStyle(color: Colors.white),
+                      )))
             ],
           ),
         ],
@@ -184,40 +240,60 @@ class _ShowCartState extends State<ShowCart> {
         itemCount: cartModels.length,
         itemBuilder: (context, index) => Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(cartModels[index].nameProduct!),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(cartModels[index].price!),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(cartModels[index].amount!),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(cartModels[index].sum!),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(Icons.delete_forever),
-                    color: Color.fromARGB(255, 202, 79, 79),
-                    onPressed: () async {
-                      int id = cartModels[index].id!;
-                      print('You Click Delete id = $id');
-                      await SQLiteHelper().deleteDataWhereId(id).then((value) {
-                        print('Success Delete id = $id');
-                        readSQLite();
-                      });
-                    },
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(cartModels[index].nameProduct!),
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(cartModels[index].price!),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(cartModels[index].amount!),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(cartModels[index].sum!),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(Icons.delete_forever),
+                      color: Color.fromARGB(255, 202, 79, 79),
+                      onPressed: () async {
+                        int id = cartModels[index].id!;
+                        print('You Click Delete id = $id');
+                        await SQLiteHelper()
+                            .deleteDataWhereId(id)
+                            .then((value) {
+                          print('Success Delete id = $id');
+                          readSQLite();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
             Divider(),
           ],
@@ -226,30 +302,66 @@ class _ShowCartState extends State<ShowCart> {
 
   Widget buildHeadTitle() {
     return Container(
-      decoration: BoxDecoration(color: Colors.grey.shade300),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: MyStyle().showHeadText1('รายการ'),
-          ),
-          Expanded(
-            flex: 1,
-            child: MyStyle().showHeadText1('ราคา'),
-          ),
-          Expanded(
-            flex: 1,
-            child: MyStyle().showHeadText1('จำนวน'),
-          ),
-          Expanded(
-            flex: 1,
-            child: MyStyle().showHeadText1('รวม'),
-          ),
-          Expanded(
-            flex: 1,
-            child: MyStyle().mySizebox(),
-          ),
-        ],
+      decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 146, 146),
+          borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 9),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 3,
+              child: Text(
+                'รายการ',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'ราคา',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'จำนวน',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'รวม',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: MyStyle().mySizebox(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -281,29 +393,34 @@ class _ShowCartState extends State<ShowCart> {
   }
 
   Widget buildOrderButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Container(
-          width: 150,
-          child: RaisedButton.icon(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              color: Color.fromARGB(255, 74, 151, 253),
-              onPressed: () {
-                // orderThread();
-                confirmOrderThread();
-              },
-              icon: Icon(
-                Icons.playlist_add_check_rounded,
-                color: Colors.white,
-              ),
-              label: Text(
-                'สั่งซื้อสินค้า',
-                style: TextStyle(color: Colors.white),
-              )),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 300,
+            height: 50,
+            child: RaisedButton.icon(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                color: Color.fromARGB(255, 74, 151, 253),
+                onPressed: () {
+                  // orderThread();
+                  confirmOrderThread();
+                },
+                icon: Icon(
+                  Icons.playlist_add_check_rounded,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                label: Text(
+                  'สั่งซื้อสินค้า',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )),
+          ),
+        ],
+      ),
     );
   }
 
@@ -374,6 +491,7 @@ class _ShowCartState extends State<ShowCart> {
                 color: Colors.white,
                 onPressed: () async {
                   orderThread();
+
                   Navigator.pop(context);
                 },
                 icon: Icon(
@@ -412,7 +530,7 @@ class _ShowCartState extends State<ShowCart> {
     DateTime dateTime = DateTime.now();
     // print(dateTime.toString());
     String orderDateTime = DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
-    print('555');
+
     print(orderDateTime);
 
     String? idShop = cartModels[0].idShop;
@@ -444,25 +562,28 @@ class _ShowCartState extends State<ShowCart> {
     String? nameUser = preferences.getString('Name');
     String? addressUser = preferences.getString('Address');
     String? phoneUser = preferences.getString('Phone');
+    // String? lat = preferences.getString('Lat');
+    // String? lng = preferences.getString('Lng');
+    String? slip = preferences.getString('Slip');
+    String? urlPicture = preferences.getString('UrlPicture');
 
     print(
-        'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, phoneUser = $phoneUser, addressUser = $addressUser, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport');
+        'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, phoneUser = $phoneUser, addressUser = $addressUser, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
     print(
         'idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sum');
 
     String url =
-        '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$addressUser&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=UserOrder';
+        '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$addressUser&Lat=$lat&Lng=$lng&Slip=none&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=รอยืนยัน';
 
     await Dio().get(url).then((value) {
       if (value.toString() == 'true') {
         clearAllSQLite();
         showToast('ทำการสั่งซื้อสำเร็จ');
-        // notificationToShop(idShop!);
+        notificationToShop(idShop!);
       } else {
         normalDialog(context, 'ไม่สามารถสั่งสินค้าได้ กรุณาลองใหม่');
       }
-    }
-    );
+    });
   }
 
   void showToast(String? string) {
@@ -482,30 +603,30 @@ class _ShowCartState extends State<ShowCart> {
     });
   }
 
-  // Future<Null> notificationToShop(String idShop) async {
-  //   String urlFindToken =
-  //       '${MyConstant().domain}/champshop/getUserWhereId.php?isAdd=true&id=$idShop';
-  //   await Dio().get(urlFindToken).then((value) {
-  //     var result = json.decode(value.data);
-  //     print('result ==> $result');
-  //     for (var json in result) {
-  //       UserModel model = UserModel.fromJson(json);
-  //       String tokenShop = model.token!;
-  //       print('tokenShop ==>> $tokenShop');
+  Future<Null> notificationToShop(String idShop) async {
+    String urlFindToken =
+        '${MyConstant().domain}/champshop/getUserWhereId.php?isAdd=true&id=$idShop';
+    await Dio().get(urlFindToken).then((value) {
+      var result = json.decode(value.data);
+      print('result ==> $result');
+      for (var json in result) {
+        UserModel model = UserModel.fromJson(json);
+        String tokenShop = model.token!;
+        print('tokenShop ==>> $tokenShop');
 
-  //       String title = 'New Order!';
-  //       String body = 'มีการสั่งสินค้าจากลูกค้า';
-  //       String urlSendToken =
-  //           '${MyConstant().domain}/champshop/apiNotification.php?isAdd=true&token=$tokenShop&title=$title&body=$body';
+        String title = 'New Order!';
+        String body = 'มีการสั่งสินค้าจากลูกค้า';
+        String urlSendToken =
+            '${MyConstant().domain}/champshop/apiNotification.php?isAdd=true&token=$tokenShop&title=$title&body=$body';
 
-  //       sendNotificationToShop(urlSendToken);
-  //     }
-  //   });
-  // }
+        sendNotificationToShop(urlSendToken);
+      }
+    });
+  }
 
-  // Future<Null> sendNotificationToShop(String urlSendToken) async {
-  //   await Dio().get(urlSendToken).then(
-  //         (value) => normalDialog(context, 'ส่ง Order ไปที่ ร้านค้าแล้ว คะ'),
-  //       );
-  // }
+  Future<Null> sendNotificationToShop(String urlSendToken) async {
+    await Dio().get(urlSendToken).then(
+          (value) => normalDialog(context, 'ส่งออเดอร์สำเร็จ'),
+        );
+  }
 }
