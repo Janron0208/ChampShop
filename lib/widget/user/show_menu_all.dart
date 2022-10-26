@@ -10,6 +10,7 @@ import 'package:champshop/widget/product/show_shop_type_h.dart';
 import 'package:champshop/widget/product/show_shop_type_k.dart';
 import 'package:champshop/widget/product/show_shop_type_l.dart';
 import 'package:champshop/widget/product/show_shop_type_m.dart';
+import 'package:champshop/widget/product/show_shop_type_sale.dart';
 import 'package:champshop/widget/product/show_shop_type_z.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,12 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   toolbarHeight: 0,
+      //   backgroundColor: Color.fromARGB(255, 251, 191, 108),
+      //   title: Text('หมวดหมู่'),
+      //   elevation: 0,
+      // ),
       body: Stack(children: [
         Container(
           width: 392.5,
@@ -104,7 +111,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
 
   Container showCategories(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 80),
+      margin: EdgeInsets.only(top: 10),
       child: GridView.count(
         primary: false,
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 40),
@@ -137,6 +144,55 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         'สินค้าทั้งหมด',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 73, 73, 73)),
+                      ),
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(3, 3), // changes position of shadow
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ShowShopTypeSale(userModel: userModels[0])));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        'https://www.creativefabrica.com/wp-content/uploads/2018/08/Sale-Discount-Shoppping-Shop-Logo-by-Mansel-Brist-2.jpg',
+                        width: double.infinity,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        'ลดราคา',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

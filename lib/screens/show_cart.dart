@@ -24,7 +24,9 @@ class ShowCart extends StatefulWidget {
 class _ShowCartState extends State<ShowCart> {
   List<CartModel> cartModels = [];
   List<UserModel> userModels = [];
-
+UserModel? userModel;
+  int? totals;
+  int? sumtotal;
   int total = 0;
   bool status = true;
 
@@ -32,15 +34,56 @@ class _ShowCartState extends State<ShowCart> {
   bool? haveData;
   Location location = Location();
   String? address, phone, slip, urlpicture;
-  double? lat, lng ;
+  double? lat, lng;
+
+  String? transport , sumAddress;
+
+  String? nameUser, urlPicture;
+  String? district, county, zipcode;
+
   @override
   void initState() {
     super.initState();
     readSQLite();
-     findLat1Lng1();
+    findLat1Lng1();
+    readCurrentInfo();
   }
 
-   Future<Null> findLat1Lng1() async {
+
+  Future<Null> readCurrentInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? idUSer = preferences.getString('id');
+    print('idUser ==>> $idUSer');
+
+    String url =
+        '${MyConstant().domain}/champshop/getUserWhereId.php?isAdd=true&id=$idUSer';
+
+    Response response = await Dio().get(url);
+    // print('response ==>> $response');
+
+    var result = json.decode(response.data);
+    // print('result ==>> $result');
+
+    for (var map in result) {
+      print('map ==>> $map');
+      setState(() {
+        userModel = UserModel.fromJson(map);
+        nameUser = userModel?.name;
+        address = userModel?.address;
+        phone = userModel?.phone;
+        urlPicture = userModel?.urlPicture;
+
+        district = userModel?.district;
+        county = userModel?.county;
+        zipcode = userModel?.zipcode;
+        transport = userModel?.transport;
+        sumAddress = userModel?.sumAddress;
+        print('$transport');
+      });
+    }
+  }
+
+  Future<Null> findLat1Lng1() async {
     LocationData? locationData = await findLocationData();
     setState(() {
       lat = locationData!.latitude!;
@@ -48,7 +91,6 @@ class _ShowCartState extends State<ShowCart> {
       // lat2 = double.parse(userModel.lat);
       // lng2 = double.parse(userModel.lng);
       print('lat1 = $lng, lng1 = $lng');
-      
     });
   }
 
@@ -69,10 +111,18 @@ class _ShowCartState extends State<ShowCart> {
       for (var model in object) {
         String? sumString = model.sum;
         int sumInt = int.parse(sumString!);
+        String? transport = model.transport;
+        int sumtran = int.parse(transport!);
         setState(() {
+          // print('รวม ${total}');
           status = false;
           cartModels = object;
           total = total + sumInt;
+          sumtotal = total + sumtran;
+          var formatter = NumberFormat('#,##,000');
+          print(formatter.format(sumtotal));
+
+          // ignore: unused_local_variable
         });
       }
     } else {
@@ -86,15 +136,99 @@ class _ShowCartState extends State<ShowCart> {
 
   @override
   Widget build(BuildContext context) {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,elevation: 0,
-        title: Text('ตะกร้าสินค้า',
-            style: TextStyle(fontWeight: FontWeight.bold,
-                fontSize: 20, color: Color.fromARGB(255, 255, 147, 147))),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Center(
+          child: Text('ตะกร้าสินค้า',
+              style: TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 255, 173, 41))),
+        ),
       ),
-      body: status ? buildNonOrder() : Card(child: buildContent()),
+      body: status
+          ? buildNonOrder()
+          : Column(
+              children: [
+                buildContent(),
+                Spacer(),
+                Container(
+                  // width: MediaQuery.of(context).size.width * 1,
+
+                  height: 60,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 215,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text('ยอดชำระเงินทั้งหมด'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  buildSumTotal(),
+                                  Text(' บาท',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 255, 173, 41),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          onTap: () {
+                            // orderThread();
+                            confirmOrderThread();
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 60,
+                            color: Color.fromARGB(255, 255, 173, 41),
+                            child: Center(
+                                child: Text('สั่งสินค้า',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19,
+                                        color: Color.fromARGB(
+                                            255, 255, 255, 255)))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
+  }
+
+  Text buildSumTotal() {
+     int total1 = int.parse('$total');
+     int total2 = int.parse('$transport');
+
+    int total3 = total1 + total2;
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text(myFormat.format(total3),
+        style: TextStyle(
+            color: Color.fromARGB(255, 255, 173, 41),
+            fontSize: 18,
+            fontWeight: FontWeight.bold));
   }
 
   Center buildNonOrder() => Center(
@@ -105,23 +239,227 @@ class _ShowCartState extends State<ShowCart> {
       ));
 
   Widget buildContent() {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            buildNameShop(),
-            buildHeadTitle(),
-            buildListProduct(),
-            // Divider(),
-            showTranspot(),
-            buildTotal(),
-            // buildClearCartButton(),
-
-            buildOrderButton(),
-          ],
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 1,
+          height: 45,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 15),
+                child: Row(
+                  children: [
+                    Container(
+                        color: Color.fromARGB(255, 255, 160, 7),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text('ร้านค้า',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: Color.fromARGB(255, 255, 255, 255))),
+                        )),
+                    Text('  ร้านจำหน่ายอุปกรณ์ก่อสร้าง',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Spacer(),
+                    Container(
+                        height: 25,
+                        child: RaisedButton(
+                            color: Color.fromARGB(255, 255, 160, 7),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                            onPressed: () {
+                              confirmDeleteAllData();
+                            },
+                            child: Text(
+                              'ล้างตะกร้า',
+                              style: TextStyle(color: Colors.white),
+                            )))
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        buildListProduct2(),
+        Container(
+          width: MediaQuery.of(context).size.width * 1,
+          height: 45,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Text('คำสั่งซื้อทั้งหมด ${cartModels.length} รายการ'),
+                    Spacer(),
+                    buildTotal1(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        MyStyle().mySizebox1(),
+        Container(
+          width: MediaQuery.of(context).size.width * 1,
+          height: 40,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.list_alt,
+                      color: Color.fromARGB(255, 255, 173, 41),
+                    ),
+                    Text(' ข้อมูลการชำระเงิน'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 1,
+          height: 80,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Text('รวมการสั่งซื้อ',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 105, 105, 105))),
+                    Spacer(),
+                    showPrice1(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Text('ค่าจัดส่ง',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 105, 105, 105))),
+                    Spacer(),
+                    Text('$transport บาท',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 105, 105, 105))),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Text('ยอดชำระเงินทั้งหมด',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Color.fromARGB(255, 33, 33, 33))),
+                    Spacer(),
+                    showTotal2(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Text('ทั้งหมด $total'),
+        // Text('ส่ง $transport'),
+        // Text('จ่ายทั้งหมด  '),
+        // testsum()
+        // Divider(),
+        // showTranspot(),
+        // buildTotal(),
+        // buildClearCartButton(),
+        // buildOrderButton(),
+      ],
+    );
+  }
+
+  Text testsum() {
+     int total1 = int.parse('$total');
+     int total2 = int.parse('$transport');
+
+    int total3 = total1 + total2;
+    return Text('$total3');
+  }
+
+  Text showTotal2() {
+     int total1 = int.parse('$total');
+     int total2 = int.parse('$transport');
+
+    int total3 = total1 + total2;
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text('${myFormat.format(total3)} บาท',
+        style:
+            TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 173, 41)));
+  }
+
+  Text showPrice1() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text('${myFormat.format(total)} บาท',
+        style: TextStyle(color: Color.fromARGB(255, 105, 105, 105)));
+  }
+
+  Text showPrice2(int index) {
+    String formatAmount() {
+      String price = cartModels[index].price!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+
+    return Text(' ${formatAmount()}',
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Color.fromARGB(255, 170, 170, 170)));
+  }
+
+  Row buildTotal1() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Row(
+      children: [
+        Text(
+          myFormat.format(total),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 255, 173, 41)),
+        ),
+        Text(
+          ' บาท',
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 255, 173, 41)),
+        ),
+      ],
     );
   }
 
@@ -148,29 +486,29 @@ class _ShowCartState extends State<ShowCart> {
             ],
           ),
           Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                'ค่าส่ง ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '${cartModels[0].transport}',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 134, 134)),
-              ),
-              Text(
-                ' บาท',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: [
+          //     Text(
+          //       'ค่าส่ง ',
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     Text(
+          //       '${cartModels[0].transport}',
+          //       style: TextStyle(
+          //           fontWeight: FontWeight.bold,
+          //           color: Color.fromARGB(255, 255, 134, 134)),
+          //     ),
+          //     Text(
+          //       ' บาท',
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       );
 
@@ -233,6 +571,83 @@ class _ShowCartState extends State<ShowCart> {
       ),
     );
   }
+
+  Widget buildListProduct2() => ListView.builder(
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        itemCount: cartModels.length,
+        itemBuilder: (context, index) => Column(
+          children: [
+             Divider(),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                     flex: 2,
+                      child: Container(
+                        height: 70,
+                        width: 40,
+                        child: Image.network(
+                            '${MyConstant().domain}${cartModels[index].pathImage}',fit: BoxFit.cover),
+                      )),
+                  Expanded(
+                    flex: 6,
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Text(
+                              '${cartModels[index].nameProduct!}',
+                              
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            showPrice2(index),
+                            Text(' บาท',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color.fromARGB(255, 170, 170, 170))),
+                            Spacer(),
+                            Text('x ${cartModels[index].amount!}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color.fromARGB(255, 170, 170, 170))),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(Icons.cancel),
+                      color: Color.fromARGB(255, 249, 125, 125),
+                      onPressed: () async {
+                        int id = cartModels[index].id!;
+                        print('You Click Delete id = $id');
+                        await SQLiteHelper()
+                            .deleteDataWhereId(id)
+                            .then((value) {
+                          print('Success Delete id = $id');
+                          readSQLite();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(),
+          ],
+        ),
+      );
 
   Widget buildListProduct() => ListView.builder(
         shrinkWrap: true,
@@ -449,7 +864,7 @@ class _ShowCartState extends State<ShowCart> {
                   color: Color.fromARGB(255, 179, 45, 45),
                 ),
                 label: Text(
-                  'Confirm',
+                  'ยืนยัน',
                   style: TextStyle(color: Color.fromARGB(255, 179, 45, 45)),
                 ),
               ),
@@ -465,7 +880,7 @@ class _ShowCartState extends State<ShowCart> {
                   color: Color.fromARGB(255, 97, 183, 60),
                 ),
                 label: Text(
-                  'Cancel',
+                  'ยกเลิก',
                   style: TextStyle(color: Color.fromARGB(255, 97, 183, 60)),
                 ),
               ),
@@ -529,14 +944,24 @@ class _ShowCartState extends State<ShowCart> {
   Future<Null> orderThread() async {
     DateTime dateTime = DateTime.now();
     // print(dateTime.toString());
-    String orderDateTime = DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+    // String orderDateTime = DateFormat('dd/MM/yyyy HH:mm น.').format(dateTime);
+    String year = DateFormat('yyyy').format(dateTime);
+
+    // print(year);
+
+    int intyear = int.parse(year);
+
+    int thaiyear = intyear + 543;
+    print(thaiyear);
+    String orderDateTime =
+        DateFormat('dd/MM/$thaiyear HH:mm น.').format(dateTime);
 
     print(orderDateTime);
 
     String? idShop = cartModels[0].idShop;
     String? nameShop = cartModels[0].nameShop;
     String? distance = cartModels[0].distance;
-    String? transport = cartModels[0].transport;
+    // String? transport = cartModels[0].transport;
 
     List<String> idProducts = [];
     List<String> nameProducts = [];
@@ -567,13 +992,23 @@ class _ShowCartState extends State<ShowCart> {
     String? slip = preferences.getString('Slip');
     String? urlPicture = preferences.getString('UrlPicture');
 
+    String? transport = preferences.getString('Transport');
+    String? sumAddress = preferences.getString('SumAddress');
+
+      int total1 = int.parse('$total');
+     int total2 = int.parse('$transport');
+
+    
+
     print(
-        'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, phoneUser = $phoneUser, addressUser = $addressUser, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
+        'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, phoneUser = $phoneUser, addressUser = $sumAddress, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
     print(
         'idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sum');
-
+ 
+  String sumAddress1 = '$address $district $county กทม. $zipcode';
+  
     String url =
-        '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$addressUser&Lat=$lat&Lng=$lng&Slip=none&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=รอยืนยัน';
+        '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$sumAddress1&Lat=$lat&Lng=$lng&Slip=none&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=รอยืนยัน';
 
     await Dio().get(url).then((value) {
       if (value.toString() == 'true') {

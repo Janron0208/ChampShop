@@ -6,6 +6,11 @@ class UserModel {
   String? password;
   String? nameShop;
   String? address;
+  String? district;
+  String? county;
+  String? zipcode;
+  String? transport;
+  String? sumAddress;
   String? phone;
   String? urlPicture;
   String? lat;
@@ -20,6 +25,11 @@ class UserModel {
       this.password,
       this.nameShop,
       this.address,
+      this.district,
+      this.county,
+      this.zipcode,
+      this.transport,
+      this.sumAddress,
       this.phone,
       this.urlPicture,
       this.lat,
@@ -34,6 +44,11 @@ class UserModel {
     password = json['Password'];
     nameShop = json['NameShop'];
     address = json['Address'];
+    district = json['District'];
+    county = json['County'];
+    zipcode = json['Zipcode'];
+    transport = json['Transport'];
+    sumAddress = json['SumAddress'];
     phone = json['Phone'];
     urlPicture = json['UrlPicture'];
     lat = json['Lat'];
@@ -50,6 +65,11 @@ class UserModel {
     data['Password'] = this.password;
     data['NameShop'] = this.nameShop;
     data['Address'] = this.address;
+    data['District'] = this.district;
+    data['County'] = this.county;
+    data['Zipcode'] = this.zipcode;
+    data['Transport'] = this.transport;
+    data['SumAddress'] = this.sumAddress;
     data['Phone'] = this.phone;
     data['UrlPicture'] = this.urlPicture;
     data['Lat'] = this.lat;

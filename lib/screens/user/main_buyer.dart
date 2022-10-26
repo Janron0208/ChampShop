@@ -45,6 +45,7 @@ class _MainBuyerState extends State<MainBuyer> {
     findUser();
     readShop();
   }
+
   Future<Null> readShop() async {
     String url =
         '${MyConstant().domain}/champshop/getUserWhereChooseType.php?isAdd=true&ChooseType=Shop';
@@ -69,12 +70,10 @@ class _MainBuyerState extends State<MainBuyer> {
 
   final _pageOptions = [
     ShowFirstPage(),
-    // ShowListShopAll(),
     ShowMenuAll(),
-    // ShowShopTypeAll(),
-    ShowStatusProductOrder(),
     ShowCart(),
-    // AboutShop()
+    ShowStatusProductOrder(),
+    
   ];
 
   Future<Null> findUser() async {
@@ -114,11 +113,6 @@ class _MainBuyerState extends State<MainBuyer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        // actions: [MyStyle().iconShowCart(context)],
-        //   elevation: 0,
-        //   backgroundColor: Colors.transparent,
-        // ),
         body: _pageOptions[selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           items: [
@@ -132,15 +126,15 @@ class _MainBuyerState extends State<MainBuyer> {
               activeIcon: Icon(Icons.shopping_bag, size: 30),
               label: 'ร้านค้า',
             ),
+             BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_outlined, size: 30),
+              activeIcon: Icon(Icons.shopping_cart, size: 30),
+              label: 'ตะกร้า',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.car_crash_outlined, size: 30),
               label: 'จัดส่ง',
               activeIcon: Icon(Icons.car_crash, size: 30),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined, size: 30),
-              activeIcon: Icon(Icons.shopping_cart, size: 30),
-              label: 'ตะกร้า',
             ),
            
           ],

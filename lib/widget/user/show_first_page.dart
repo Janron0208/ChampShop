@@ -1,4 +1,10 @@
 import 'dart:convert';
+import 'package:champshop/widget/imageslide/guild_page_five.dart';
+import 'package:champshop/widget/imageslide/guild_page_four.dart';
+import 'package:champshop/widget/imageslide/guild_page_three.dart';
+import 'package:champshop/widget/imageslide/guild_page_two.dart';
+import 'package:champshop/widget/user/show_information_shop.dart';
+
 import '';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,6 +25,7 @@ import '../../model/product_model.dart';
 import '../../utility/my_constant.dart';
 import '../../utility/my_style.dart';
 import '../../utility/signout_process.dart';
+import '../imageslide/guild_page_one.dart';
 
 class ShowFirstPage extends StatefulWidget {
   const ShowFirstPage({Key? key}) : super(key: key);
@@ -54,6 +61,7 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     readProductMenu();
     checkPreferance();
     findLat1Lng1();
+   
   }
 
   Future<Null> findLat1Lng1() async {
@@ -128,21 +136,183 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Color.fromARGB(255, 255, 195, 84),elevation: 0,
-
+      backgroundColor: Color.fromARGB(255, 254, 202, 125),
+      appBar: AppBar(
+        
+        title: Text('สวัสดี $nameUser',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              color: Color.fromARGB(255, 255, 255, 255),
+            )), actions: <Widget>[
+               Padding(
+      padding: EdgeInsets.only(right: 30.0),
+      child: GestureDetector(
+        onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ShowInfarmationShop()));
+              },
+        child: Icon(
+            Icons.chat
+        ),
+      )
+    ),
+    Padding(
+      padding: EdgeInsets.only(right: 30.0),
+      child: GestureDetector(
+        onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                      return ShowSetting();
+                    }));
+              },
+        child: Icon(
+            Icons.settings
+        ),
+      )
+    ),
+    
+  ],
+        backgroundColor: Color.fromARGB(255, 254, 202, 125),
+        elevation: 0,
+      ),
+      // body: SingleChildScrollView(
+      //   child: Container(
+      //     child: Column(
+      //       children: [
+      //         showBaner(),
+      //         showImageSlide(),
+      //         // showHeadText1(),
+      //         // showLastProduct(),
+      //         // showMap(),
+      //       ],
+      //     ),
+      //   ),
       // ),
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              showBaner(),
-              showImageSlide(),
-              showHeadText1(),
-
-              // showLastProduct(),
-              showMap(),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Center(
+            child: Container(
+              width: 350,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(236, 255, 255, 255),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                ),
+              ),
+              child: Column(
+                children: [
+                  MyStyle().mySizebox(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuildPageOne()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        width: 300,
+                        height: 150,
+                        child: Image.asset(
+                          'images/banner1.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  MyStyle().mySizebox(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuildPageTwo()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        width: 300,
+                        height: 150,
+                        child: Image.asset(
+                          'images/banner2.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  MyStyle().mySizebox(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuildPageThree()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        width: 300,
+                        height: 150,
+                        child: Image.asset(
+                          'images/banner3.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  MyStyle().mySizebox(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuildPageFour()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        width: 300,
+                        height: 150,
+                        child: Image.asset(
+                          'images/banner4.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  MyStyle().mySizebox(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuildPageFive()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(),
+                        width: 300,
+                        height: 150,
+                        child: Image.asset(
+                          'images/banner5.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  MyStyle().mySizebox(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -153,57 +323,89 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     return CarouselSlider(
       items: [
         //1st Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: new DecorationImage(
-              image: new AssetImage('images/banner1.png'),
-              fit: BoxFit.cover,
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => GuildPageOne()));
+          },
+          child: Container(
+            margin: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              image: new DecorationImage(
+                image: new AssetImage('images/banner1.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
 
         //2nd Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: new DecorationImage(
-              image: new AssetImage('images/banner2.png'),
-              fit: BoxFit.cover,
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => GuildPageTwo()));
+          },
+          child: Container(
+            margin: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              image: new DecorationImage(
+                image: new AssetImage('images/banner2.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
 
         //3rd Image of Slider
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: new DecorationImage(
-              image: new AssetImage('images/banner3.png'),
-              fit: BoxFit.cover,
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => GuildPageThree()));
+          },
+          child: Container(
+            margin: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              image: new DecorationImage(
+                image: new AssetImage('images/banner3.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: new DecorationImage(
-              image: new AssetImage('images/banner4.png'),
-              fit: BoxFit.cover,
+
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => GuildPageFour()));
+          },
+          child: Container(
+            margin: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              image: new DecorationImage(
+                image: new AssetImage('images/banner4.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.all(6.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            image: new DecorationImage(
-              image: new AssetImage('images/banner5.png'),
-              fit: BoxFit.cover,
+
+        InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => GuildPageFive()));
+          },
+          child: Container(
+            margin: EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              image: new DecorationImage(
+                image: new AssetImage('images/banner5.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -674,13 +876,35 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
   Stack showBaner() {
     return Stack(
       children: [
+        // CarouselSlider(
+        //   items: [
+        //     Container(
+        //          width: 392.5,
+        //   height: 250,
+        //       decoration: BoxDecoration(
+        //         image: new DecorationImage(
+        //           image: new AssetImage('images/pngegg.png'),
+        //           fit: BoxFit.cover,
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        //   options: CarouselOptions(
+
+        //     height: 250.0,
+        //     autoPlay: true,
+        //     aspectRatio: 16 / 9,
+        //     autoPlayCurve: Curves.fastOutSlowIn,
+        //     enableInfiniteScroll: true,
+        //     autoPlayAnimationDuration: Duration(milliseconds: 2000),
+        //     viewportFraction: 0.8,
+        //   ),
+        // ),
         Container(
           width: 392.5,
           height: 250,
-          child: Image.asset(
-            'images/pngegg.png',
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset('images/pngegg.png',
+              fit: BoxFit.cover, colorBlendMode: BlendMode.darken),
         ),
         Positioned(
           top: 40.0,
@@ -698,43 +922,57 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
             ),
           ),
         ),
+        //  Positioned(
+        //   bottom: 40.0,
+        //   left: 20.0,
+        //    child: Container(
+        //           width: 100.0,
+        //           height: 100.0,
+        //           child: CircleAvatar(
+        //             backgroundImage: NetworkImage(
+        //                 "${MyConstant().domain}$urlPicture"), //NetworkImage
+        //             radius: 100,
+        //           ),
+        //         ),
+        //  ),
         Positioned(
-          bottom: 1.0,
-          left: 20.0,
+          bottom: 0.0,
+          // left: 20.0,
           child: Container(
-              child: Column(
-            children: [
-              // Container(
-              //   width: 60.0,
-              //   height: 60.0,
-              //   child: CircleAvatar(
-              //     backgroundImage: NetworkImage(
-              //         "${MyConstant().domain}$urlPicture"), //NetworkImage
-              //     radius: 100,
-              //   ),
-              // ),
-              Text(
-                'ยินดีต้อนรับ $nameUser',
-                style: TextStyle(
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Color.fromARGB(255, 241, 144, 109),
-                        offset: Offset(3.0, 3.0),
+            width: 392.5,
+            height: 30,
+            color: Color.fromARGB(45, 91, 91, 91),
+            child: Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      '  ยินดีต้อนรับ',
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
-                    ],
-                    fontSize: 25,
+                    ),
+                  ],
+                ),
+                Text(
+                  ' $nameUser',
+                  style: TextStyle(
+                    fontSize: 21,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255)),
-              ),
-            ],
-          )),
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Container showMap() {
+  Column showMap() {
     if (lat1 != null) {
       LatLng latLng1 = LatLng(lat1!, lng2!);
       position = CameraPosition(
@@ -765,17 +1003,33 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
       return <Marker>[userMarker(), shopMarker()].toSet();
     }
 
-    return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-      height: 250,
-      child: lat1 == null
-          ? MyStyle().showProgress()
-          : GoogleMap(
-              initialCameraPosition: position,
-              mapType: MapType.normal,
-              onMapCreated: (controller) {},
-              markers: mySet(),
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Text('ที่อยู่ร้านค้า ',
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 241, 122, 89))),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 16),
+          height: 250,
+          child: lat1 == null
+              ? MyStyle().showProgress()
+              : GoogleMap(
+                  initialCameraPosition: position,
+                  mapType: MapType.normal,
+                  onMapCreated: (controller) {},
+                  markers: mySet(),
+                ),
+        ),
+      ],
     );
   }
 }

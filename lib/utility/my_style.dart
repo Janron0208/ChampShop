@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../screens/show_cart.dart';
 
@@ -29,6 +30,11 @@ class MyStyle {
   SizedBox mySizebox2() => SizedBox(
         width: 8.0,
         height: 20.0,
+      );
+
+      SizedBox mySizebox0() => SizedBox(
+        width: 8.0,
+        height: 4.0,
       );
 
   Widget iconShowCart(BuildContext context) {
@@ -64,6 +70,8 @@ class MyStyle {
     );
   }
 
+   
+
   Text showTitle(String title) => Text(
         title,
         style: TextStyle(
@@ -71,6 +79,7 @@ class MyStyle {
             color: Color.fromARGB(255, 177, 201, 122),
             fontWeight: FontWeight.bold),
       );
+
   Text showSubTitle(String title) => Text(
         title,
         style: TextStyle(

@@ -18,6 +18,7 @@ class SQLiteHelper {
   final String sum = 'sum';
   final String distance = 'distance';
   final String transport = 'transport';
+  final String pathImage = 'pathImage';
 
   SQLiteHelper() {
     initDatabase();
@@ -26,7 +27,7 @@ class SQLiteHelper {
   Future<Null> initDatabase() async {
     await openDatabase(join(await getDatabasesPath(), nameDatabase),
         onCreate: (db, version) => db.execute(
-            'CREATE TABLE $tableDatabase ($idColumn INTEGER PRIMARY KEY, $idShopColumn TEXT, $nameShop TEXT, $idProduct TEXT, $nameProduct TEXT, $price TEXT, $amount TEXT, $sum TEXT, $distance TEXT, $transport TEXT)'),
+            'CREATE TABLE $tableDatabase ($idColumn INTEGER PRIMARY KEY, $idShopColumn TEXT, $nameShop TEXT, $idProduct TEXT, $nameProduct TEXT, $price TEXT, $amount TEXT, $sum TEXT, $distance TEXT, $transport TEXT, $pathImage TEXT)'),
         version: version);
   }
 

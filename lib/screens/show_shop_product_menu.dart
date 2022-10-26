@@ -24,7 +24,7 @@ class _ShowShopProductMenuState extends State<ShowShopProductMenu> {
     super.initState();
     userModel = widget.userModel;
     listWidgets.add(AboutShop(
-      userModel: userModel!,
+      // userModel: userModel!,
     ));
     listWidgets.add(ShowMenuProduct(
       userModel: userModel!,

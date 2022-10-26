@@ -120,7 +120,18 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+    color: Color.fromARGB(255, 255, 173, 41)
+  ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text('ประวัติการสั่งซื้อ',
+            style: TextStyle(
+                // fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Color.fromARGB(255, 255, 173, 41))),
+      ),
       body: statusOrder
           ? MyStyle().showProgress()
           : haveData!

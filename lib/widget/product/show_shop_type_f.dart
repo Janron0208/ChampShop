@@ -90,10 +90,10 @@ class _ShowShopTypeFState extends State<ShowShopTypeF> {
     );
   }
 
-  GridView showGridview() {
+   GridView showGridview() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 3 / 4.3,
+        childAspectRatio: 3 / 4.8,
         crossAxisCount: 2,
       ),
       itemCount: productModels.length,
@@ -106,49 +106,6 @@ class _ShowShopTypeFState extends State<ShowShopTypeF> {
           child: showContent(context, index),
         ),
       ),
-    );
-  }
-
-// showContent(context, index),
-  Column showContent(BuildContext context, int index) {
-    return Column(
-      children: [
-        showProductImage(context, index),
-        Container(
-          child: Column(
-            children: [
-              new Container(
-                padding: new EdgeInsets.all(8),
-                child: new Text(
-                  '${productModels[index].nameProduct!}',
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: new TextStyle(
-                    fontSize: 14.0,
-                    color: Color.fromARGB(255, 96, 96, 96),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              // Spacer(),
-            ],
-          ),
-        ),
-        Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '฿${productModels[index].price!}',
-                style: TextStyle(
-                    fontSize: 16, color: Color.fromARGB(255, 254, 79, 79)),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -175,186 +132,491 @@ class _ShowShopTypeFState extends State<ShowShopTypeF> {
             ));
   }
 
-  StatefulBuilder showContentDialog(int index) {
-    return StatefulBuilder(
-      builder: (context, setState) => AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        titlePadding: EdgeInsets.only(bottom: 0, left: 0, right: 0, top: 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 350,
-              height: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15),
-                ),
-                image: DecorationImage(
-                    image: NetworkImage(
-                        '${MyConstant().domain}${productModels[index].pathImage}'),
-                    fit: BoxFit.cover),
-              ),
-            ),
-            new Container(
-              padding: new EdgeInsets.only(left: 10, right: 10),
-              child: new Text(
-                '${productModels[index].nameProduct!}',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: new TextStyle(
-                  fontSize: 20.0,
-                  color: Color.fromARGB(255, 78, 77, 77),
-                  // fontWeight: FontWeight.bold,
+  Column showContent(BuildContext context, int index) {
+    return Column(
+      children: [
+        showProductImage(context, index),
+        Container(
+          child: Column(
+            children: [
+              new Container(
+                padding:
+                    new EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 2),
+                child: new Text(
+                  '${productModels[index].nameProduct!}',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: new TextStyle(
+                    fontSize: 14.0,
+                    color: Color.fromARGB(255, 96, 96, 96),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
                 child: Row(
                   children: [
-                    Text(
-                      '฿${productModels[index].price!}',
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Color.fromARGB(255, 255, 45, 45)),
+                    Text('ขนาด/ปริมาณ : ',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Color.fromARGB(255, 132, 132, 132),
+                        )),
+                    Text('${productModels[index].size!}',
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color.fromARGB(255, 255, 132, 32),
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(
+                  children: [
+                    Text('สี : ',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Color.fromARGB(255, 132, 132, 132),
+                        )),
+                    Text('${productModels[index].color!}',
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              productModels[index].sale! == productModels[index].price!
+                  ? showSale1(index)
+                  : Row(
+                      children: [
+                        showPrice1(index),
+                        showSale2(index),
+                      ],
+                    )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Text showSale2(int index) {
+     String formatAmount() {
+      String price = productModels[index].sale!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                        '${formatAmount()} บาท.',
+                        style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 249, 91, 91)),
+                      );
+  }
+
+  Text showPrice1(int index) {
+      String formatAmount() {
+      String price = productModels[index].price!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                        '${formatAmount()} บาท',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 81, 185, 43)),
+                      );
+  }
+
+  Text showSale1(int index) {
+     String formatAmount() {
+      String price = productModels[index].sale!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                    '${formatAmount()} บาท.',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 249, 91, 91)),
+                  );
+  }
+
+  SingleChildScrollView showContentDialog(int index) {
+    return SingleChildScrollView(
+      child: StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 0),
+          titlePadding: EdgeInsets.only(bottom: 0, left: 0, right: 0, top: 0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.cancel,
+                          size: 30,
+                        )),
+                  ),
+                ],
+              ),
+
+              Container(
+                width: MediaQuery.of(context).size.width * 1,
+                height: MediaQuery.of(context).size.width * 0.8,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(0),
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          '${MyConstant().domain}${productModels[index].pathImage}'),
+                      fit: BoxFit.cover),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 1,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${productModels[index].nameProduct}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 64, 64, 64)),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Text('ขนาด/ปริมาณ : ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 132, 132, 132),
+                              )),
+                          Text('${productModels[index].size}',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 255, 132, 32),
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('สี : ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 132, 132, 132),
+                              )),
+                          Text('${productModels[index].color}',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Color.fromARGB(255, 60, 60, 60),
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                       productModels[index].sale! == productModels[index].price!
+                  ? Row(
+                    children: [
+                      showSale3(index),
+                    ],
+                  )
+                  : Row(
+                      children: [
+                        showPrice2(index),
+                        showSale4(index),
+                      ],
+                    )
+                    ],
+                  ),
+                ),
+              ),
+     
+              Container(
+                width: MediaQuery.of(context).size.width * 1,
+                color: Color.fromARGB(255, 255, 255, 255),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Icon(
+                        Icons.my_library_books_outlined,
+                        size: 20,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 5, top: 2, bottom: 2),
+                      child: Text('  รายละเอียดสินค้า',style: TextStyle(fontSize: 16),),
                     ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          'รายละเอียดสินค้า :',
+              Container(
+                width: MediaQuery.of(context).size.width * 1,
+                color: Color.fromARGB(255, 255, 255, 255),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 10),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('${productModels[index].detail}',style: TextStyle(fontSize: 15))),
+                    ),
+               
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Card(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: MediaQuery.of(context).size.width * 0.20,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.remove_circle_outline,
+                                    size: 36,
+                                    // color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    if (amount > 1) {
+                                      setState(() {
+                                        amount--;
+                                      });
+                                    }
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Container(
+                                    width: 50,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 195, 195, 195)),
+                                    child: Center(
+                                      child: Text(
+                                        amount.toString(),
+                                        style: MyStyle().headText18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.add_circle_outline,
+                                    size: 36,
+                                    // color: Colors.green,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      amount++;
+                                      // print('amount = $amount');
+                                    });
+                                  },
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: 150,
+                                  height: 60,
+                                  child: ElevatedButton(
+                                    
+                                      style: ButtonStyle(
+                                        
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        addOrderToCart(index);
+                                      },
+                                      child: Text('เพิ่มลงตะกร้า',
                           style: TextStyle(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 255, 255, 255))),)
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Text(
-                      '${productModels[index].detail!}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 92, 92, 92),
-                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.remove_circle_outline,
-                      size: 36,
-                      // color: Colors.red,
-                    ),
-                    onPressed: () {
-                      if (amount > 1) {
-                        setState(() {
-                          amount--;
-                        });
-                      }
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      width: 50,
-                      height: 30,
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 195, 195, 195)),
-                      child: Center(
-                        child: Text(
-                          amount.toString(),
-                          style: MyStyle().headText18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.add_circle_outline,
-                      size: 36,
-                      // color: Colors.green,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        amount++;
-                        // print('amount = $amount');
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: 184,
-                  height: 60,
-                  child: RaisedButton(
-                    color: Color.fromARGB(255, 142, 201, 249),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      addOrderToCart(index);
-                    },
-                    child: Text(
-                      'ใส่ตะกร้า',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
+                  ],
                 ),
-                Container(
-                  width: 184,
-                  height: 60,
-                  child: RaisedButton(
-                    color: Color.fromARGB(255, 255, 108, 100),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      'ปิด',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
+              ),
+            
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Text showPrice2(int index) {
+     String formatAmount() {
+      String price = productModels[index].price!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                        '${formatAmount()} บาท',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 81, 185, 43)),
+                      );
+  }
+
+  Text showSale4(int index) {
+     String formatAmount() {
+      String price = productModels[index].sale!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                        '${formatAmount()} บาท.',
+                        style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 249, 91, 91)),
+                      );
+  }
+
+  Text showSale3(int index) {
+    String formatAmount() {
+      String price = productModels[index].sale!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+    return Text(
+                        '${formatAmount()} บาท.',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 249, 91, 91)),
+                      );
   }
 
   Future<Null> addOrderToCart(int index) async {
     String? nameShop = 'ChampShop';
     String? idShop = '1';
     String? idProduct = productModels[index].id;
-    String? nameProduct = productModels[index].nameProduct;
+    // String? nameProduct = productModels[index].nameProduct;
     String? price = productModels[index].price;
+    String? pathImage = productModels[index].pathImage;
+
+  String? size = productModels[index].size;
+  String? color = productModels[index].color;
+
+  String? nameProduct = '${productModels[index].nameProduct}(${productModels[index].size}/${productModels[index].color})' ;
+
+
 
     int priceInt = int.parse(price!);
     int sumInt = priceInt * amount;
@@ -370,7 +632,7 @@ class _ShowShopTypeFState extends State<ShowShopTypeF> {
 
 // , distance = $distanceString, transport = $transport
     print(
-        'idShop = $idShop, nameShop = $nameShop, idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sumInt, distance = $distanceString, transport = $transport');
+        'idShop = $idShop, nameShop = $nameShop, idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sumInt, distance = $distanceString, transport = $transport, pathImage = $pathImage');
 
     Map<String, dynamic> map = Map();
 
@@ -383,6 +645,7 @@ class _ShowShopTypeFState extends State<ShowShopTypeF> {
     map['sum'] = sumInt.toString();
     map['distance'] = distanceString;
     map['transport'] = transport.toString();
+    map['pathImage'] = pathImage;
 
     print('map ==> ${map.toString()}');
 

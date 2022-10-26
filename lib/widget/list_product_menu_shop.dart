@@ -117,11 +117,30 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                'ราคา ${productModels[index].price} บาท',
+
+                                productModels[index].sale! == productModels[index].price! ?  Text(
+                                'ราคา ${productModels[index].sale} บาท',
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Color.fromARGB(255, 249, 91, 91)),
+                              ) : 
+                              Row(
+                                children: [
+                                  Text(
+                                    'ราคา ${productModels[index].sale} บาท ',
+                                    style: TextStyle(
+                                       decoration: TextDecoration.lineThrough,
+                                        fontSize: 9,
+                                       color: Color.fromARGB(255, 249, 91, 91)),
+                                  ),
+                                  Text(
+                                    'ราคา ${productModels[index].price} บาท',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                       color: Color.fromARGB(255, 81, 185, 43)),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

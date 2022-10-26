@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:champshop/utility/my_style.dart';
+import 'package:champshop/widget/user/order_history_shop.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -122,7 +123,34 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
 
    @override
   Widget build(BuildContext context) {
-    return statusOrder ? buildNonOrder() : buildContent();
+    
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Center(
+          child: Text('การจัดส่ง',
+              style: TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 255, 173, 41))),
+        ),
+      ),
+       floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrderHistoryShop(),
+            ),
+          );
+        },
+        label: const Text('ประวัติการสั่งซื้อ'),
+        icon: const Icon(Icons.av_timer),
+        backgroundColor: Color.fromARGB(255, 255, 173, 41),
+      ),
+      body: statusOrder ? buildNonOrder() : buildContent() ,
+    ); 
   }
 
   Widget buildContent() => ListView.builder(
@@ -416,6 +444,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
                             // confirmDialog();
                             editThread(index);
                             // findUser();
+                            showToast('แจ้งชำระเงินสำเร็จ');
                           },
                           child: Text(
                             'ส่งบิล',
@@ -620,4 +649,15 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
           ],
         ),
       );
+      
+       void showToast(String? string) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(string!),
+        action: SnackBarAction(
+            label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
 }

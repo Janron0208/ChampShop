@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           routeToService(MainBuyer());
         } else if (chooseType == 'Shop') {
           routeToService(MainShop());
-        } else if (chooseType == 'Rider') {
+        } else if (chooseType == '5') {
           // routeToService(MainRider());
         } else {
           normalDialog(context, 'Error User Type');

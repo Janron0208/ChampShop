@@ -23,7 +23,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  // Field
+ 
   String? user, password;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,42 +31,6 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      // appBar: AppBar(
-      //   title: Text('เข้าสู่ระบบ'),
-      // ),
-      // body: Container(
-      //   decoration: BoxDecoration(
-      //     gradient: LinearGradient(
-      //       begin: Alignment.topRight,
-      //       end: Alignment.bottomLeft,
-      //       colors: [
-      //         Color.fromARGB(255, 162, 249, 188),
-      //         Color.fromARGB(255, 201, 241, 255),
-      //       ],
-      //     ),
-      //   ),
-      //   child: Center(
-      //       child: SingleChildScrollView(
-      //     child: Column(
-      //       mainAxisSize: MainAxisSize.min,
-      //       children: <Widget>[
-      //         MyStyle().showLogo(),
-      //         MyStyle().showTitle('Champshop'),
-      //         MyStyle().showSubTitle('ร้านจำหน่ายอุปกรณ์ก่อสร้าง'),
-      //         MyStyle().mySizebox(),
-      //         MyStyle().mySizebox(),
-      //         userForm(),
-      //         MyStyle().mySizebox(),
-      //         passwordForm(),
-      //         MyStyle().mySizebox(),
-      //         MyStyle().mySizebox(),
-      //         loginButton()
-      //       ],
-      //     ),
-      //   )),
-      // ),
-
-      //ใหม่
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -76,12 +40,6 @@ class _SignInState extends State<SignIn> {
               height: MediaQuery.of(context).size.height * 1,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 246, 143, 88),
-                // image: DecorationImage(
-                //   fit: BoxFit.cover,
-                //   image: Image.asset(
-                //     'assets/images/login_BG@2x.jpg',
-                //   ).image,
-                // ),
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
@@ -170,28 +128,7 @@ class _SignInState extends State<SignIn> {
                                                 255, 140, 140, 140)),
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () async {},
-                                      child: Container(
-                                        width: 40,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Color(0xFFDBE2E7),
-                                          ),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () async {},
-                                          child: Icon(
-                                            Icons.call_rounded,
-                                            color: Color(0xFF090F13),
-                                            size: 24,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                   
                                   ],
                                 ),
                               ),
@@ -203,9 +140,9 @@ class _SignInState extends State<SignIn> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.center,
                                   children: [
-                                    newChangePass(),
+                                   
                                     newLoginBtn(context),
                                   ],
                                 ),
@@ -262,7 +199,7 @@ class _SignInState extends State<SignIn> {
 
   Container newLoginBtn(BuildContext context) {
     return Container(
-      width: 130,
+      width: 280,
       height: 50,
       child: ElevatedButton(
           onPressed: () async {
@@ -348,11 +285,11 @@ class _SignInState extends State<SignIn> {
                 filled: true,
                 fillColor: Colors.white,
                 contentPadding: EdgeInsetsDirectional.fromSTEB(16, 24, 0, 24),
-                suffix: InkWell(
-                  onTap: () {},
-                  focusNode: FocusNode(skipTraversal: true),
-                  child: Icon(Icons.visibility_outlined, size: 22),
-                ),
+                // suffix: InkWell(
+                //   onTap: () {},
+                //   focusNode: FocusNode(skipTraversal: true),
+                //   child: Icon(Icons.visibility_outlined, size: 22),
+                // ),
               ),
             ),
           ),

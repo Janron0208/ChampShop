@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:champshop/widget/about_shop.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,13 +26,39 @@ class _ShowSettingState extends State<ShowSetting> {
   String? lat;
   String? lng;
   String? urlPicture;
-
+  String? address, phone;
+  List<UserModel> userModels = [];
   @override
   void initState() {
     super.initState();
     checkPreferance();
+    readCurrentInfo();
   }
+ Future<Null> readCurrentInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? idUSer = preferences.getString('id');
+    print('idUser ==>> $idUSer');
 
+    String url =
+        '${MyConstant().domain}/champshop/getUserWhereId.php?isAdd=true&id=$idUSer';
+
+    Response response = await Dio().get(url);
+    // print('response ==>> $response');
+
+    var result = json.decode(response.data);
+    // print('result ==>> $result');
+
+    for (var map in result) {
+      print('map ==>> $map');
+      setState(() {
+        userModel = UserModel.fromJson(map);
+        nameUser = userModel?.name;
+        address = userModel?.address;
+        phone = userModel?.phone;
+        urlPicture = userModel?.urlPicture;
+      });
+    }
+  }
   Future<void> checkPreferance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -63,7 +93,7 @@ class _ShowSettingState extends State<ShowSetting> {
           showCol1(),
           showText1(),
           showEditProfile(),
-          showEditProfile1(),
+          // showEditProfile1(),
           showEditProfile2(),
           Spacer(),
           Padding(
@@ -158,12 +188,12 @@ class _ShowSettingState extends State<ShowSetting> {
       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: InkWell(
         onTap: () async {
-          // await Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => EditProfileUser(),
-          //   ),
-          // );
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AboutShop(),
+            ),
+          );
         },
         child: Container(
           width: double.infinity,
@@ -186,14 +216,14 @@ class _ShowSettingState extends State<ShowSetting> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Icon(
-                  Icons.lock,
+                  Icons.paypal,
                   color: Color.fromARGB(255, 106, 106, 106),
                   size: 24,
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                   child: Text(
-                    'เปลี่ยนรหัสผ่าน',
+                    'การโอนเงิน',
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -318,28 +348,36 @@ class _ShowSettingState extends State<ShowSetting> {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Card(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                color: Color.fromARGB(255, 255, 156, 63),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Container(
-                        width: 60.0,
-                        height: 60.0,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "${MyConstant().domain}$urlPicture"), //NetworkImage
-                          radius: 100,
-                        ),
-                      )),
-                ),
-              ),
+              Padding(
+  padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(60),
+    child: Image.network(
+      '${MyConstant().domain}$urlPicture',
+      width: 80,
+      height: 80,
+      fit: BoxFit.cover,
+    ),
+  ),
+),
+                
+                
+                
+              //   Padding(
+              //     padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+              //     child: ClipRRect(
+              //         borderRadius: BorderRadius.circular(40),
+              //         child: Container(
+              //           width: 60.0,
+              //           height: 60.0,
+              //           child: CircleAvatar(
+              //             backgroundImage: NetworkImage(
+              //                 "${MyConstant().domain}$urlPicture"), //NetworkImage
+              //             radius: 100,
+              //           ),
+              //         )),
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                 child: Column(

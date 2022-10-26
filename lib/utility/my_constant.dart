@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyConstant {
   String domain =
-      'https://54f9-2403-6200-88a0-d9a1-71a4-f21e-768-6fc7.ap.ngrok.io';
+      'https://c32c-2403-6200-88a0-3579-886f-6128-2104-38c3.ap.ngrok.io';
   String keyId = 'id';
   String keyType = 'ChooseType';
   String keyName = 'Name';

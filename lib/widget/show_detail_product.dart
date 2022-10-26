@@ -1,7 +1,8 @@
+import 'package:champshop/model/product_model.dart';
 import 'package:flutter/material.dart';
 
 class ShowDetailProduct extends StatefulWidget {
-  const ShowDetailProduct({Key? key}) : super(key: key);
+  const ShowDetailProduct({Key? key, required List<ProductModel> productModel}) : super(key: key);
 
   @override
   State<ShowDetailProduct> createState() => _ShowDetailProductState();

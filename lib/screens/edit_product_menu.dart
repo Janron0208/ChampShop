@@ -22,7 +22,7 @@ class EditProductMenu extends StatefulWidget {
 class _EditProductMenuState extends State<EditProductMenu> {
   ProductModel? productModel;
   File? file;
-  String? name, price, detail, pathImage, type;
+  String? name, price, detail, pathImage, type, sale, size, color, stock;
 
   final List<String> items = [
     'โครง,ล้อ',
@@ -35,7 +35,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
     'ถังปูน',
     'ปูน',
     'เครื่องมือ',
-     'สีทาภายในภายนอก',
+    'สีทาภายในภายนอก',
     'งานสีอื่นๆ',
     'สเปรย์',
     'อื่นๆ',
@@ -52,7 +52,9 @@ class _EditProductMenuState extends State<EditProductMenu> {
     detail = productModel!.detail;
     pathImage = productModel!.pathImage;
     type = productModel!.type;
-
+    sale = productModel!.sale;
+    size = productModel!.size;
+    color = productModel!.color;
   }
 
   @override
@@ -65,6 +67,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         child: Column(
           children: [
             nameProduct(),
+            sizeProduct(),
+            colorProduct(),
             priceProduct(),
             typeProduct(),
             detailProduct(),
@@ -84,38 +88,45 @@ class _EditProductMenuState extends State<EditProductMenu> {
       child: RaisedButton.icon(
         onPressed: () {
           checkType();
-          print('$name , $price , $detail , $type');
+          print('$name , $price , $detail , $type , $sale');
           if (name!.isEmpty || price!.isEmpty || detail!.isEmpty) {
-          normalDialog(context, 'กรุณากรอกให้ครบ');
-        } else {
-          confirmEdit();
-        }
-      },
+            normalDialog(context, 'กรุณากรอกให้ครบ');
+          } else {
+            confirmEdit();
+          }
+        },
         icon: Icon(Icons.save),
         label: Text('บันทึก'),
       ),
     );
   }
 
-    Future<Null> confirmEdit() async {
+  Future<Null> confirmEdit() async {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
         title: Text('คุณต้องการจะบันทึกหรือไม่ ?'),
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FlatButton.icon(
                 onPressed: () {
                   Navigator.pop(context);
                   editValueOnMySQL();
                 },
-                icon: Icon(Icons.check, color: Colors.green,),
+                icon: Icon(
+                  Icons.check,
+                  color: Colors.green,
+                ),
                 label: Text('ยืนยัน'),
               ),
               FlatButton.icon(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.clear, color: Colors.red,),
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.red,
+                ),
                 label: Text('ยกเลิก'),
               )
             ],
@@ -125,9 +136,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
     );
   }
 
-
   Future<Null> editValueOnMySQL() async {
-
     Random random = Random();
     int i = random.nextInt(100000);
     String nameFile = 'editProduct$i.jpg';
@@ -141,37 +150,50 @@ class _EditProductMenuState extends State<EditProductMenu> {
 
     await Dio().post(urlUpload, data: formData).then((value) async {
       pathImage = '/champshop/Product/$nameFile';
-   
-   
-   
-    String? id = productModel!.id;
-    String url = '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type';
-    await Dio().get(url).then((value){
-      if (value.toString() == 'true') {
-        Navigator.pop(context);
-      } else {
-        normalDialog(context, 'ผิดพลาด! กรุณาลองใหม่');
-      }
-    });
+
+      String? id = productModel!.id;
+      String url =
+          '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Size=$size&Color=$color';
+      await Dio().get(url).then((value) {
+        if (value.toString() == 'true') {
+          Navigator.pop(context);
+        } else {
+          normalDialog(context, 'ผิดพลาด! กรุณาลองใหม่');
+        }
+      });
     });
   }
 
   Future<Null> checkType() async {
-    if (selectedValue == 'โครง,ล้อ') { type = 'A';  } 
-    else if (selectedValue == 'งานประปา') { type = 'B'; } 
-    else if (selectedValue == 'งานสวน') { type = 'C'; } 
-    else if (selectedValue == 'รถเข็น') { type = 'D'; } 
-    else if (selectedValue == 'โครงรถเข็นปูน') {type = 'E'; } 
-
-    else if (selectedValue == 'เปล') {type = 'F'; } 
-    else if (selectedValue == 'กระเบื้องยาง') {type = 'G'; } 
-    else if (selectedValue == 'ถังปูน') {type = 'H'; } 
-    else if (selectedValue == 'ปูน') {type = 'I'; } 
-    else if (selectedValue == 'เครื่องมือ') {type = 'J'; } 
-     else if (selectedValue == 'สีทาภายในภายนอก') {type = 'K'; } 
-    else if (selectedValue == 'งานสีอื่นๆ') {type = 'L'; } 
-    else if (selectedValue == 'สเปรย์') {type = 'M'; } 
-    else {  type = 'Z'; }
+    if (selectedValue == 'โครง,ล้อ') {
+      type = 'A';
+    } else if (selectedValue == 'งานประปา') {
+      type = 'B';
+    } else if (selectedValue == 'งานสวน') {
+      type = 'C';
+    } else if (selectedValue == 'รถเข็น') {
+      type = 'D';
+    } else if (selectedValue == 'โครงรถเข็นปูน') {
+      type = 'E';
+    } else if (selectedValue == 'เปล') {
+      type = 'F';
+    } else if (selectedValue == 'กระเบื้องยาง') {
+      type = 'G';
+    } else if (selectedValue == 'ถังปูน') {
+      type = 'H';
+    } else if (selectedValue == 'ปูน') {
+      type = 'I';
+    } else if (selectedValue == 'เครื่องมือ') {
+      type = 'J';
+    } else if (selectedValue == 'สีทาภายในภายนอก') {
+      type = 'K';
+    } else if (selectedValue == 'งานสีอื่นๆ') {
+      type = 'L';
+    } else if (selectedValue == 'สเปรย์') {
+      type = 'M';
+    } else {
+      type = 'Z';
+    }
   }
 
   Future<Null> chooseImage(ImageSource source) async {
@@ -228,6 +250,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         hint: 'เลือกหมวดหมู่สินค้า',
         dropdownItems: items,
         value: selectedValue,
+        // initialValue: productModel!.type,
+        
         onChanged: (value) {
           setState(() {
             selectedValue = value;
@@ -243,7 +267,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
           Container(
             margin: EdgeInsets.only(top: 20),
             width: 300,
-            child: TextFormField(maxLines: 2,
+            child: TextFormField(
+              maxLines: 2,
               onChanged: (value) => name = value.trim(),
               initialValue: productModel!.nameProduct,
               decoration: InputDecoration(
@@ -255,6 +280,43 @@ class _EditProductMenuState extends State<EditProductMenu> {
         ],
       );
 
+  Widget sizeProduct() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            width: 300,
+            child: TextFormField(
+              maxLines: 1,
+              onChanged: (value) => size = value.trim(),
+              initialValue: productModel!.size,
+              decoration: InputDecoration(
+                labelText: 'ขนาด/ปริมาณ',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
+
+  Widget colorProduct() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            width: 300,
+            child: TextFormField(
+              maxLines: 1,
+              onChanged: (value) => color = value.trim(),
+              initialValue: productModel!.size,
+              decoration: InputDecoration(
+                labelText: 'สี',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
   Widget priceProduct() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -280,7 +342,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
           Container(
             margin: EdgeInsets.only(top: 20),
             width: 300,
-           child: TextFormField(
+            child: TextFormField(
               onChanged: (value) => detail = value.trim(),
               keyboardType: TextInputType.multiline,
               maxLines: 3,

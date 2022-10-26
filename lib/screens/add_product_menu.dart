@@ -8,6 +8,7 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utility/my_constant.dart';
@@ -21,7 +22,8 @@ class AddProductMenu extends StatefulWidget {
 
 class _AddProductMenuState extends State<AddProductMenu> {
   File? file;
-  String? nameProduct, price, detail, type, sale, advice;
+  String? nameProduct, price, detail, type, advice, guild, size, color,stock;
+  String? sale;
 
   final List<String> items = [
     'โครง,ล้อ',
@@ -50,13 +52,18 @@ class _AddProductMenuState extends State<AddProductMenu> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            showTitleProduct('รูปภาพสินค้า'),
+            Text('รูปภาพสินค้า',style: TextStyle(fontSize: 20),),
             groupImage(),
             showTitleProduct('รายละเอียด'),
             nameForm(),
-            MyStyle().mySizebox(),
+             MyStyle().mySizebox1(),
+            sizeForm(),
+             MyStyle().mySizebox1(),
+            colorForm(),
+
+            MyStyle().mySizebox1(),
             priceForm(),
-            MyStyle().mySizebox(),
+            MyStyle().mySizebox1(),
             Container(
               width: 300,
               height: 60,
@@ -71,7 +78,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
                 },
               ),
             ),
-            MyStyle().mySizebox(),
+            MyStyle().mySizebox1(),
             detailForm(),
             MyStyle().mySizebox2(),
             saveButton()
@@ -89,7 +96,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
       child: RaisedButton.icon(
         onPressed: () {
           checkType();
-          print('$nameProduct , $price , $detail , $type');
+          // print('$nameProduct , $price , $detail , $type');
           if (file == null) {
             normalDialog(context, 'กรุณาเลือกรูปภาพสินค้า');
           } else if (nameProduct == null ||
@@ -129,12 +136,22 @@ class _AddProductMenuState extends State<AddProductMenu> {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         String? idShop = preferences.getString('id');
 
-        String? sale = '';
+        // String? sale = '0';
         String? advice = '';
+        String? guild = '';
+         String? stock = '';
 
+        // print('$price');
+   
+
+  // print(formatAmount());
+
+ 
+
+   
 
         String urlInsertData =
-            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type&Sale=$sale&Advice=$advice';
+            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&Size=$size&Color=$color&Stock=$stock&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Advice=$advice&Guild=$guild';
 
         await Dio().get(urlInsertData).then((value) => Navigator.pop(context));
       });
@@ -143,10 +160,33 @@ class _AddProductMenuState extends State<AddProductMenu> {
 
   Widget nameForm() => Container(
         width: 300,
-        child: TextField(maxLines: 2,
+        child: TextField(
+          maxLines: 2,
           onChanged: (value) => nameProduct = value.trim(),
           decoration: InputDecoration(
             labelText: 'ชื่อสินค้า',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      );
+      Widget sizeForm() => Container(
+        width: 300,
+        child: TextField(
+      
+          onChanged: (value) => size = value.trim(),
+          decoration: InputDecoration(
+            labelText: 'ขนาด/ปริมาณ',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      );
+      Widget colorForm() => Container(
+        width: 300,
+        child: TextField(
+     
+          onChanged: (value) => color = value.trim(),
+          decoration: InputDecoration(
+            labelText: 'สี',
             border: OutlineInputBorder(),
           ),
         ),
@@ -155,6 +195,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
   Widget priceForm() => Container(
         width: 300,
         child: TextField(
+          // inputFormatters: [],
           keyboardType: TextInputType.number,
           onChanged: (value) => price = value.trim(),
           decoration: InputDecoration(
@@ -177,17 +218,14 @@ class _AddProductMenuState extends State<AddProductMenu> {
         ),
       );
 
-  Row groupImage() {
-    return Row(
+  Column groupImage() {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: () => chooseImage(ImageSource.camera),
-          icon: Icon(Icons.add_a_photo),
-        ),
+      
         Container(
-          width: 200.0,
-          height: 200.0,
+          width: 150.0,
+          height: 150.0,
           child: file == null
               ? Image.asset(
                   'images/product.png',
@@ -196,35 +234,46 @@ class _AddProductMenuState extends State<AddProductMenu> {
                   width: 150.0,
                   height: 150.0,
                   decoration: BoxDecoration(
-                   
                       image: DecorationImage(
                           fit: BoxFit.cover, image: FileImage(file!)))),
         ),
-        IconButton(
-          onPressed: () => chooseImage(ImageSource.gallery),
-          icon: Icon(Icons.add_photo_alternate),
-        ),
+        ElevatedButton(
+          onPressed: () => chooseImage(ImageSource.gallery), child: Text('เลือกรูปภาพ'))
+       
       ],
     );
   }
-    
 
   Future<Null> checkType() async {
-    if (selectedValue == 'โครง,ล้อ') { type = 'A';  } 
-    else if (selectedValue == 'งานประปา') { type = 'B'; } 
-    else if (selectedValue == 'งานสวน') { type = 'C'; } 
-    else if (selectedValue == 'รถเข็น') { type = 'D'; } 
-    else if (selectedValue == 'โครงรถเข็นปูน') {type = 'E'; } 
-
-    else if (selectedValue == 'เปล') {type = 'F'; } 
-    else if (selectedValue == 'กระเบื้องยาง') {type = 'G'; } 
-    else if (selectedValue == 'ถังปูน') {type = 'H'; } 
-    else if (selectedValue == 'ปูน') {type = 'I'; } 
-    else if (selectedValue == 'เครื่องมือ') {type = 'J'; } 
-    else if (selectedValue == 'สีทาภายในภายนอก') {type = 'K'; } 
-    else if (selectedValue == 'งานสีอื่นๆ') {type = 'L'; } 
-    else if (selectedValue == 'สเปรย์') {type = 'M'; } 
-    else {  type = 'Z'; }
+    if (selectedValue == 'โครง,ล้อ') {
+      type = 'A';
+    } else if (selectedValue == 'งานประปา') {
+      type = 'B';
+    } else if (selectedValue == 'งานสวน') {
+      type = 'C';
+    } else if (selectedValue == 'รถเข็น') {
+      type = 'D';
+    } else if (selectedValue == 'โครงรถเข็นปูน') {
+      type = 'E';
+    } else if (selectedValue == 'เปล') {
+      type = 'F';
+    } else if (selectedValue == 'กระเบื้องยาง') {
+      type = 'G';
+    } else if (selectedValue == 'ถังปูน') {
+      type = 'H';
+    } else if (selectedValue == 'ปูน') {
+      type = 'I';
+    } else if (selectedValue == 'เครื่องมือ') {
+      type = 'J';
+    } else if (selectedValue == 'สีทาภายในภายนอก') {
+      type = 'K';
+    } else if (selectedValue == 'งานสีอื่นๆ') {
+      type = 'L';
+    } else if (selectedValue == 'สเปรย์') {
+      type = 'M';
+    } else {
+      type = 'Z';
+    }
   }
 
   Future<Null> chooseImage(ImageSource source) async {
@@ -242,7 +291,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
 
   Widget showTitleProduct(String string) {
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(2),
       child: Row(
         children: [
           MyStyle().showTitle1(string),

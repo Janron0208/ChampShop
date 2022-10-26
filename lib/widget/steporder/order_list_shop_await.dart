@@ -128,7 +128,12 @@ class _OrderListShopAwaitState extends State<OrderListShopAwait> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: statusOrder
-          ? MyStyle().showProgress()
+          ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Text('ไม่มีคำสั่งซื้อ')],
+                  ),
+                )
           : haveData!
               ? showListProduct()
               : Center(
@@ -638,7 +643,7 @@ class _OrderListShopAwaitState extends State<OrderListShopAwait> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'เวลาที่สั่ง  ',
+          'เวลาที่สั่ง ',
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
         ),
         Text(orderModels[index].orderDateTime!,
@@ -652,9 +657,10 @@ class _OrderListShopAwaitState extends State<OrderListShopAwait> {
 
   Text showNameAndPhone(int index) {
     return Text(
-      '${orderModels[index].nameUser!} ${orderModels[index].phoneUser!}',
+      'คุณ ${orderModels[index].nameUser!} ${orderModels[index].phoneUser!}',
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 16,
+        color: Color.fromARGB(255, 43, 43, 43)
       ),
     );
   }

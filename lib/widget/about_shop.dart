@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:champshop/model/user_model.dart';
 import 'package:champshop/utility/my_api.dart';
 import 'package:champshop/utility/my_style.dart';
@@ -8,11 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
-import '../utility/my_constant.dart';
-
 class AboutShop extends StatefulWidget {
-  final UserModel userModel;
-  AboutShop({Key? key, required this.userModel}) : super(key: key);
+  AboutShop({Key? key}) : super(key: key);
 
   @override
   State<AboutShop> createState() => _AboutShopState();
@@ -28,7 +23,6 @@ class _AboutShopState extends State<AboutShop> {
   @override
   void initState() {
     super.initState();
-    userModel = widget.userModel;
     findLat1Lng1();
   }
 
@@ -64,41 +58,107 @@ class _AboutShopState extends State<AboutShop> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.all(16.0),
-                width: 150.0,
-                height: 150.0,
-                child: Image.network(
-                  '${MyConstant().domain}${userModel!.urlPicture}',
-                  fit: BoxFit.cover,
-                ),
+          Padding(
+              padding: const EdgeInsets.only(top: 35),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: IconButton(
+                        onPressed: (() {
+                          Navigator.pop(context);
+                        }),
+                        icon: Icon(Icons.arrow_back_ios_new)),
+                  ),
+                  Text('การชำระเงิน',style: TextStyle(fontSize: 20))
+                ],
               ),
-            ],
+            ),
+         
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Container(
+          //       width: 400,
+          //       height: 70,
+          //       color: Color.fromARGB(255, 200, 200, 200),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Text('ร้าน ChampShop',style: TextStyle(fontSize: 20)),
+          //           Text('ร้านจำหน่ายอุปกรณ์ก่อสร้าง'),
+          //         ],
+          //       )),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Container(
+          //     width: 400,
+          //     height: 80,
+          //     color: Color.fromARGB(255, 200, 200, 200),
+          //     child: Center(
+          //       child: Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: Text(
+          //             'ที่อยู่ร้าน : ศูนย์การค้าซีคอนบางแค ชั้น 2 เลขที่ 108 ชั้น 1 ถ. เพชรเกษม บางหว้า เขตภาษีเจริญ กรุงเทพมหานคร 10160',style: TextStyle(fontSize: 15)),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            child: Container(height: 50,width: 300,
+              child: Image.network('https://www.designil.com/wp-content/uploads/2022/02/prompt-pay-logo.jpg')),
           ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text(userModel!.address!),
+          Container(width: 300,height: 300,
+            child: Image.network('https://www.investopedia.com/thmb/KfGSwVyV8mOdTHFxL1T0aS3xpE8=/1148x1148/smart/filters:no_upscale()/qr-code-bc94057f452f4806af70fd34540f72ad.png')),
+         
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 400,
+                height: 120,
+                color: Color.fromARGB(255, 200, 200, 200),
+                child: Row(
+                  children: [
+                    Image.network('https://media.thaigov.go.th/uploads/thumbnail/news/2019/07/IMG_21633_20190718141213000000.jpg'),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('ออมทรัพย์ 1234567891112',style: TextStyle(fontSize: 17)),
+                          Text('นายณัฐพล จันทร์รอน',style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+            ),
+          ), Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 400,
+                height: 120,
+                color: Color.fromARGB(255, 200, 200, 200),
+                child: Row(
+                  children: [
+                    Image.network('http://innews.news/images/1612503758-1.jpg'),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('ออมทรัพย์ 1234567891112',style: TextStyle(fontSize: 17)),
+                          Text('นายณัฐพล จันทร์รอน',style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+            ),
           ),
-          ListTile(
-            leading: Icon(Icons.phone),
-            title: Text(userModel!.phone!),
-          ),
-          ListTile(
-            leading: Icon(Icons.directions_bike),
-            title: Text(
-                distance == null ? '- กิโลเมตร' : '$distanceString กิโลเมตร'),
-          ),
-          ListTile(
-            leading: Icon(Icons.transfer_within_a_station),
-            title: Text(transport == null ? '- บาท' : '$transport บาท'),
-          ),
-          showMap(),
         ],
       ),
     );
@@ -113,15 +173,6 @@ class _AboutShopState extends State<AboutShop> {
       );
     }
 
-    Marker userMarker() {
-      return Marker(
-        markerId: MarkerId('userMarker'),
-        position: LatLng(lat1!, lng1!),
-        icon: BitmapDescriptor.defaultMarkerWithHue(60.0),
-        infoWindow: InfoWindow(title: 'คุณอยู่ที่นี่'),
-      );
-    }
-
     Marker shopMarker() {
       return Marker(
         markerId: MarkerId('shopMarker'),
@@ -132,7 +183,7 @@ class _AboutShopState extends State<AboutShop> {
     }
 
     Set<Marker> mySet() {
-      return <Marker>[userMarker(), shopMarker()].toSet();
+      return <Marker>[shopMarker()].toSet();
     }
 
     return Container(

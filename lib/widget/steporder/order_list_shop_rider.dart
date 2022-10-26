@@ -125,7 +125,12 @@ class _OrderListShopRiderState extends State<OrderListShopRider> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: statusOrder
-            ? MyStyle().showProgress()
+            ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Text('ไม่มีคำสั่งซื้อ')],
+                  ),
+                )
             : haveData!
                 ? showListProduct()
                 : Center(
@@ -632,7 +637,7 @@ class _OrderListShopRiderState extends State<OrderListShopRider> {
       ],
     );
   }
-
+  
   Row showDateOrder(int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -652,9 +657,10 @@ class _OrderListShopRiderState extends State<OrderListShopRider> {
 
   Text showNameAndPhone(int index) {
     return Text(
-      '${orderModels[index].nameUser!} ${orderModels[index].phoneUser!}',
+      'คุณ ${orderModels[index].nameUser!} ${orderModels[index].phoneUser!}',
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 16,
+        color: Color.fromARGB(255, 43, 43, 43)
       ),
     );
   }
