@@ -20,63 +20,63 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final String chooseType = 'User';
-  String? name, user, password, address, phone, urlpicture;
+  String? name,nickname, user, password, address, phone, urlpicture;
   String? district, county, zipcode, transport, sumAddress;
   String avatar = '';
   File? file;
 
   final List<String> items = [
-    'เขตพระนคร',
-    'เขตดุสิต',
-    'เขตหนองจอก',
-    'เขตบางรัก',
-    'เขตบางเขน',
-    'เขตบางกะปิ',
-    'เขตปทุมวัน',
-    'เขตป้อมปราบศัตรูพ่าย',
-    'เขตพระโขนง',
-    'เขตมีนบุรี',
-    'เขตลาดกระบัง',
-    'เขตยานนาวา',
-    'เขตสัมพันธวงศ์',
-    'เขตพญาไท',
-    'เขตธนบุรี',
-    'เขตบางกอกใหญ่',
-    'เขตห้วยขวาง',
-    'เขตคลองสาน',
-    'เขตตลิ่งชัน',
-    'เขตบางกอกน้อย',
-    'เขตบางขุนเทียน',
-    'เขตภาษีเจริญ',
-    'เขตหนองแขม',
-    'เขตราษฎร์บูรณะ',
-    'เขตบางพลัด',
-    'เขตดินแดง',
-    'เขตบึงกุ่ม',
-    'เขตสาทร',
-    'เขตบางซื่อ',
-    'เขตจตุจักร',
-    'เขตบางคอแหลม',
-    'เขตประเวศ',
-    'เขตคลองเตย',
-    'เขตสวนหลวง',
-    'เขตจอมทอง',
-    'เขตดอนเมือง',
-    'เขตราชเทวี',
-    'เขตลาดพร้าว',
-    'เขตวัฒนา',
-    'เขตบางแค',
-    'เขตหลักสี่',
-    'เขตสายไหม',
-    'เขตคันนายาว',
-    'เขตสะพานสูง',
-    'เขตวังทองหลาง',
-    'เขตคลองสามวา',
-    'เขตบางนา',
-    'เขตทวีวัฒนา',
-    'เขตทุ่งครุ',
-    'เขตบางบอน',
-    'เขตอื่น'
+    'เขตพระนคร(ค่าส่ง+160บาท)',
+    'เขตดุสิต(ค่าส่ง+170บาท)',
+    'เขตหนองจอก(ค่าส่ง+300บาท)',
+    'เขตบางรัก(ค่าส่ง+160บาท)',
+    'เขตบางเขน(ค่าส่ง+220บาท)',
+    'เขตบางกะปิ(ค่าส่ง+220บาท)',
+    'เขตปทุมวัน(ค่าส่ง+170บาท)',
+    'เขตป้อมปราบศัตรูพ่าย(ค่าส่ง+160บาท)',
+    'เขตพระโขนง(ค่าส่ง+200บาท)',
+    'เขตมีนบุรี(ค่าส่ง+270บาท)',
+    'เขตลาดกระบัง(ค่าส่ง+270บาท)',
+    'เขตยานนาวา(ค่าส่ง+170บาท)',
+    'เขตสัมพันธวงศ์(ค่าส่ง+160บาท)',
+    'เขตพญาไท(ค่าส่ง+180บาท)',
+    'เขตธนบุรี(ค่าส่ง+150บาท)',
+    'เขตบางกอกใหญ่(ค่าส่ง+150บาท)',
+    'เขตห้วยขวาง(ค่าส่ง+190บาท)',
+    'เขตคลองสาน(ค่าส่ง+170บาท)',
+    'เขตตลิ่งชัน(ค่าส่ง+120บาท)',
+    'เขตบางกอกน้อย(ค่าส่ง+150บาท)',
+    'เขตบางขุนเทียน(ค่าส่ง+140บาท)',
+    'เขตภาษีเจริญ(ค่าส่ง+120บาท)',
+    'เขตหนองแขม(ค่าส่ง+120บาท)',
+    'เขตราษฎร์บูรณะ(ค่าส่ง+150บาท)',
+    'เขตบางพลัด(ค่าส่ง+160บาท)',
+    'เขตดินแดง(ค่าส่ง+180บาท)',
+    'เขตบึงกุ่ม(ค่าส่ง+220บาท)',
+    'เขตสาทร(ค่าส่ง+160บาท)',
+    'เขตบางซื่อ(ค่าส่ง+180บาท)',
+    'เขตจตุจักร(ค่าส่ง+200บาท)',
+    'เขตบางคอแหล(ค่าส่ง+160บาท)',
+    'เขตประเวศ(ค่าส่ง+220บาท)',
+    'เขตคลองเตย(ค่าส่ง+180บาท)',
+    'เขตสวนหลวง(ค่าส่ง+200บาท)',
+    'เขตจอมทอง(ค่าส่ง+120บาท)',
+    'เขตดอนเมือง(ค่าส่ง+250บาท)',
+    'เขตราชเทวี(ค่าส่ง+180บาท)',
+    'เขตลาดพร้าว(ค่าส่ง+220บาท)',
+    'เขตวัฒนา(ค่าส่ง+180บาท)',
+    'เขตบางแค(ค่าส่ง+100บาท)',
+    'เขตหลักสี่(ค่าส่ง+220บาท)',
+    'เขตสายไหม(ค่าส่ง+250บาท)',
+    'เขตคันนายาว(ค่าส่ง+240บาท)',
+    'เขตสะพานสูง(ค่าส่ง+240บาท)',
+    'เขตวังทองหลาง(ค่าส่ง+200บาท)',
+    'เขตคลองสามวา(ค่าส่ง+270บาท)',
+    'เขตบางนา(ค่าส่ง+200บาท)',
+    'เขตทวีวัฒนา(ค่าส่ง+120บาท)',
+    'เขตทุ่งครุ(ค่าส่ง+140บาท)',
+    'เขตบางบอน(ค่าส่ง+120บาท)',
+    'เขตอื่น(ค่าส่ง+350บาท)'
 
   ];
   String? selectedValue;
@@ -103,9 +103,11 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     buildAvatar(),
-                    Divider(),
+                
                     MyStyle().mySizebox0(),
                     nameForm(),
+                    MyStyle().mySizebox0(),
+                    nameForm2(),
                     MyStyle().mySizebox0(),
                     phoneForm(),
                     MyStyle().mySizebox2(),
@@ -149,11 +151,7 @@ class _SignUpState extends State<SignUp> {
             Expanded(
               child: Text(
                 ' เลือกเขต',
-                // style: TextStyle(
-                //   fontSize: 14,
-                //   fontWeight: FontWeight.bold,
-                //   color: Color.fromARGB(255, 119, 119, 119),
-                // ),
+               
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -215,110 +213,161 @@ class _SignUpState extends State<SignUp> {
   }
   
 Future<Null> checkTransport() async {
-    if (selectedValue == 'เขตพระนคร') {
+    if (selectedValue == 'เขตพระนคร(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตดุสิต') {
+      county = 'เขตพระนคร';
+    } else if (selectedValue == 'เขตดุสิต(ค่าส่ง+170บาท)') {
       transport = '170';
-    } else if (selectedValue == 'เขตหนองจอก') {
+      county = 'เขตดุสิต';
+    } else if (selectedValue == 'เขตหนองจอก(ค่าส่ง+300บาท)') {
       transport = '300';
-    } else if (selectedValue == 'เขตบางรัก') {
+      county = 'เขตหนองจอก';
+    } else if (selectedValue == 'เขตบางรัก(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตบางเขน') {
+      county = 'เขตบางรัก';
+    } else if (selectedValue == 'เขตบางเขน(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตบางกะปิ') {
+      county = 'เขตบางเขน';
+    } else if (selectedValue == 'เขตบางกะปิ(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตปทุมวัน') {
+      county = 'เขตบางกะปิ';
+    } else if (selectedValue == 'เขตปทุมวัน(ค่าส่ง+170บาท)') {
       transport = '170';
-    } else if (selectedValue == 'เขตป้อมปราบศัตรูพ่าย') {
+      county = 'เขตปทุมวัน';
+    } else if (selectedValue == 'เขตป้อมปราบศัตรูพ่าย(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตพระโขนง') {
+      county = 'เขตป้อมปราบศัตรูพ่าย';
+    } else if (selectedValue == 'เขตพระโขนง(ค่าส่ง+200บาท)') {
       transport = '200';
-    } else if (selectedValue == 'เขตมีนบุรี') {
+      county = 'เขตพระโขนง';
+    } else if (selectedValue == 'เขตมีนบุรี(ค่าส่ง+270บาท)') {
       transport = '270';
-    } else if (selectedValue == 'เขตลาดกระบัง') {
+      county = 'เขตมีนบุรี';
+    } else if (selectedValue == 'เขตลาดกระบัง(ค่าส่ง+270บาท)') {
       transport = '270';
-    } else if (selectedValue == 'เขตยานนาวา') {
+      county = 'เขตลาดกระบัง';
+    } else if (selectedValue == 'เขตยานนาวา(ค่าส่ง+170บาท)') {
       transport = '170';
-    } else if (selectedValue == 'เขตสัมพันธวงศ์') {
+      county = 'เขตยานนาวา';
+    } else if (selectedValue == 'เขตสัมพันธวงศ์(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตพญาไท') {
+      county = 'เขตสัมพันธวงศ์';
+    } else if (selectedValue == 'เขตพญาไท(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตธนบุรี') {
+      county = 'เขตพญาไท';
+    } else if (selectedValue == 'เขตธนบุรี(ค่าส่ง+150บาท)') {
       transport = '150';
-    } else if (selectedValue == 'เขตบางกอกใหญ่') {
+      county = 'เขตธนบุรี';
+    } else if (selectedValue == 'เขตบางกอกใหญ่(ค่าส่ง+150บาท)') {
       transport = '150';
-    } else if (selectedValue == 'เขตห้วยขวาง') {
+      county = 'เขตบางกอกใหญ่';
+    } else if (selectedValue == 'เขตห้วยขวาง(ค่าส่ง+190บาท)') {
       transport = '190';
-    } else if (selectedValue == 'เขตคลองสาน') {
+      county = 'เขตห้วยขวาง';
+    } else if (selectedValue == 'เขตคลองสาน(ค่าส่ง+170บาท)') {
       transport = '170';
-    } else if (selectedValue == 'เขตตลิ่งชัน') {
+      county = 'เขตคลองสาน';
+    } else if (selectedValue == 'เขตตลิ่งชัน(ค่าส่ง+120บาท)') {
       transport = '120';
-    } else if (selectedValue == 'เขตบางกอกน้อย') {
+      county = 'เขตตลิ่งชัน';
+    } else if (selectedValue == 'เขตบางกอกน้อย(ค่าส่ง+150บาท)') {
       transport = '150';
-    } else if (selectedValue == 'เขตบางขุนเทียน') {
+      county = 'เขตบางกอกน้อย';
+    } else if (selectedValue == 'เขตบางขุนเทียน(ค่าส่ง+140บาท)') {
       transport = '140';
-    } else if (selectedValue == 'เขตภาษีเจริญ') {
+      county = 'เขตบางขุนเทียน';
+    } else if (selectedValue == 'เขตภาษีเจริญ(ค่าส่ง+120บาท)') {
       transport = '120';
-    } else if (selectedValue == 'เขตหนองแขม') {
+      county = 'เขตภาษีเจริญ';
+    } else if (selectedValue == 'เขตหนองแขม(ค่าส่ง+120บาท)') {
       transport = '120';
-    } else if (selectedValue == 'เขตราษฎร์บูรณะ') {
+      county = 'เขตหนองแขม';
+    } else if (selectedValue == 'เขตราษฎร์บูรณะ(ค่าส่ง+150บาท)') {
       transport = '150';
-    } else if (selectedValue == 'เขตบางพลัด') {
+      county = 'เขตราษฎร์บูรณะ';
+    } else if (selectedValue == 'เขตบางพลัด(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตดินแดง') {
+      county = 'เขตบางพลัด';
+    } else if (selectedValue == 'เขตดินแดง(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตบึงกุ่ม') {
+      county = 'เขตดินแดง';
+    } else if (selectedValue == 'เขตบึงกุ่ม(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตสาทร') {
+      county = 'เขตบึงกุ่ม';
+    } else if (selectedValue == 'เขตสาทร(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตบางซื่อ') {
+      county = 'เขตสาทร';
+    } else if (selectedValue == 'เขตบางซื่อ(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตจตุจักร') {
+      county = 'เขตบางซื่อ';
+    } else if (selectedValue == 'เขตจตุจักร(ค่าส่ง+200บาท)') {
       transport = '200';
-    } else if (selectedValue == 'เขตบางคอแหลม') {
+      county = 'เขตจตุจักร';
+    } else if (selectedValue == 'เขตบางคอแหล(ค่าส่ง+160บาท)') {
       transport = '160';
-    } else if (selectedValue == 'เขตประเวศ') {
+      county = 'เขตบางคอแหลม';
+    } else if (selectedValue == 'เขตประเวศ(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตคลองเตย') {
+      county = 'เขตประเวศ';
+    } else if (selectedValue == 'เขตคลองเตย(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตสวนหลวง') {
+      county = 'เขตคลองเตย';
+    } else if (selectedValue == 'เขตสวนหลวง(ค่าส่ง+200บาท)') {
       transport = '200';
-    } else if (selectedValue == 'เขตจอมทอง') {
+      county = 'เขตสวนหลวง';
+    } else if (selectedValue == 'เขตจอมทอง(ค่าส่ง+120บาท)') {
       transport = '120';
-    } else if (selectedValue == 'เขตดอนเมือง') {
+      county = 'เขตจอมทอง';
+    } else if (selectedValue == 'เขตดอนเมือง(ค่าส่ง+250บาท)') {
       transport = '250';
-    } else if (selectedValue == 'เขตราชเทวี') {
+      county = 'เขตดอนเมือง';
+    } else if (selectedValue == 'เขตราชเทวี(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตลาดพร้าว') {
+      county = 'เขตราชเทวี';
+    } else if (selectedValue == 'เขตลาดพร้าว(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตวัฒนา') {
+      county = 'เขตลาดพร้าว';
+    } else if (selectedValue == 'เขตวัฒนา(ค่าส่ง+180บาท)') {
       transport = '180';
-    } else if (selectedValue == 'เขตบางแค') {
+      county = 'เขตวัฒนา';
+    } else if (selectedValue == 'เขตบางแค(ค่าส่ง+100บาท)') {
       transport = '100';
-    } else if (selectedValue == 'เขตหลักสี่') {
+      county = 'เขตบางแค';
+    } else if (selectedValue == 'เขตหลักสี่(ค่าส่ง+220บาท)') {
       transport = '220';
-    } else if (selectedValue == 'เขตสายไหม') {
+      county = 'เขตหลักสี่';
+    } else if (selectedValue == 'เขตสายไหม(ค่าส่ง+250บาท)') {
       transport = '250';
-    } else if (selectedValue == 'เขตคันนายาว') {
+      county = 'เขตสายไหม';
+    } else if (selectedValue == 'เขตคันนายาว(ค่าส่ง+240บาท)') {
       transport = '240';
-    } else if (selectedValue == 'เขตสะพานสูง') {
+      county = 'เขตคันนายาว';
+    } else if (selectedValue == 'เขตสะพานสูง(ค่าส่ง+240บาท)') {
       transport = '240';
-    } else if (selectedValue == 'เขตวังทองหลาง') {
+      county = 'เขตสะพานสูง';
+    } else if (selectedValue == 'เขตวังทองหลาง(ค่าส่ง+200บาท)') {
       transport = '200';
-    } else if (selectedValue == 'เขตคลองสามวา') {
+      county = 'เขตวังทองหลาง';
+    } else if (selectedValue == 'เขตคลองสามวา(ค่าส่ง+270บาท)') {
       transport = '270';
-    } else if (selectedValue == 'เขตบางนา') {
+      county = 'เขตคลองสามวา';
+    } else if (selectedValue == 'เขตบางนา(ค่าส่ง+200บาท)') {
       transport = '200';
-    } else if (selectedValue == 'เขตทวีวัฒนา') {
+      county = 'เขตบางนา';
+    } else if (selectedValue == 'เขตทวีวัฒนา(ค่าส่ง+120บาท)') {
       transport = '120';
-    } else if (selectedValue == 'เขตทุ่งครุ') {
+      county = 'เขตทวีวัฒนา';
+    } else if (selectedValue == 'เขตทุ่งครุ(ค่าส่ง+140บาท)') {
       transport = '140';
-    } else if (selectedValue == 'เขตบางบอน') {
+      county = 'เขตทุ่งครุ';
+    } else if (selectedValue == 'เขตบางบอน(ค่าส่ง+120บาท)') {
       transport = '120';
+      county = 'เขตบางบอน';
     } 
  
     else {
       transport = '350';
+      county = 'เขตอื่น';
     }
   }
   
@@ -393,9 +442,9 @@ Future<Null> checkTransport() async {
           color: Color.fromARGB(255, 255, 155, 135),
           onPressed: () {
             checkTransport();
-            print('$address $district $selectedValue กทม. $zipcode ค่าส่ง $transport บาท');
+            print('$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
             print(
-                '## name = $name, address = $address $district $selectedValue $zipcode, transport = $transport, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+                '## name = $name($nickname), address = $address $district $county $zipcode, transport = $transport, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
             if (name == null ||
                 name!.isEmpty ||
                 user == null ||
@@ -437,8 +486,10 @@ Future<Null> checkTransport() async {
       avatar = '/champshop/Avatar/$nameAvatar';
     });
     print(
-        '## name = $name, address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+        '## name = $name($nickname), address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
     // print('### process Upload Avatar ==> $avatar');
+    
+    // print('$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
     registerThread();
   }
 
@@ -449,7 +500,7 @@ Future<Null> checkTransport() async {
       Response response = await Dio().get(url);
       if (response.toString() == 'null') {
         uploadpictureThread();
-        // registerThread();
+     
       } else {
         normalDialog(
             context, 'User นี่ $user มีคนอื่นใช้ไปแล้ว กรุณาเปลี่ยน User ใหม่');
@@ -459,10 +510,10 @@ Future<Null> checkTransport() async {
 
   Future<Null> registerThread() async {
 
-      String sumAddress = '$address $district $selectedValue กทม. $zipcode';
+      String sumAddress = '$address $district $county กทม. $zipcode';
 
     String url =
-        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&User=$user&Password=$password&ChooseType=$chooseType&Address=$address&Phone=$phone&UrlPicture=$avatar&District=$district&County=$selectedValue&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
+        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&Nickname=$nickname&User=$user&Password=$password&ChooseType=$chooseType&Address=$address&Phone=$phone&UrlPicture=$avatar&District=$district&County=$county&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
 
     try {
       Response response = await Dio().get(url);
@@ -483,6 +534,36 @@ Future<Null> checkTransport() async {
           decoration: InputDecoration(
             prefixIcon:
                 Icon(Icons.person, color: Color.fromARGB(255, 255, 181, 146)),
+            labelStyle: TextStyle(color: MyStyle().fontColor1),
+            labelText: 'ชื่อ-นามสกุล',
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromARGB(255, 244, 54, 54)),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromARGB(255, 253, 192, 159)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      );
+
+      Widget nameForm2() => Container(
+        width: 300.0,
+        child: TextField(
+          onChanged: (value) => nickname = value.trim(),
+          decoration: InputDecoration(
+            prefixIcon:
+                Icon(Icons.person_pin, color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'ชื่อผู้ใช้',
             filled: true,

@@ -9,18 +9,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps_indicator/steps_indicator.dart';
 
-import '../model/order_model.dart';
-import '../utility/my_constant.dart';
-import '../utility/normal_dialog.dart';
+import '../../model/order_model.dart';
+import '../../utility/my_constant.dart';
+import '../../utility/normal_dialog.dart';
+// import '../model/order_model.dart';
+// import '../utility/my_constant.dart';
+// import '../utility/normal_dialog.dart';
 
-class ShowStatusProductOrder extends StatefulWidget {
-  const ShowStatusProductOrder({Key? key}) : super(key: key);
+class ShowWaitPayMent extends StatefulWidget {
+  const ShowWaitPayMent({Key? key}) : super(key: key);
 
   @override
-  State<ShowStatusProductOrder> createState() => _ShowStatusProductOrderState();
+  State<ShowWaitPayMent> createState() => _ShowWaitPayMentState();
 }
 
-class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
+class _ShowWaitPayMentState extends State<ShowWaitPayMent> {
   String? idUser, statusShow, slip;
   bool statusOrder = true;
   bool? haveData;
@@ -46,7 +49,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
   Future<Null> readOrderFromIdUser() async {
     if (idUser != null) {
       String url =
-          '${MyConstant().domain}/champshop/getOrderWhereIdUser.php?isAdd=true&idUser=$idUser';
+          '${MyConstant().domain}/champshop/getOrderWhereIdUserWaitPayment.php?isAdd=true&idUser=$idUser';
 
       Response response = await Dio().get(url);
       // print('respose ######==> $response');
@@ -102,23 +105,16 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
     }
   }
 
-  late Timer timer;
-  int counter = 0;
+  // get index => null;
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
     findUser();
-     timer = Timer.periodic(Duration(seconds: 30), (Timer t) => RefreshPage());
+    //  _timer = Timer.periodic(Duration(seconds: 1),(_) => (context as Element).reassemble(););
   }
 
-  Future<Null> RefreshPage() async {
-       Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowStatusProductOrder(),
-                  ),
-                );
-  }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -128,201 +124,187 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('สถานะการจัดส่ง',
+            Text('รอชำระเงิน',
                 style: TextStyle(
                     fontSize: 20, color: Color.fromARGB(255, 255, 173, 41))),
             Text('')
           ],
         ),
       ),
-      body: statusOrder
-          ? buildNonOrder()
-          : RefreshIndicator(
-              color: Colors.white,
-              backgroundColor: Color.fromARGB(255, 255, 173, 41),
-              onRefresh: () async {
-                Future<void>.delayed(const Duration(seconds: 3));
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowStatusProductOrder(),
-                  ),
-                );
-                // Navigator.pop(context);
-              },
-              child: buildContent()),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrderHistoryShop(),
+            ),
+          );
+        },
+        label: const Text('ประวัติการสั่งซื้อ'),
+        icon: const Icon(Icons.av_timer),
+        backgroundColor: Color.fromARGB(255, 255, 173, 41),
+      ),
+      body: statusOrder ? buildNonOrder() : buildContent(),
     );
   }
 
   Widget buildContent() => ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: orderModels.length,
-        itemBuilder: (context, index) => Card(
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                height: 40,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            amount = 1;
+          },
+          child: Card(
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: 40,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildDateTimeOrder(index),
+                        Container(
+                          height: 30,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              RaisedButton(
+                                onPressed: () {
+                                  amount = 1;
+                                  payMent(index);
+                                  // print(orderModels[index].id!);
+                                },
+                                child: Text('แจ้งชำระ'),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                buildListVireMenuProduct(index),
+                Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: 30,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      buildDateTimeOrder(index),
-                      Container(
-                        height: 30,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [],
+                          children: [
+                            Icon(
+                              Icons.list_alt,
+                              color: Color.fromARGB(255, 255, 173, 41),
+                            ),
+                            Text(' ข้อมูลการจัดส่ง'),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              buildListVireMenuProduct(index),
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                height: 30,
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.list_alt,
-                            color: Color.fromARGB(255, 255, 173, 41),
-                          ),
-                          Text(' ข้อมูลการจัดส่ง'),
-                        ],
+                Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  // height: 80,
+                  color: Color.fromARGB(255, 255, 241, 227),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('สถานะการแจ้งชำระ',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                            Spacer(),
+                            orderModels[index].slip! == 'none'
+                                ? Text('ยังไม่ได้ส่งสลิป',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 224, 64, 64)))
+                                : Text('ส่งสลิปแล้ว',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 29, 172, 36)))
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 20, right: 20),
+                      //   child: Row(
+                      //     children: [
+                      //       Text('สถานะการจัดส่ง',
+                      //           style: TextStyle(
+                      //               color: Color.fromARGB(255, 105, 105, 105))),
+                      //       Spacer(),
+                      //       orderModels[index].status! == 'รอยืนยัน'
+                      //           ? Text(
+                      //               'รอยืนยัน',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color:
+                      //                       Color.fromARGB(255, 221, 71, 71)),
+                      //             )
+                      //           : Text(
+                      //               'กำลังจัดส่ง',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color:
+                      //                       Color.fromARGB(255, 244, 177, 54)),
+                      //             ),
+                      //     ],
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('ค่าจัดส่ง',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                            Spacer(),
+                            Text('${orderModels[index].transport!} บาท',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('ยอดชำระเงินทั้งหมด',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color.fromARGB(255, 33, 33, 33))),
+                            Spacer(),
+                            Text('${orderModels[index].idRider!} บาท',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 255, 173, 41),
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                // height: 80,
-                color: Color.fromARGB(255, 255, 241, 227),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('สถานะการชำระ',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          orderModels[index].slip! == 'none'
-                              ? Text('เก็บเงินปลายทาง',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 64, 216, 224)))
-                              : Text('โอนเงิน',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 29, 172, 36)))
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('สถานะการจัดส่ง',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          buildStatus(index),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('ค่าจัดส่ง',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          Text('${orderModels[index].transport!} บาท',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('ยอดชำระเงินทั้งหมด',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 33, 33, 33))),
-                          Spacer(),
-                          showTotalBath(index),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
-
-  Text showTotalBath(int index) {
-    
-     String formatAmount() {
-      String price = orderModels[index].idRider!;
-      String priceInText = "";
-      int counter = 0;
-      for (int i = (price.length - 1); i >= 0; i--) {
-        counter++;
-        String str = price[i];
-        if ((counter % 3) != 0 && i != 0) {
-          priceInText = "$str$priceInText";
-        } else if (i == 0) {
-          priceInText = "$str$priceInText";
-        } else {
-          priceInText = ",$str$priceInText";
-        }
-      }
-      return priceInText.trim();
-    }
-    return Text('${formatAmount()} บาท',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 255, 173, 41),
-                              fontWeight: FontWeight.bold,
-                            ));
-  }
-
-  Container buildStatus(int index) {
-    return Container(
-      child: orderModels[index].status! == 'รอยืนยัน'
-          ? Text(
-              'รอยืนยัน',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 221, 71, 71)),
-            )
-          : Text(
-              'กำลังจัดส่ง',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 244, 177, 54)),
-            ),
-    );
-  }
 
   ListView buildListVireMenuProduct(int index) => ListView.builder(
         shrinkWrap: true,
@@ -348,7 +330,11 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
                               ))),
                       Row(
                         children: [
-                          showProductBath(index, index2),
+                          Text('${listPrices[index][index2]} บาท.',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Color.fromARGB(255, 170, 170, 170))),
                           Spacer(),
                           Text('x ${listAmounts[index][index2]} ชิ้น',
                               style: TextStyle(
@@ -398,33 +384,6 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
           ),
         ),
       );
-
-  Text showProductBath(int index, int index2) {
- String formatAmount() {
-      String price = listPrices[index][index2];
-      String priceInText = "";
-      int counter = 0;
-      for (int i = (price.length - 1); i >= 0; i--) {
-        counter++;
-        String str = price[i];
-        if ((counter % 3) != 0 && i != 0) {
-          priceInText = "$str$priceInText";
-        } else if (i == 0) {
-          priceInText = "$str$priceInText";
-        } else {
-          priceInText = ",$str$priceInText";
-        }
-      }
-      return priceInText.trim();
-    }
-
-
-    return Text('${formatAmount()} บาท.',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Color.fromARGB(255, 170, 170, 170)));
-  }
 
   Future<Null> payMent(int index) async {
     showDialog(

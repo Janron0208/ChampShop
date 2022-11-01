@@ -2,25 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:champshop/widget/user/order_history_shop.dart';
+
+import 'package:champshop/screens/user/main_buyer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:steps_indicator/steps_indicator.dart';
 
-import '../model/order_model.dart';
-import '../utility/my_constant.dart';
-import '../utility/normal_dialog.dart';
+import '../../model/order_model.dart';
+import '../../utility/my_constant.dart';
+import '../../utility/normal_dialog.dart';
 
-class ShowStatusProductOrder extends StatefulWidget {
-  const ShowStatusProductOrder({Key? key}) : super(key: key);
+class OrderStatus extends StatefulWidget {
+  const OrderStatus({Key? key}) : super(key: key);
 
   @override
-  State<ShowStatusProductOrder> createState() => _ShowStatusProductOrderState();
+  State<OrderStatus> createState() => _OrderStatusState();
 }
 
-class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
+class _OrderStatusState extends State<OrderStatus> {
   String? idUser, statusShow, slip;
   bool statusOrder = true;
   bool? haveData;
@@ -35,6 +34,31 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
   int amount = 1;
   File? file;
   String? id;
+  late Timer timer;
+  int counter = 0;
+
+  List<String> changeArrey(String string) {
+    List<String> list = [];
+
+    String myString = string.substring(1, string.length - 1);
+    // print('myString = $myString');
+    list = myString.split(',');
+    int index = 0;
+    for (var string in list) {
+      list[index] = string.trim();
+      index++;
+    }
+    // print('list *****=>> $list');
+    return list;
+  }
+
+  Future<Null> RefreshPage() async {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const OrderStatus(),
+      ),
+    );
+  }
 
   Future<Null> findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -102,54 +126,73 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
     }
   }
 
-  late Timer timer;
-  int counter = 0;
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     findUser();
      timer = Timer.periodic(Duration(seconds: 30), (Timer t) => RefreshPage());
   }
 
-  Future<Null> RefreshPage() async {
-       Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowStatusProductOrder(),
-                  ),
-                );
-  }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Color.fromARGB(255, 255, 173, 41)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text('สถานะการจัดส่ง',
-                style: TextStyle(
-                    fontSize: 20, color: Color.fromARGB(255, 255, 173, 41))),
-            Text('')
-          ],
-        ),
-      ),
+      backgroundColor: Color.fromARGB(255, 237, 237, 237),
       body: statusOrder
           ? buildNonOrder()
-          : RefreshIndicator(
+          : Stack(
+            children: [
+              
+              Padding(
+                padding: const EdgeInsets.only(top: 55,bottom: 20),
+                child: RefreshIndicator(
+                    color: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 255, 173, 41),
+                    onRefresh: () async {
+                      Future<void>.delayed(const Duration(seconds: 3));
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const OrderStatus(),
+                        ),
+                      );
+                      // Navigator.pop(context);
+                    },
+                    child: buildContent()),
+              ),
+                   Container(
               color: Colors.white,
-              backgroundColor: Color.fromARGB(255, 255, 173, 41),
-              onRefresh: () async {
-                Future<void>.delayed(const Duration(seconds: 3));
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowStatusProductOrder(),
-                  ),
-                );
-                // Navigator.pop(context);
-              },
-              child: buildContent()),
+              width: MediaQuery.of(context).size.width * 1,
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 35,
+                      ),
+                      color: Color.fromARGB(255, 255, 173, 41),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainBuyer()),
+                            (Route<dynamic> route) => false);
+                      },
+                    ),
+                    Text('      สถานะการจัดส่ง',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 255, 173, 41))),
+                    Text('                '),
+                  ],
+                ),
+              ),
+            ),
+            ],
+          ),
     );
   }
 
@@ -456,7 +499,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
                         ),
                       ],
                     ),
-                    showImage(),
+                 
                   ],
                 ),
                 content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -480,7 +523,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
                             // print(
                             //     'Order ${productModels[index].nameProduct!} Amount = $amount');
                             // confirmDialog();
-                            editThread(index);
+                          
                             // findUser();
                             showToast('แจ้งชำระเงินสำเร็จ');
                           },
@@ -510,84 +553,8 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
             ));
   }
 
-  Widget showImage() => Container(
-        margin: EdgeInsetsDirectional.only(top: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add_a_photo),
-              onPressed: () => chooseImage(ImageSource.camera),
-            ),
-            // Container(
-            //   width: 100.0,
-            //   height: 100.0,
-            //   child: file == null
-            //       ? Image.asset('images/product.png')
-            //       : Image.file(
-            //           file!,
-            //           fit: BoxFit.cover,
-            //         ),
-            // ),
-            Container(
-              width: 100.0,
-              height: 100.0,
-              child: file == null
-                  ? Image.asset('images/product.png', fit: BoxFit.cover)
-                  : Image.file(
-                      file!,
-                      fit: BoxFit.cover,
-                    ),
-            ),
-            IconButton(
-              icon: Icon(Icons.add_photo_alternate),
-              onPressed: () => chooseImage(ImageSource.gallery),
-            ),
-          ],
-        ),
-      );
-
-  Future<Null> chooseImage(ImageSource source) async {
-    try {
-      var object = await ImagePicker()
-          .getImage(source: source, maxWidth: 800.0, maxHeight: 800.0);
-
-      setState(() {
-        file = File(object!.path);
-      });
-    } catch (e) {}
-  }
-
-  Future<Null> editThread(int index) async {
-    Random random = Random();
-    int i = random.nextInt(100000);
-    String nameFile = 'addSlip$i.jpg';
-
-    Map<String, dynamic> map = Map();
-    map['file'] = await MultipartFile.fromFile(file!.path, filename: nameFile);
-    FormData formData = FormData.fromMap(map);
-
-    String urlUpload = '${MyConstant().domain}/champshop/saveSlip.php';
-    print('### $nameFile');
-
-    await Dio().post(urlUpload, data: formData).then((value) async {
-      slip = '/champshop/Slip/$nameFile';
-      print('slip = $slip');
-      print(orderModels[index].id!);
-      id = orderModels[index].id!;
-
-      String url =
-          '${MyConstant().domain}/champshop/insertSlipWhereIdOrder.php?isAdd=true&id=$id&Slip=$slip';
-
-      Response response = await Dio().get(url);
-      if (response.toString() == 'true') {
-        print('## Upload Slip Success');
-        // Navigator.pop(context);
-      } else {
-        normalDialog(context, 'ยังอัพเดทไม่ได้กรุณาลองใหม่');
-      }
-    });
-  }
+ 
+ 
 
   Future<Null> confirmDialog() async {
     showDialog(
@@ -648,52 +615,8 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
             TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
       ));
 
-  List<String> changeArrey(String string) {
-    List<String> list = [];
-
-    String myString = string.substring(1, string.length - 1);
-    // print('myString = $myString');
-    list = myString.split(',');
-    int index = 0;
-    for (var string in list) {
-      list[index] = string.trim();
-      index++;
-    }
-    // print('list *****=>> $list');
-    return list;
-  }
-
-  Widget buildStepIndicator(int index) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            StepsIndicator(
-              selectedStepSize: 30,
-              selectedStepColorIn: Color.fromARGB(255, 255, 168, 162),
-              selectedStepBorderSize: 0,
-              unselectedStepSize: 10,
-              unselectedStepColorIn: Color.fromARGB(255, 255, 212, 162),
-              unselectedStepBorderSize: 0,
-              undoneLineColor: Color.fromARGB(255, 255, 212, 162),
-              doneLineColor: Color.fromARGB(255, 255, 168, 162),
-              lineLength: 100,
-              nbSteps: 3,
-              selectedStep: index,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('รอจัดส่ง'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Text('กำลังจัดส่ง'),
-                ),
-                Text('จัดส่งสำเร็จ'),
-              ],
-            )
-          ],
-        ),
-      );
+ 
+  
 
   void showToast(String? string) {
     final scaffold = ScaffoldMessenger.of(context);

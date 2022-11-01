@@ -57,7 +57,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
     String url =
         '${MyConstant().domain}/champshop/getUserWhereChooseType.php?isAdd=true&ChooseType=Shop';
     await Dio().get(url).then((value) {
-      // print('$value');
+      print('$value');
       var result = json.decode(value.data);
       int index = 0;
       for (var map in result) {
@@ -129,6 +129,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
+                
                 child: Column(
                   children: [
                     ClipRRect(
@@ -183,7 +184,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        'https://www.creativefabrica.com/wp-content/uploads/2018/08/Sale-Discount-Shoppping-Shop-Logo-by-Mansel-Brist-2.jpg',
+                        'https://inwfile.com/s-o/c98akr.jpg',
                         width: double.infinity,
                         height: 120,
                         fit: BoxFit.cover,

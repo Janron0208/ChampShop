@@ -2,6 +2,7 @@ class UserModel {
   String? id;
   String? chooseType;
   String? name;
+  String? nickname;
   String? user;
   String? password;
   String? nameShop;
@@ -21,6 +22,7 @@ class UserModel {
       {this.id,
       this.chooseType,
       this.name,
+      this.nickname,
       this.user,
       this.password,
       this.nameShop,
@@ -40,6 +42,7 @@ class UserModel {
     id = json['id'];
     chooseType = json['ChooseType'];
     name = json['Name'];
+    nickname = json['Nickname'];
     user = json['User'];
     password = json['Password'];
     nameShop = json['NameShop'];
@@ -61,6 +64,7 @@ class UserModel {
     data['id'] = this.id;
     data['ChooseType'] = this.chooseType;
     data['Name'] = this.name;
+    data['Nickname'] = this.nickname;
     data['User'] = this.user;
     data['Password'] = this.password;
     data['NameShop'] = this.nameShop;

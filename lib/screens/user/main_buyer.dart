@@ -1,21 +1,18 @@
 import 'dart:convert';
 
 import 'package:champshop/screens/show_cart.dart';
-import 'package:champshop/screens/show_shop_product_menu.dart';
-import 'package:champshop/widget/about_shop.dart';
-import 'package:champshop/widget/product/show_shop_type_all.dart';
-import 'package:champshop/widget/show_list_shop_all.dart';
+
 import 'package:champshop/widget/user/show_first_page.dart';
 import 'package:champshop/widget/user/show_menu_all.dart';
+import 'package:champshop/widget/user/show_setting.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/user_model.dart';
 import '../../utility/my_constant.dart';
-import '../../utility/my_style.dart';
+
 import '../../widget/show_status_product_order.dart';
-import '../../widget/user/show_setting.dart';
 
 class MainBuyer extends StatefulWidget {
   const MainBuyer({Key? key}) : super(key: key);
@@ -28,6 +25,7 @@ class _MainBuyerState extends State<MainBuyer> {
   List<UserModel> userModels = [];
   UserModel? userModel;
   String? nameUser;
+  String? nicknameUser;
   String? phoneUser;
   String? addressUser;
   String? lat;
@@ -44,6 +42,7 @@ class _MainBuyerState extends State<MainBuyer> {
     // userModel = widget.userModel;
     findUser();
     readShop();
+  
   }
 
   Future<Null> readShop() async {
@@ -57,7 +56,7 @@ class _MainBuyerState extends State<MainBuyer> {
         UserModel model = UserModel.fromJson(map);
         String? nameShop = model.nameShop;
         if (nameShop!.isNotEmpty) {
-          print('NameShop = ${model.nameShop}');
+          // print('NameShop = ${model.nameShop}');
           setState(() {
             userModels.add(model);
             // shopCards.add(createCard(model, index));
@@ -71,22 +70,23 @@ class _MainBuyerState extends State<MainBuyer> {
   final _pageOptions = [
     ShowFirstPage(),
     ShowMenuAll(),
-    ShowCart(),
-    ShowStatusProductOrder(),
-    
+    // ShowCart(),
+    ShowSetting()
   ];
 
   Future<Null> findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       nameUser = preferences.getString('Name');
+      nicknameUser = preferences.getString('Nickname');
       phoneUser = preferences.getString('Phone');
       addressUser = preferences.getString('Address');
       lat = preferences.getString('Lat');
       lng = preferences.getString('Lng');
       slip = preferences.getString('Slip');
       urlPicture = preferences.getString('UrlPicture');
-      print('$nameUser $phoneUser $addressUser $lat $lng $slip $urlPicture');
+      print(
+          '$nameUser $nicknameUser $phoneUser $addressUser $lat $lng $urlPicture');
     });
   }
 
@@ -126,17 +126,16 @@ class _MainBuyerState extends State<MainBuyer> {
               activeIcon: Icon(Icons.shopping_bag, size: 30),
               label: 'ร้านค้า',
             ),
-             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined, size: 30),
-              activeIcon: Icon(Icons.shopping_cart, size: 30),
-              label: 'ตะกร้า',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.car_crash_outlined, size: 30),
+            //   activeIcon: Icon(Icons.car_crash, size: 30),
+            //   label: 'จัดส่ง',
+            // ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.car_crash_outlined, size: 30),
-              label: 'จัดส่ง',
-              activeIcon: Icon(Icons.car_crash, size: 30),
+              icon: Icon(Icons.person_outlined, size: 30),
+              label: 'ผู้ใช้',
+              activeIcon: Icon(Icons.person ,size: 30),
             ),
-           
           ],
           unselectedFontSize: 10,
           selectedFontSize: 15,

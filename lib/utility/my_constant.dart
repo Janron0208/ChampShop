@@ -6,6 +6,7 @@ class MyConstant {
   String keyId = 'id';
   String keyType = 'ChooseType';
   String keyName = 'Name';
+  String keyNickname = 'Nickname';
   String keyPhone = 'Phone';
   String keyAddress = 'Address';
   String keyLat = 'Lat';

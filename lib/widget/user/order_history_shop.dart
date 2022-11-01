@@ -126,20 +126,37 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
   ),
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text('ประวัติการสั่งซื้อ',
-            style: TextStyle(
-                // fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Color.fromARGB(255, 255, 173, 41))),
+        title: Row(   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('ประวัติการสั่งซื้อ',
+                style: TextStyle(
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 255, 173, 41))),Text('')
+          ],
+        ),
       ),
       body: statusOrder
-          ? MyStyle().showProgress()
+          ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Text(
+        'ไม่มีรายการสั่งซื้อ',
+        style:
+            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
+      )],
+                  ),
+                )
           : haveData!
               ? buildContent()
               : Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text('ไม่มีคำสั่งซื้อ')],
+                    children: [Text(
+        'ไม่มีรายการสั่งซื้อ',
+        style:
+            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
+      )],
                   ),
                 ),
     );

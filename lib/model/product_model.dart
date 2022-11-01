@@ -2,6 +2,8 @@ class ProductModel {
   String? id;
   String? idShop;
   String? nameProduct;
+  String? brand;
+  String? model;
   String? size;
   String? color;
   String? stock;
@@ -17,6 +19,8 @@ class ProductModel {
       {this.id,
       this.idShop,
       this.nameProduct,
+      this.brand,
+      this.model,
       this.size,
       this.color,
       this.stock,
@@ -32,6 +36,8 @@ class ProductModel {
     id = json['id'];
     idShop = json['idShop'];
     nameProduct = json['NameProduct'];
+    brand = json['Brand'];
+    model = json['Model'];
     size = json['Size'];
     color = json['Color'];
     stock = json['Stock'];
@@ -49,6 +55,8 @@ class ProductModel {
     data['id'] = this.id;
     data['idShop'] = this.idShop;
     data['NameProduct'] = this.nameProduct;
+    data['Brand'] = this.brand;
+    data['Model'] = this.model;
     data['Size'] = this.size;
     data['Color'] = this.color;
     data['Stock'] = this.stock;

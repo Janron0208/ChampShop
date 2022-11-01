@@ -1,27 +1,42 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 // import 'dart:html';
+import 'package:champshop/screens/user/main_buyer.dart';
 import 'package:champshop/utility/my_style.dart';
-import 'package:champshop/widget/steppayment/order_payment.dart';
+import 'package:champshop/widget/show_status_product_order.dart';
+import 'package:champshop/widget/user/show_information_shop.dart';
+import 'package:champshop/widget/user/show_owner_shop.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/cart_model.dart';
-import '../model/user_model.dart';
-import '../utility/my_constant.dart';
-import '../utility/normal_dialog.dart';
-import '../utility/sqlite_helper.dart';
+import '../../model/cart_model.dart';
+import '../../model/user_model.dart';
+import '../../screens/show_cart.dart';
+import '../../utility/my_constant.dart';
+import '../../utility/normal_dialog.dart';
+import '../../utility/sqlite_helper.dart';
+import '../about_shop.dart';
+import 'order_success.dart';
 
-class ShowCart extends StatefulWidget {
-  const ShowCart({Key? key}) : super(key: key);
+// import '../model/cart_model.dart';
+// import '../model/user_model.dart';
+// import '../utility/my_constant.dart';
+// import '../utility/normal_dialog.dart';
+// import '../utility/sqlite_helper.dart';
+
+class OrderPayment extends StatefulWidget {
+  const OrderPayment({Key? key}) : super(key: key);
 
   @override
-  State<ShowCart> createState() => _ShowCartState();
+  State<OrderPayment> createState() => _OrderPaymentState();
 }
 
-class _ShowCartState extends State<ShowCart> {
+class _OrderPaymentState extends State<OrderPayment> {
   List<CartModel> cartModels = [];
   List<UserModel> userModels = [];
   UserModel? userModel;
@@ -38,8 +53,10 @@ class _ShowCartState extends State<ShowCart> {
 
   String? sumAddress;
   String? transport;
-  String? nameUser, urlPicture;
+  String? nameUser, urlPicture, nickname;
   String? district, county, zipcode;
+
+  File? file;
 
   @override
   void initState() {
@@ -68,6 +85,7 @@ class _ShowCartState extends State<ShowCart> {
       setState(() {
         userModel = UserModel.fromJson(map);
         nameUser = userModel?.name;
+        nickname = userModel?.nickname;
         address = userModel?.address;
         phone = userModel?.phone;
         urlPicture = userModel?.urlPicture;
@@ -112,7 +130,7 @@ class _ShowCartState extends State<ShowCart> {
         String? transport = model.transport;
         int sumtran = int.parse(transport!);
         setState(() {
-          print('รวม ${total}');
+          // print('รวม ${total}');
           status = false;
           cartModels = object;
           total = total + sumInt;
@@ -132,6 +150,8 @@ class _ShowCartState extends State<ShowCart> {
     }
   }
 
+  String? selectedValue = 'เก็บเงินปลายทาง';
+
   @override
   Widget build(BuildContext context) {
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
@@ -140,152 +160,310 @@ class _ShowCartState extends State<ShowCart> {
         iconTheme: IconThemeData(color: Color.fromARGB(255, 255, 173, 41)),
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('ตะกร้าสินค้า',
+            Text('ชำระเงิน',
                 style: TextStyle(
                     fontSize: 20, color: Color.fromARGB(255, 255, 173, 41))),
-                    Text('')
+            Text('')
           ],
         ),
       ),
       body: status
           ? buildNonOrder()
           : Stack(
-            children: [
-              SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 60),
-                        child: buildContent(),
-                      ),
-                      // Spacer(),
-                      MyStyle().mySizebox0(),
-                      // Container(
-                      //   height: 60,
-                      //   color: Color.fromARGB(255, 255, 255, 255),
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(left: 20),
-                      //     child: Row(
-                      //       children: [
-                      //         Container(
-                      //           width: 215,
-                      //           child: Column(
-                      //             mainAxisAlignment: MainAxisAlignment.center,
-                      //             children: [
-                      //               Row(
-                      //                 mainAxisAlignment: MainAxisAlignment.end,
-                      //                 children: [
-                      //                   Text('ยอดชำระเงินทั้งหมด'),
-                      //                 ],
-                      //               ),
-                      //               Row(
-                      //                 mainAxisAlignment: MainAxisAlignment.end,
-                      //                 children: [
-                      //                   buildSumTotal(),
-                      //                   Text(' บาท',
-                      //                       style: TextStyle(
-                      //                           color: Color.fromARGB(
-                      //                               255, 255, 173, 41),
-                      //                           fontSize: 18,
-                      //                           fontWeight: FontWeight.bold))
-                      //                 ],
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         Spacer(),
-                      //         InkWell(
-                      //           onTap: () {
-                      //             // orderThread();
-                      //             // confirmOrderThread();
-                      //              Navigator.push(context,
-                      //   MaterialPageRoute(builder: (context) => OrderPayment()));
-                      //           },
-                      //           child: Container(
-                      //             width: 150,
-                      //             height: 60,
-                      //             color: Color.fromARGB(255, 255, 173, 41),
-                      //             child: Center(
-                      //                 child: Text('ชำระเงิน',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 19,
-                      //                         color: Color.fromARGB(
-                      //                             255, 255, 255, 255)))),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),Column(mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                            height: 60,
-                            color: Color.fromARGB(255, 255, 255, 255),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 60),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Container(
+                        //   width: MediaQuery.of(context).size.width * 1,
+                        //   color: Colors.amber,
+                        //   height: 5,
+                        // ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 1,
+                            color: Colors.white,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Row(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Column(
                                 children: [
-                                  Container(
-                                    width: 215,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text('ยอดชำระเงินทั้งหมด'),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            buildSumTotal(),
-                                            Text(' บาท',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 255, 173, 41),
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold))
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'ชื่อผู้รับ : ',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 173, 41),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text('${nameUser}(${nickname})',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 83, 83, 83))),
+                                    ],
                                   ),
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      // orderThread();
-                                      // confirmOrderThread();
-                                       Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => OrderPayment()));
-                                    },
-                                    child: Container(
-                                      width: 150,
-                                      height: 60,
-                                      color: Color.fromARGB(255, 255, 173, 41),
-                                      child: Center(
-                                          child: Text('ชำระเงิน',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 19,
-                                                  color: Color.fromARGB(
-                                                      255, 255, 255, 255)))),
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text('เบอร์โทรศัพท์ : ',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 173, 41),
+                                              fontWeight: FontWeight.bold)),
+                                      Text('${phone}',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 83, 83, 83))),
+                                    ],
                                   ),
+                                  Text('${address}',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83))),
                                 ],
                               ),
                             ),
                           ),
+                        ),
+
+                        buildContent(),
+                        // Spacer(),
+                        MyStyle().mySizebox0(),
+
+                        Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Text(
+                                'เลือกประเภทการชำระเงิน',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              ListTile(
+                                title: const Text('โอนเงิน',
+                                    style: TextStyle(fontSize: 15)),
+                                leading: Radio(
+                                  value: 'โอนเงิน',
+                                  groupValue: selectedValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedValue = value as String?;
+                                      print(selectedValue);
+                                    });
+                                  },
+                                ),
+                              ),
+                              ListTile(
+                                title: const Text('เก็บเงินปลายทาง',
+                                    style: TextStyle(fontSize: 15)),
+                                leading: Radio(
+                                  value: 'เก็บเงินปลายทาง',
+                                  groupValue: selectedValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedValue = value as String?;
+                                      print(selectedValue);
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        MyStyle().mySizebox0(),
+                        Container(
+                            child: selectedValue == 'เก็บเงินปลายทาง'
+                                ? Text('')
+                                : Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        MyStyle().mySizebox1(),
+                                        RaisedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AboutShop(),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              'ดูเลขบัญชีสำหรับการโอนเงิน',
+                                              style: TextStyle(fontSize: 18),
+                                            )),
+                                        MyStyle().mySizebox1(),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            child: file == null
+                                                ? Image.asset(
+                                                    'images/product.png',
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () async {
+                                                      await showDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (_) => Container(
+                                                                    child:
+                                                                        Dialog(
+                                                                      // backgroundColor: Colors.transparent,
+                                                                      elevation:
+                                                                          5,
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.stretch,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 8.0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [],
+                                                                            ),
+                                                                          ),
+                                                                          Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Container(
+                                                                                // width: 250,
+                                                                                height: 400,
+
+                                                                                decoration: BoxDecoration(
+                                                                                  image: DecorationImage(fit: BoxFit.cover, image: FileImage(file!)),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ));
+                                                    },
+                                                    child: Container(
+                                                        width: 100.0,
+                                                        height: 100.0,
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: FileImage(
+                                                                    file!)))),
+                                                  ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: ElevatedButton(
+                                            child: Text("เลือกรูปภาพสลิป"),
+                                            onPressed: () => chooseImage(
+                                                ImageSource.gallery),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color.fromARGB(
+                                                  255, 255, 121, 112),
+                                              onPrimary: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(32.0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20, top: 20),
+                          child: Text(
+                            '*** โปรดตรวจสอบข้อมูลให้ถูกต้องก่อนทำการสั่งซื้อ ***',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: 60,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 215,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text('ยอดชำระเงินทั้งหมด'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      buildSumTotal(),
+                                      Text(' บาท',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 173, 41),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: () {
+                                // orderThread();
+                                confirmOrderThread();
+                              },
+                              child: Container(
+                                width: 150,
+                                height: 60,
+                                color: Color.fromARGB(255, 255, 173, 41),
+                                child: Center(
+                                    child: Text('สั่งซื้อ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255)))),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-            ],
-          ),
+              ],
+            ),
     );
   }
 
@@ -323,31 +501,9 @@ class _ShowCartState extends State<ShowCart> {
                 padding: const EdgeInsets.only(left: 20, right: 15),
                 child: Row(
                   children: [
-                    Container(
-                        color: Color.fromARGB(255, 255, 160, 7),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text('ร้านค้า',
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: Color.fromARGB(255, 255, 255, 255))),
-                        )),
-                    Text('  ร้านจำหน่ายอุปกรณ์ก่อสร้าง',
+                    Text('รายการทั้งหมด',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Spacer(),
-                    Container(
-                        height: 25,
-                        child: RaisedButton(
-                            color: Color.fromARGB(255, 255, 160, 7),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3)),
-                            onPressed: () {
-                              confirmDeleteAllData();
-                            },
-                            child: Text(
-                              'ล้างตะกร้า',
-                              style: TextStyle(color: Colors.white),
-                            )))
                   ],
                 ),
               ),
@@ -447,16 +603,6 @@ class _ShowCartState extends State<ShowCart> {
             ],
           ),
         ),
-
-        // Text('ทั้งหมด $total'),
-        // Text('ส่ง $transport'),
-        // Text('จ่ายทั้งหมด  '),
-        // testsum()
-        // Divider(),
-        // showTranspot(),
-        // buildTotal(),
-        // buildClearCartButton(),
-        // buildOrderButton(),
       ],
     );
   }
@@ -534,55 +680,6 @@ class _ShowCartState extends State<ShowCart> {
     );
   }
 
-  Widget showTranspot() => Row(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('ระยะห่างจากร้าน ',
-                  style: TextStyle(
-                      fontSize: 12,
-                      // fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 78, 78, 78))),
-              Text('${cartModels[0].distance}',
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 46, 219, 43))),
-              Text(' กม.',
-                  style: TextStyle(
-                      fontSize: 12,
-                      // fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 78, 78, 78))),
-            ],
-          ),
-          Spacer(),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Text(
-          //       'ค่าส่ง ',
-          //       style: TextStyle(
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //     Text(
-          //       '${cartModels[0].transport}',
-          //       style: TextStyle(
-          //           fontWeight: FontWeight.bold,
-          //           color: Color.fromARGB(255, 255, 134, 134)),
-          //     ),
-          //     Text(
-          //       ' บาท',
-          //       style: TextStyle(
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
-      );
-
   Widget buildTotal() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -623,19 +720,6 @@ class _ShowCartState extends State<ShowCart> {
                     color: Color.fromARGB(255, 255, 149, 123)),
               ),
               Spacer(),
-              Container(
-                  height: 25,
-                  child: RaisedButton(
-                      color: Color.fromARGB(255, 245, 90, 105),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      onPressed: () {
-                        confirmDeleteAllData();
-                      },
-                      child: Text(
-                        'ล้างตะกร้า',
-                        style: TextStyle(color: Colors.white),
-                      )))
             ],
           ),
         ],
@@ -651,7 +735,7 @@ class _ShowCartState extends State<ShowCart> {
           children: [
             // Divider(),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
                 children: [
                   Expanded(
@@ -693,28 +777,6 @@ class _ShowCartState extends State<ShowCart> {
                           ],
                         ),
                       ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: Icon(Icons.cancel),
-                      color: Color.fromARGB(255, 249, 125, 125),
-                      onPressed: () async {
-                        int id = cartModels[index].id!;
-                        print('You Click Delete id = $id');
-                        await SQLiteHelper()
-                            .deleteDataWhereId(id)
-                            .then((value) {
-                          print('Success Delete id = $id');
-                          readSQLite();
-                           Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowCart(),
-                  ),
-                );
-                        });
-                      },
                     ),
                   ),
                 ],
@@ -854,32 +916,6 @@ class _ShowCartState extends State<ShowCart> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildClearCartButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Container(
-          width: 150,
-          child: RaisedButton.icon(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              color: Color.fromARGB(255, 188, 49, 49),
-              onPressed: () {
-                confirmDeleteAllData();
-              },
-              icon: Icon(
-                Icons.delete_outline,
-                color: Colors.white,
-              ),
-              label: Text(
-                'Clear ตะกร้า',
-                style: TextStyle(color: Colors.white),
-              )),
-        ),
-      ],
     );
   }
 
@@ -1077,25 +1113,101 @@ class _ShowCartState extends State<ShowCart> {
     int sumtotal = total + transport1;
     // print('$sumtotal');
 
-    print(
-        'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, phoneUser = $phoneUser, addressUser = $sumAddress, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
-    print(
-        'idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sum, all = $sumtotal');
+    print(file);
 
-    String sumAddress1 = '$address $district $county กทม. $zipcode';
+    if (file == null) {
+      print(
+          'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, nickname = $nickname , phoneUser = $phoneUser, addressUser = $sumAddress, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
+      print(
+          'idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sum, all = $sumtotal');
 
-    String url =
-        '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$sumAddress1&Lat=$lat&Lng=$lng&Slip=none&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport1&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=$sumtotal&Status=รอยืนยัน';
+      String sumAddress1 = '$address $district $county กทม. $zipcode';
 
-    await Dio().get(url).then((value) {
-      if (value.toString() == 'true') {
-        clearAllSQLite();
-        showToast('ทำการสั่งซื้อสำเร็จ');
-        notificationToShop(idShop!);
-      } else {
-        normalDialog(context, 'ไม่สามารถสั่งสินค้าได้ กรุณาลองใหม่');
-      }
-    });
+      print(
+          'OrderDateTime = $orderDateTime , idUser = $idUser , NameUser=$nameUser , PhoneUser=$phoneUser');
+      print('AddressUser=$sumAddress1 , Lat=$lat , Lng=$lng ');
+      print(
+          'Slip=none , UrlPicture=$urlPicture , idShop=$idShop , NameShop=$nameShop , Distance=$distance , ');
+      print(
+          'Transport= $transport1 , idProduct=$idProduct , NameProduct=$nameProduct , Price=$price');
+      print(
+          'Amount=$amount , Sum=$sum , idRider=$sumtotal , Status = $selectedValue');
+
+      String url =
+          '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$sumAddress1&Lat=$lat&Lng=$lng&Slip=none&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport1&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=$sumtotal&Status=รอยืนยัน';
+
+      await Dio().get(url).then((value) {
+        if (value.toString() == 'true') {
+          clearAllSQLite();
+          // showToast('ทำการสั่งซื้อสำเร็จ');
+          notificationToShop(idShop!);
+          //     Navigator.pushAndRemoveUntil(
+          // context,
+          // MaterialPageRoute(builder: (context) => OrderSuccess()),
+          // (Route<dynamic> route) => false);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const OrderSuccess(),
+            ),
+          );
+        } else {
+          normalDialog(context, 'ไม่สามารถสั่งสินค้าได้ กรุณาลองใหม่');
+        }
+      });
+    } else {
+      String urlUpload = '${MyConstant().domain}/champshop/saveSlip.php';
+      Random random = Random();
+      int i = random.nextInt(100000);
+      String nameFile = 'addSlip$i.jpg';
+      Map<String, dynamic> map = Map();
+      map['file'] =
+          await MultipartFile.fromFile(file!.path, filename: nameFile);
+      FormData formData = FormData.fromMap(map);
+      print('### $nameFile');
+      await Dio().post(urlUpload, data: formData).then((value) async {
+        slip = '/champshop/Slip/$nameFile';
+        print('slip = $slip');
+
+        print(
+            'orderDateTime = $orderDateTime, idUser = $idUser, nameUser = $nameUser, nickname = $nickname , phoneUser = $phoneUser, addressUser = $sumAddress, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport, lat = $lat, lng = $lng, slip = $slip, urlPicture = $urlPicture');
+        print(
+            'idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sum, all = $sumtotal');
+
+        String sumAddress1 = '$address $district $county กทม. $zipcode';
+
+        print(
+            'OrderDateTime = $orderDateTime , idUser = $idUser , NameUser=$nameUser , PhoneUser=$phoneUser');
+        print('AddressUser=$sumAddress1 , Lat=$lat , Lng=$lng ');
+        print(
+            'Slip = $slip  , UrlPicture=$urlPicture , idShop=$idShop , NameShop=$nameShop , Distance=$distance , ');
+        print(
+            'Transport= $transport1 , idProduct=$idProduct , NameProduct=$nameProduct , Price=$price');
+        print(
+            'Amount=$amount , Sum=$sum , idRider=$sumtotal , Status = $selectedValue');
+
+        String url =
+            '${MyConstant().domain}/champshop/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&PhoneUser=$phoneUser&AddressUser=$sumAddress1&Lat=$lat&Lng=$lng&Slip=$slip&UrlPicture=$urlPicture&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport1&idProduct=$idProduct&NameProduct=$nameProduct&Price=$price&Amount=$amount&Sum=$sum&idRider=$sumtotal&Status=รอยืนยัน';
+
+        await Dio().get(url).then((value) {
+          if (value.toString() == 'true') {
+            clearAllSQLite();
+            // showToast('ทำการสั่งซื้อสำเร็จ');
+            notificationToShop(idShop!);
+            //    Navigator.pushAndRemoveUntil(
+            // context,
+            // MaterialPageRoute(builder: (context) => OrderSuccess()),
+            // (Route<dynamic> route) => false);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const OrderSuccess(),
+              ),
+            );
+          } else {
+            normalDialog(context, 'ไม่สามารถสั่งสินค้าได้ กรุณาลองใหม่');
+          }
+        });
+      });
+    }
   }
 
   void showToast(String? string) {
@@ -1138,7 +1250,20 @@ class _ShowCartState extends State<ShowCart> {
 
   Future<Null> sendNotificationToShop(String urlSendToken) async {
     await Dio().get(urlSendToken).then(
-          (value) => normalDialog(context, 'ส่งออเดอร์สำเร็จ'),
+          (value) => {},
         );
+  }
+
+  Future<Null> chooseImage(ImageSource source) async {
+    try {
+      var object = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800.0,
+        maxHeight: 800.0,
+      );
+      setState(() {
+        file = File(object!.path);
+      });
+    } catch (e) {}
   }
 }

@@ -22,7 +22,17 @@ class EditProductMenu extends StatefulWidget {
 class _EditProductMenuState extends State<EditProductMenu> {
   ProductModel? productModel;
   File? file;
-  String? name, price, detail, pathImage, type, sale, size, color, stock;
+  String? name,
+      price,
+      detail,
+      pathImage,
+      type,
+      sale,
+      size,
+      color,
+      stock,
+      brand,
+      model;
 
   final List<String> items = [
     'โครง,ล้อ',
@@ -48,6 +58,10 @@ class _EditProductMenuState extends State<EditProductMenu> {
     super.initState();
     productModel = widget.productModel;
     name = productModel!.nameProduct;
+
+    brand = productModel!.brand;
+    model = productModel!.model;
+
     price = productModel!.price;
     detail = productModel!.detail;
     pathImage = productModel!.pathImage;
@@ -67,6 +81,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         child: Column(
           children: [
             nameProduct(),
+            brandProduct(),
+            modelProduct(),
             sizeProduct(),
             colorProduct(),
             priceProduct(),
@@ -153,7 +169,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
 
       String? id = productModel!.id;
       String url =
-          '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Size=$size&Color=$color';
+          '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&Brand=$brand&Model=$model&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Size=$size&Color=$color';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
           Navigator.pop(context);
@@ -243,7 +259,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
 
   Container typeProduct() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 10),
       width: 300,
       height: 60,
       child: CustomDropdownButton2(
@@ -251,7 +267,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
         dropdownItems: items,
         value: selectedValue,
         // initialValue: productModel!.type,
-        
+
         onChanged: (value) {
           setState(() {
             selectedValue = value;
@@ -280,12 +296,53 @@ class _EditProductMenuState extends State<EditProductMenu> {
         ],
       );
 
+
+ Widget brandProduct() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            width: 300,
+            height: 50,
+            child: TextFormField(
+              maxLines: 1,
+              onChanged: (value) => brand = value.trim(),
+              initialValue: productModel!.brand,
+              decoration: InputDecoration(
+                labelText: 'ยี่ห้อ',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
+
+       Widget modelProduct() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            width: 300,
+            height: 50,
+            child: TextFormField(
+              maxLines: 1,
+              onChanged: (value) => model = value.trim(),
+              initialValue: productModel!.model,
+              decoration: InputDecoration(
+                labelText: 'รุ่น/รหัสสินค้า',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
   Widget sizeProduct() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 10),
             width: 300,
+            height: 50,
             child: TextFormField(
               maxLines: 1,
               onChanged: (value) => size = value.trim(),
@@ -303,8 +360,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 20),
-            width: 300,
+            margin: EdgeInsets.only(top: 10),
+            width: 300,height: 50,
             child: TextFormField(
               maxLines: 1,
               onChanged: (value) => color = value.trim(),
@@ -321,8 +378,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 20),
-            width: 300,
+            margin: EdgeInsets.only(top: 10),
+            width: 300,height: 50,
             child: TextFormField(
               onChanged: (value) => price = value.trim(),
               keyboardType: TextInputType.number,
@@ -340,7 +397,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 10),
             width: 300,
             child: TextFormField(
               onChanged: (value) => detail = value.trim(),

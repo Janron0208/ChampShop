@@ -1,30 +1,27 @@
 import 'dart:convert';
+import 'package:champshop/screens/show_cart.dart';
 import 'package:champshop/widget/imageslide/guild_page_five.dart';
 import 'package:champshop/widget/imageslide/guild_page_four.dart';
 import 'package:champshop/widget/imageslide/guild_page_three.dart';
 import 'package:champshop/widget/imageslide/guild_page_two.dart';
 import 'package:champshop/widget/user/show_information_shop.dart';
 
-import '';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:champshop/model/user_model.dart';
-import 'package:champshop/utility/my_api.dart';
-import 'package:champshop/widget/about_shop.dart';
+
 import 'package:champshop/widget/product/show_shop_type_all.dart';
 import 'package:champshop/widget/user/show_setting.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
+
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/product_model.dart';
 import '../../utility/my_constant.dart';
 import '../../utility/my_style.dart';
-import '../../utility/signout_process.dart';
+
 import '../imageslide/guild_page_one.dart';
 
 class ShowFirstPage extends StatefulWidget {
@@ -40,6 +37,7 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
   String? idShop = '1';
   List<ProductModel> productModels = [];
   String? nameUser;
+  String? nickname;
   String? phoneUser;
   String? addressUser;
   String? lat;
@@ -61,7 +59,7 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     readProductMenu();
     checkPreferance();
     findLat1Lng1();
-   
+   readCurrentInfo();
   }
 
   Future<Null> findLat1Lng1() async {
@@ -83,17 +81,42 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     }
   }
 
+   Future<Null> readCurrentInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? idUSer = preferences.getString('id');
+    print('idUser ==>> $idUSer');
+
+    String url =
+        '${MyConstant().domain}/champshop/getUserWhereId.php?isAdd=true&id=$idUSer';
+
+    Response response = await Dio().get(url);
+    // print('response ==>> $response');
+
+    var result = json.decode(response.data);
+    print('result ==>> $result');
+
+    for (var map in result) {
+      print('map ==>> $map');
+      setState(() {
+        userModel = UserModel.fromJson(map);
+        nickname = userModel?.nickname;
+ 
+      });
+    }
+  }
+
   Future<void> checkPreferance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       nameUser = preferences.getString('Name');
+      nickname = preferences.getString('Nickname');
       phoneUser = preferences.getString('Phone');
       addressUser = preferences.getString('Address');
       lat = preferences.getString('Lat');
       lng = preferences.getString('Lng');
       // slip = preferences.getString('Slip');
       urlPicture = preferences.getString('UrlPicture');
-      print('$nameUser $phoneUser $addressUser $lat $lng $urlPicture');
+      // print('$nameUser $nicknameUser $phoneUser $addressUser $lat $lng $urlPicture');
     });
   }
 
@@ -139,10 +162,10 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
       backgroundColor: Color.fromARGB(255, 254, 202, 125),
       appBar: AppBar(
         
-        title: Text('สวัสดี $nameUser',
+        title: Text( nickname == null ? 'ยินดีต้อนรับ *****' : 'ยินดีต้อนรับ $nickname' ,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 25,
+              fontSize: 20,
               color: Color.fromARGB(255, 255, 255, 255),
             )), actions: <Widget>[
                Padding(
@@ -163,11 +186,11 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
         onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) {
-                      return ShowSetting();
+                      return ShowCart();
                     }));
               },
         child: Icon(
-            Icons.settings
+            Icons.shopping_cart
         ),
       )
     ),
@@ -176,19 +199,6 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
         backgroundColor: Color.fromARGB(255, 254, 202, 125),
         elevation: 0,
       ),
-      // body: SingleChildScrollView(
-      //   child: Container(
-      //     child: Column(
-      //       children: [
-      //         showBaner(),
-      //         showImageSlide(),
-      //         // showHeadText1(),
-      //         // showLastProduct(),
-      //         // showMap(),
-      //       ],
-      //     ),
-      //   ),
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20),
@@ -319,401 +329,9 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     );
   }
 
-  CarouselSlider showImageSlide() {
-    return CarouselSlider(
-      items: [
-        //1st Image of Slider
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GuildPageOne()));
-          },
-          child: Container(
-            margin: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: new DecorationImage(
-                image: new AssetImage('images/banner1.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
+ 
 
-        //2nd Image of Slider
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GuildPageTwo()));
-          },
-          child: Container(
-            margin: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: new DecorationImage(
-                image: new AssetImage('images/banner2.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-
-        //3rd Image of Slider
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GuildPageThree()));
-          },
-          child: Container(
-            margin: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: new DecorationImage(
-                image: new AssetImage('images/banner3.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GuildPageFour()));
-          },
-          child: Container(
-            margin: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: new DecorationImage(
-                image: new AssetImage('images/banner4.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => GuildPageFive()));
-          },
-          child: Container(
-            margin: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: new DecorationImage(
-                image: new AssetImage('images/banner5.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-      ],
-
-      //Slider Container properties
-      options: CarouselOptions(
-        height: 200.0,
-        enlargeCenterPage: true,
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enableInfiniteScroll: true,
-        autoPlayAnimationDuration: Duration(milliseconds: 2000),
-        viewportFraction: 0.8,
-      ),
-    );
-  }
-
-  showLastProduct() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Container(
-              width: 150,
-              height: 180,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromARGB(95, 211, 211, 211),
-                    width: 1, //                   <--- border width here
-                  ),
-                  color: Color.fromARGB(255, 251, 236, 216),
-                  borderRadius: BorderRadius.circular(1)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[0].pathImage!}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new Container(
-                      child: new Text(
-                        '${productModels[0].nameProduct!}',
-                        overflow: TextOverflow.ellipsis,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Color.fromARGB(255, 96, 96, 96),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text('${productModels[0].price!} บาท.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 228, 126, 92))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Container(
-              width: 150,
-              height: 180,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromARGB(95, 211, 211, 211),
-                    width: 1, //                   <--- border width here
-                  ),
-                  color: Color.fromARGB(255, 251, 236, 216),
-                  borderRadius: BorderRadius.circular(1)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[1].pathImage!}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new Container(
-                      child: new Text(
-                        '${productModels[1].nameProduct!}',
-                        overflow: TextOverflow.ellipsis,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Color.fromARGB(255, 96, 96, 96),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text('${productModels[1].price!} บาท.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 228, 126, 92))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Container(
-              width: 150,
-              height: 180,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromARGB(95, 211, 211, 211),
-                    width: 1, //                   <--- border width here
-                  ),
-                  color: Color.fromARGB(255, 251, 236, 216),
-                  borderRadius: BorderRadius.circular(1)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[2].pathImage!}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new Container(
-                      child: new Text(
-                        '${productModels[2].nameProduct!}',
-                        overflow: TextOverflow.ellipsis,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Color.fromARGB(255, 96, 96, 96),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text('${productModels[2].price!} บาท.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 228, 126, 92))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Container(
-              width: 150,
-              height: 180,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromARGB(95, 211, 211, 211),
-                    width: 1, //                   <--- border width here
-                  ),
-                  color: Color.fromARGB(255, 251, 236, 216),
-                  borderRadius: BorderRadius.circular(1)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[3].pathImage!}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new Container(
-                      child: new Text(
-                        '${productModels[3].nameProduct!}',
-                        overflow: TextOverflow.ellipsis,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Color.fromARGB(255, 96, 96, 96),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text('${productModels[3].price!} บาท.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 228, 126, 92))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Container(
-              width: 150,
-              height: 180,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromARGB(95, 211, 211, 211),
-                    width: 1, //                   <--- border width here
-                  ),
-                  color: Color.fromARGB(255, 251, 236, 216),
-                  borderRadius: BorderRadius.circular(1)),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '${MyConstant().domain}${productModels[4].pathImage!}'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new Container(
-                      child: new Text(
-                        '${productModels[4].nameProduct!}',
-                        overflow: TextOverflow.ellipsis,
-                        style: new TextStyle(
-                          fontSize: 15.0,
-                          color: Color.fromARGB(255, 96, 96, 96),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text('${productModels[4].price!} บาท.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 228, 126, 92))),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   Container showHeadText1() {
     return Container(
@@ -769,267 +387,9 @@ class _ShowFirstPageState extends State<ShowFirstPage> {
     );
   }
 
-  Container showSearchBox() {
-    return Container(
-      width: double.infinity,
-      height: 100,
-      decoration: BoxDecoration(
-          // color: FlutterFlowTheme.of(context).secondaryBackground,
-          ),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(18, 8, 18, 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Container(
-                width: 330,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF3F2F3),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: Color(0x33000000),
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
-                        child: TextFormField(
-                          // controller: textController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            // hintStyle: FlutterFlowTheme.of(context).bodyText2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedErrorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              size: 22,
-                            ),
-                            suffixIcon: Icon(
-                              Icons.filter_alt,
-                              // color: FlutterFlowTheme.of(context).darkSeaGreen,
-                              size: 22,
-                            ),
-                          ),
-                          // style: FlutterFlowTheme.of(context).bodyText1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  
 
-  Stack showBaner() {
-    return Stack(
-      children: [
-        // CarouselSlider(
-        //   items: [
-        //     Container(
-        //          width: 392.5,
-        //   height: 250,
-        //       decoration: BoxDecoration(
-        //         image: new DecorationImage(
-        //           image: new AssetImage('images/pngegg.png'),
-        //           fit: BoxFit.cover,
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        //   options: CarouselOptions(
+ 
 
-        //     height: 250.0,
-        //     autoPlay: true,
-        //     aspectRatio: 16 / 9,
-        //     autoPlayCurve: Curves.fastOutSlowIn,
-        //     enableInfiniteScroll: true,
-        //     autoPlayAnimationDuration: Duration(milliseconds: 2000),
-        //     viewportFraction: 0.8,
-        //   ),
-        // ),
-        Container(
-          width: 392.5,
-          height: 250,
-          child: Image.asset('images/pngegg.png',
-              fit: BoxFit.cover, colorBlendMode: BlendMode.darken),
-        ),
-        Positioned(
-          top: 40.0,
-          right: 10.0,
-          child: Container(
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ShowSetting()));
-              },
-              icon: Icon(
-                Icons.settings,
-                color: Color.fromARGB(180, 60, 60, 60),
-              ),
-            ),
-          ),
-        ),
-        //  Positioned(
-        //   bottom: 40.0,
-        //   left: 20.0,
-        //    child: Container(
-        //           width: 100.0,
-        //           height: 100.0,
-        //           child: CircleAvatar(
-        //             backgroundImage: NetworkImage(
-        //                 "${MyConstant().domain}$urlPicture"), //NetworkImage
-        //             radius: 100,
-        //           ),
-        //         ),
-        //  ),
-        Positioned(
-          bottom: 0.0,
-          // left: 20.0,
-          child: Container(
-            width: 392.5,
-            height: 30,
-            color: Color.fromARGB(45, 91, 91, 91),
-            child: Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      '  ยินดีต้อนรับ',
-                      style: TextStyle(
-                        fontSize: 19,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  ' $nameUser',
-                  style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column showMap() {
-    if (lat1 != null) {
-      LatLng latLng1 = LatLng(lat1!, lng2!);
-      position = CameraPosition(
-        target: latLng1,
-        zoom: 12.0,
-      );
-    }
-
-    Marker userMarker() {
-      return Marker(
-        markerId: MarkerId('userMarker'),
-        position: LatLng(lat1!, lng1!),
-        icon: BitmapDescriptor.defaultMarkerWithHue(1.0),
-        infoWindow: InfoWindow(title: 'คุณอยู่ที่นี่'),
-      );
-    }
-
-    Marker shopMarker() {
-      return Marker(
-        markerId: MarkerId('shopMarker'),
-        position: LatLng(lat2!, lng2!),
-        icon: BitmapDescriptor.defaultMarkerWithHue(150.0),
-        infoWindow: InfoWindow(title: 'ร้านค้า'),
-      );
-    }
-
-    Set<Marker> mySet() {
-      return <Marker>[userMarker(), shopMarker()].toSet();
-    }
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Text('ที่อยู่ร้านค้า ',
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 241, 122, 89))),
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 16),
-          height: 250,
-          child: lat1 == null
-              ? MyStyle().showProgress()
-              : GoogleMap(
-                  initialCameraPosition: position,
-                  mapType: MapType.normal,
-                  onMapCreated: (controller) {},
-                  markers: mySet(),
-                ),
-        ),
-      ],
-    );
-  }
+  
 }

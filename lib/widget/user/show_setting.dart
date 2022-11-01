@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:champshop/screens/show_cart.dart';
 import 'package:champshop/widget/about_shop.dart';
+import 'package:champshop/widget/show_status_product_order.dart';
+import 'package:champshop/widget/steppayment/show_wait_payment.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,6 +96,10 @@ class _ShowSettingState extends State<ShowSetting> {
           showCol1(),
           showText1(),
           showEditProfile(),
+          showCart(),
+          // showWaitPayment(),
+          showStatus(),
+
           // showEditProfile1(),
           showEditProfile2(),
           Spacer(),
@@ -159,6 +166,201 @@ class _ShowSettingState extends State<ShowSetting> {
                   padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                   child: Text(
                     'แก้ไขข้อมูลส่วนตัว',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 122, 122, 122)),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(0.9, 0),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color.fromARGB(255, 106, 106, 106),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+   Padding showCart() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: InkWell(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowCart(),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                color: Color(0x3416202A),
+                offset: Offset(0, 2),
+              )
+            ],
+            borderRadius: BorderRadius.circular(12),
+            shape: BoxShape.rectangle,
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Icon(
+                  Icons.shopping_cart,
+                  color: Color.fromARGB(255, 106, 106, 106),
+                  size: 24,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  child: Text(
+                    'ตะกร้าสินค้า',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 122, 122, 122)),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(0.9, 0),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color.fromARGB(255, 106, 106, 106),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+   Padding showWaitPayment() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: InkWell(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowWaitPayMent(),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                color: Color(0x3416202A),
+                offset: Offset(0, 2),
+              )
+            ],
+            borderRadius: BorderRadius.circular(12),
+            shape: BoxShape.rectangle,
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Icon(
+                  Icons.attach_money_outlined,
+                  color: Color.fromARGB(255, 106, 106, 106),
+                  size: 24,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  child: Text(
+                    'รอชำระเงิน',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 122, 122, 122)),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(0.9, 0),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color.fromARGB(255, 106, 106, 106),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+   Padding showStatus() {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: InkWell(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowStatusProductOrder(),
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                color: Color(0x3416202A),
+                offset: Offset(0, 2),
+              )
+            ],
+            borderRadius: BorderRadius.circular(12),
+            shape: BoxShape.rectangle,
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Icon(
+                  Icons.car_crash,
+                  color: Color.fromARGB(255, 106, 106, 106),
+                  size: 24,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  child: Text(
+                    'สถานะการจัดส่ง',
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

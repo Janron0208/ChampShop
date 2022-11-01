@@ -22,7 +22,17 @@ class AddProductMenu extends StatefulWidget {
 
 class _AddProductMenuState extends State<AddProductMenu> {
   File? file;
-  String? nameProduct, price, detail, type, advice, guild, size, color,stock;
+  String? nameProduct,
+      price,
+      detail,
+      type,
+      advice,
+      guild,
+      size,
+      color,
+      stock,
+      brand,
+      model;
   String? sale;
 
   final List<String> items = [
@@ -52,15 +62,24 @@ class _AddProductMenuState extends State<AddProductMenu> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text('รูปภาพสินค้า',style: TextStyle(fontSize: 20),),
+            Text(
+              'รูปภาพสินค้า',
+              style: TextStyle(fontSize: 20),
+            ),
             groupImage(),
-            showTitleProduct('รายละเอียด'),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: showTitleProduct('รายละเอียด'),
+            ),
             nameForm(),
-             MyStyle().mySizebox1(),
+            MyStyle().mySizebox1(),
+            brandForm(),
+            MyStyle().mySizebox1(),
+            modelForm(),
+            MyStyle().mySizebox1(),
             sizeForm(),
-             MyStyle().mySizebox1(),
+            MyStyle().mySizebox1(),
             colorForm(),
-
             MyStyle().mySizebox1(),
             priceForm(),
             MyStyle().mySizebox1(),
@@ -117,8 +136,8 @@ class _AddProductMenuState extends State<AddProductMenu> {
   }
 
   Future<Null> uploadProductAndInsertData() async {
+    
     String urlUpload = '${MyConstant().domain}/champshop/saveProduct.php';
-
     Random random = Random();
     int i = random.nextInt(1000000);
     String nameFile = 'product$i.jpg';
@@ -139,24 +158,43 @@ class _AddProductMenuState extends State<AddProductMenu> {
         // String? sale = '0';
         String? advice = '';
         String? guild = '';
-         String? stock = '';
+        String? stock = '';
 
         // print('$price');
-   
 
-  // print(formatAmount());
-
- 
-
-   
+        // print(formatAmount());
 
         String urlInsertData =
-            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&Size=$size&Color=$color&Stock=$stock&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Advice=$advice&Guild=$guild';
+            '${MyConstant().domain}/champshop/addProduct.php?isAdd=true&idShop=$idShop&NameProduct=$nameProduct&Brand=$brand&Model=$model&Size=$size&Color=$color&Stock=$stock&PathImage=$urlPathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Advice=$advice&Guild=$guild';
 
         await Dio().get(urlInsertData).then((value) => Navigator.pop(context));
       });
     } catch (e) {}
   }
+
+  Widget brandForm() => Container(
+        width: 300,
+        height: 50,
+        child: TextField(
+          onChanged: (value) => brand = value.trim(),
+          decoration: InputDecoration(
+            labelText: 'ยี่ห้อ',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      );
+
+  Widget modelForm() => Container(
+        width: 300,
+        height: 50,
+        child: TextField(
+          onChanged: (value) => model = value.trim(),
+          decoration: InputDecoration(
+            labelText: 'รุ่นสินค้า',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      );
 
   Widget nameForm() => Container(
         width: 300,
@@ -169,10 +207,10 @@ class _AddProductMenuState extends State<AddProductMenu> {
           ),
         ),
       );
-      Widget sizeForm() => Container(
+  Widget sizeForm() => Container(
         width: 300,
+        height: 50,
         child: TextField(
-      
           onChanged: (value) => size = value.trim(),
           decoration: InputDecoration(
             labelText: 'ขนาด/ปริมาณ',
@@ -180,10 +218,10 @@ class _AddProductMenuState extends State<AddProductMenu> {
           ),
         ),
       );
-      Widget colorForm() => Container(
+  Widget colorForm() => Container(
         width: 300,
+        height: 50,
         child: TextField(
-     
           onChanged: (value) => color = value.trim(),
           decoration: InputDecoration(
             labelText: 'สี',
@@ -194,6 +232,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
 
   Widget priceForm() => Container(
         width: 300,
+        height: 50,
         child: TextField(
           // inputFormatters: [],
           keyboardType: TextInputType.number,
@@ -222,7 +261,6 @@ class _AddProductMenuState extends State<AddProductMenu> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      
         Container(
           width: 150.0,
           height: 150.0,
@@ -238,8 +276,8 @@ class _AddProductMenuState extends State<AddProductMenu> {
                           fit: BoxFit.cover, image: FileImage(file!)))),
         ),
         ElevatedButton(
-          onPressed: () => chooseImage(ImageSource.gallery), child: Text('เลือกรูปภาพ'))
-       
+            onPressed: () => chooseImage(ImageSource.gallery),
+            child: Text('เลือกรูปภาพ'))
       ],
     );
   }
