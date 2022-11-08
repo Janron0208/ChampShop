@@ -32,10 +32,13 @@ class MyStyle {
         height: 20.0,
       );
 
-      SizedBox mySizebox0() => SizedBox(
+  SizedBox mySizebox0() => SizedBox(
         width: 8.0,
         height: 4.0,
       );
+
+  
+ 
 
   Widget iconShowCart(BuildContext context) {
     return IconButton(
@@ -69,8 +72,6 @@ class MyStyle {
       ),
     );
   }
-
-   
 
   Text showTitle(String title) => Text(
         title,

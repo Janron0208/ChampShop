@@ -60,47 +60,60 @@ class _AddProductMenuState extends State<AddProductMenu> {
         title: Text('เพิ่มสินค้า'),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'รูปภาพสินค้า',
-              style: TextStyle(fontSize: 20),
+            Column(
+              children: [
+                MyStyle().mySizebox(),
+                groupImage(),
+                MyStyle().mySizebox1(),
+                Container(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'รายระเอียดสินค้า',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+                nameForm(),
+                MyStyle().mySizebox1(),
+                brandForm(),
+                MyStyle().mySizebox1(),
+                modelForm(),
+                MyStyle().mySizebox1(),
+                sizeForm(),
+                MyStyle().mySizebox1(),
+                colorForm(),
+                MyStyle().mySizebox1(),
+                priceForm(),
+                MyStyle().mySizebox1(),
+                Container(
+                  width: 300,
+                  height: 60,
+                  child: CustomDropdownButton2(
+                    hint: 'เลือกหมวดหมู่สินค้า',
+                    dropdownItems: items,
+                    value: selectedValue,
+                    dropdownHeight: 500,
+                    dropdownWidth: 200,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                  ),
+                ),
+                MyStyle().mySizebox1(),
+                detailForm(),
+                MyStyle().mySizebox2(),
+                saveButton()
+              ],
             ),
-            groupImage(),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: showTitleProduct('รายละเอียด'),
-            ),
-            nameForm(),
-            MyStyle().mySizebox1(),
-            brandForm(),
-            MyStyle().mySizebox1(),
-            modelForm(),
-            MyStyle().mySizebox1(),
-            sizeForm(),
-            MyStyle().mySizebox1(),
-            colorForm(),
-            MyStyle().mySizebox1(),
-            priceForm(),
-            MyStyle().mySizebox1(),
-            Container(
-              width: 300,
-              height: 60,
-              child: CustomDropdownButton2(
-                hint: 'เลือกหมวดหมู่สินค้า',
-                dropdownItems: items,
-                value: selectedValue,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value;
-                  });
-                },
-              ),
-            ),
-            MyStyle().mySizebox1(),
-            detailForm(),
-            MyStyle().mySizebox2(),
-            saveButton()
           ],
         ),
       ),
@@ -136,7 +149,6 @@ class _AddProductMenuState extends State<AddProductMenu> {
   }
 
   Future<Null> uploadProductAndInsertData() async {
-    
     String urlUpload = '${MyConstant().domain}/champshop/saveProduct.php';
     Random random = Random();
     int i = random.nextInt(1000000);
@@ -160,7 +172,8 @@ class _AddProductMenuState extends State<AddProductMenu> {
         String? guild = '';
         String? stock = '';
 
-        // print('$price');
+        print(
+            '$nameProduct, $brand, $model, $size, $color, $price($price), $type, $detail, $urlPathImage');
 
         // print(formatAmount());
 
@@ -249,7 +262,7 @@ class _AddProductMenuState extends State<AddProductMenu> {
         child: TextField(
           onChanged: (value) => detail = value.trim(),
           keyboardType: TextInputType.multiline,
-          maxLines: 3,
+          maxLines: 5,
           decoration: InputDecoration(
             labelText: 'รายละเอียดของสินค้า',
             border: OutlineInputBorder(),

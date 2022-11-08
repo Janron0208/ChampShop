@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:champshop/utility/my_style.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
     'อื่นๆ',
   ];
   String? selectedValue;
-
+  String? showtype;
   @override
   void initState() {
     // TODO: implement initState
@@ -69,6 +70,45 @@ class _EditProductMenuState extends State<EditProductMenu> {
     sale = productModel!.sale;
     size = productModel!.size;
     color = productModel!.color;
+    print('$type , $pathImage');
+    checktypeshow();
+  }
+
+   Future<Null> checktypeshow() async {
+    if (productModel!.type == 'A') {
+      showtype = 'โครง,ล้อ';
+    } else if (productModel!.type == 'B') {
+      showtype = 'งานประปา';
+    } else if (productModel!.type == 'C') {
+      showtype = 'งานสวน';
+    } else if (productModel!.type == 'D') {
+      showtype = 'รถเข็น';
+    } else if (productModel!.type == 'E') {
+      showtype = 'โครงรถเข็นปูน';
+    } else if (productModel!.type == 'F') {
+      showtype = 'เปล';
+    } else if (productModel!.type == 'G') {
+      showtype = 'กระเบื้องยาง';
+    } else if (productModel!.type == 'H') {
+      showtype = 'ถังปูน';
+    } else if (productModel!.type == 'I') {
+      showtype = 'ปูน';
+    } else if (productModel!.type == 'J') {
+      showtype = 'เครื่องมือ';
+    } else if (productModel!.type == 'K') {
+      showtype = 'สีทาภายในภายนอก';
+    } else if (productModel!.type == 'L') {
+      showtype = 'งานสีอื่นๆ';
+    } else if (productModel!.type == 'M') {
+      showtype = 'สเปรย์';
+    } else if (productModel!.type == 'Z') {
+      showtype = 'อื่นๆ';
+    } else {
+      showtype = productModel!.type;
+    }
+
+    print(showtype);
+    
   }
 
   @override
@@ -80,6 +120,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            groupImage(),
             nameProduct(),
             brandProduct(),
             modelProduct(),
@@ -88,7 +129,6 @@ class _EditProductMenuState extends State<EditProductMenu> {
             priceProduct(),
             typeProduct(),
             detailProduct(),
-            groupImage(),
             uploadButton(),
           ],
         ),
@@ -103,11 +143,12 @@ class _EditProductMenuState extends State<EditProductMenu> {
       height: 50,
       child: RaisedButton.icon(
         onPressed: () {
-          checkType();
-          print('$name , $price , $detail , $type , $sale');
+          print('$name , $price , $detail , $type , $sale, $pathImage , $file');
+
           if (name!.isEmpty || price!.isEmpty || detail!.isEmpty) {
             normalDialog(context, 'กรุณากรอกให้ครบ');
           } else {
+            checkType();
             confirmEdit();
           }
         },
@@ -153,21 +194,29 @@ class _EditProductMenuState extends State<EditProductMenu> {
   }
 
   Future<Null> editValueOnMySQL() async {
-    Random random = Random();
-    int i = random.nextInt(100000);
-    String nameFile = 'editProduct$i.jpg';
-
-    Map<String, dynamic> map = Map();
-    map['file'] = await MultipartFile.fromFile(file!.path, filename: nameFile);
-    FormData formData = FormData.fromMap(map);
-
-    String urlUpload = '${MyConstant().domain}/champshop/saveProduct.php';
-    print('### $nameFile');
-
-    await Dio().post(urlUpload, data: formData).then((value) async {
-      pathImage = '/champshop/Product/$nameFile';
-
+    if (file == null) {
+      print('ไม่ได้เลือกรูปใหม่');
       String? id = productModel!.id;
+      print('$id');
+      // print('$pathImage');
+      print(
+          '$name ,$brand ,$model, $size, $color, $price, $type ,detal ,$pathImage ');
+
+      // Random random = Random();
+      // int i = random.nextInt(100000);
+      // String nameFile = 'editProduct$i.jpg';
+
+      // // Map<String, dynamic> map = Map();
+      // // map['file'] =
+      //     await MultipartFile.fromFile(file!.path, filename: nameFile);
+      // // FormData formData = FormData.fromMap(map);
+
+      // String urlUpload = '${MyConstant().domain}/champshop/saveProduct.php';
+
+      // await Dio().post(urlUpload).then((value) async {
+      //  pathImage = '$pathImage';
+      //  print('$pathImage');
+      // String? id = productModel!.id;
       String url =
           '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&Brand=$brand&Model=$model&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Size=$size&Color=$color';
       await Dio().get(url).then((value) {
@@ -177,7 +226,35 @@ class _EditProductMenuState extends State<EditProductMenu> {
           normalDialog(context, 'ผิดพลาด! กรุณาลองใหม่');
         }
       });
-    });
+      // });
+    } else {
+      Random random = Random();
+      int i = random.nextInt(100000);
+      String nameFile = 'editProduct$i.jpg';
+
+      Map<String, dynamic> map = Map();
+      map['file'] =
+          await MultipartFile.fromFile(file!.path, filename: nameFile);
+      FormData formData = FormData.fromMap(map);
+
+      String urlUpload = '${MyConstant().domain}/champshop/saveProduct.php';
+      print('### $nameFile');
+
+      await Dio().post(urlUpload, data: formData).then((value) async {
+        pathImage = '/champshop/Product/$nameFile';
+
+        String? id = productModel!.id;
+        String url =
+            '${MyConstant().domain}/champshop/editProductWhereId.php?isAdd=true&id=$id&NameProduct=$name&Brand=$brand&Model=$model&PathImage=$pathImage&Price=$price&Detail=$detail&Type=$type&Sale=$price&Size=$size&Color=$color';
+        await Dio().get(url).then((value) {
+          if (value.toString() == 'true') {
+            Navigator.pop(context);
+          } else {
+            normalDialog(context, 'ผิดพลาด! กรุณาลองใหม่');
+          }
+        });
+      });
+    }
   }
 
   Future<Null> checkType() async {
@@ -207,8 +284,10 @@ class _EditProductMenuState extends State<EditProductMenu> {
       type = 'L';
     } else if (selectedValue == 'สเปรย์') {
       type = 'M';
-    } else {
+    } else if (selectedValue == 'อื่นๆ') {
       type = 'Z';
+    } else {
+      type = productModel!.type;
     }
   }
 
@@ -225,18 +304,14 @@ class _EditProductMenuState extends State<EditProductMenu> {
     } catch (e) {}
   }
 
-  Row groupImage() {
-    return Row(
+  Column groupImage() {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: () => chooseImage(ImageSource.camera),
-          icon: Icon(Icons.add_a_photo),
-        ),
         Container(
           padding: EdgeInsets.only(top: 16),
-          width: 200.0,
-          height: 200.0,
+          width: 150.0,
+          height: 150.0,
           child: file == null
               ? Image.network(
                   '${MyConstant().domain}${productModel!.pathImage}',
@@ -249,9 +324,10 @@ class _EditProductMenuState extends State<EditProductMenu> {
                       image: DecorationImage(
                           fit: BoxFit.cover, image: FileImage(file!)))),
         ),
-        IconButton(
+        MyStyle().mySizebox1(),
+        ElevatedButton(
           onPressed: () => chooseImage(ImageSource.gallery),
-          icon: Icon(Icons.add_photo_alternate),
+          child: Text('เลือกรูปภาพ'),
         ),
       ],
     );
@@ -263,7 +339,10 @@ class _EditProductMenuState extends State<EditProductMenu> {
       width: 300,
       height: 60,
       child: CustomDropdownButton2(
-        hint: 'เลือกหมวดหมู่สินค้า',
+        dropdownHeight: 500,
+        dropdownWidth: 200,
+       
+        hint: '$showtype',
         dropdownItems: items,
         value: selectedValue,
         // initialValue: productModel!.type,
@@ -296,8 +375,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
         ],
       );
 
-
- Widget brandProduct() => Row(
+  Widget brandProduct() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
@@ -317,7 +395,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
         ],
       );
 
-       Widget modelProduct() => Row(
+  Widget modelProduct() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
@@ -336,6 +414,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
           ),
         ],
       );
+
   Widget sizeProduct() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -361,11 +440,12 @@ class _EditProductMenuState extends State<EditProductMenu> {
         children: [
           Container(
             margin: EdgeInsets.only(top: 10),
-            width: 300,height: 50,
+            width: 300,
+            height: 50,
             child: TextFormField(
               maxLines: 1,
               onChanged: (value) => color = value.trim(),
-              initialValue: productModel!.size,
+              initialValue: productModel!.color,
               decoration: InputDecoration(
                 labelText: 'สี',
                 border: OutlineInputBorder(),
@@ -379,7 +459,8 @@ class _EditProductMenuState extends State<EditProductMenu> {
         children: [
           Container(
             margin: EdgeInsets.only(top: 10),
-            width: 300,height: 50,
+            width: 300,
+            height: 50,
             child: TextFormField(
               onChanged: (value) => price = value.trim(),
               keyboardType: TextInputType.number,
@@ -402,7 +483,7 @@ class _EditProductMenuState extends State<EditProductMenu> {
             child: TextFormField(
               onChanged: (value) => detail = value.trim(),
               keyboardType: TextInputType.multiline,
-              maxLines: 3,
+              maxLines: 5,
               initialValue: productModel!.detail,
               decoration: InputDecoration(
                 labelText: 'รายละเอียด',
@@ -412,4 +493,6 @@ class _EditProductMenuState extends State<EditProductMenu> {
           ),
         ],
       );
+      
+       
 }

@@ -25,7 +25,6 @@ class _EditProfileUserState extends State<EditProfileUser> {
   String? nameUser, nickname, address, phone, urlPicture;
   String? district, county, zipcode, transport, sumAddress;
   File? file;
-  
 
   @override
   void initState() {
@@ -68,7 +67,7 @@ class _EditProfileUserState extends State<EditProfileUser> {
   }
 
   final List<String> items = [
-     'เขตพระนคร(ค่าส่ง+160บาท)',
+    'เขตพระนคร(ค่าส่ง+160บาท)',
     'เขตดุสิต(ค่าส่ง+170บาท)',
     'เขตหนองจอก(ค่าส่ง+300บาท)',
     'เขตบางรัก(ค่าส่ง+160บาท)',
@@ -131,32 +130,35 @@ class _EditProfileUserState extends State<EditProfileUser> {
             style:
                 TextStyle(color: Color.fromARGB(255, 61, 61, 61), fontSize: 20),
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color.fromARGB(255, 247, 133, 88),
           elevation: 0,
           iconTheme: IconThemeData(color: Color.fromARGB(255, 61, 61, 61)),
         ),
         body: userModel == null
             ? MyStyle().showProgress()
             : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    showImage(),
-                    nameForm(),
-                    nicknameForm(),
-                    phoneForm(),
-                    addressForm(),
-                    districtForm(),
-                    countyForm(),
-                    zipcodeForm(),
-                    saveBtn(),
-                  ],
+                child: Container(
+                  color: Color.fromARGB(255, 255, 230, 206),
+                  child: Column(
+                    children: [
+                      showImage(),
+                      nameForm(),
+                      nicknameForm(),
+                      phoneForm(),
+                      addressForm(),
+                      districtForm(),
+                      countyForm(),
+                      zipcodeForm(),
+                      saveBtn(),
+                    ],
+                  ),
                 ),
               ));
   }
 
   Padding saveBtn() {
     return Padding(
-      padding: const EdgeInsets.only(top: 120),
+      padding: const EdgeInsets.only(top: 60, bottom: 60),
       child: SizedBox(
         width: 300,
         height: 50,
@@ -185,8 +187,8 @@ class _EditProfileUserState extends State<EditProfileUser> {
         children: [
           file == null
               ? Container(
-                  width: 200,
-                  height: 200,
+                  width: 150,
+                  height: 150,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Color.fromARGB(255, 254, 175, 101),
@@ -205,8 +207,8 @@ class _EditProfileUserState extends State<EditProfileUser> {
                   ),
                 )
               : Container(
-                  width: 200,
-                  height: 200,
+                  width: 150,
+                  height: 150,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Color.fromARGB(255, 254, 175, 101),
@@ -220,20 +222,47 @@ class _EditProfileUserState extends State<EditProfileUser> {
                     ),
                   ),
                 ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: ElevatedButton(
-              child: Text(
-                'เปลี่ยนรูปภาพ',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 255, 122, 45), fontSize: 12),
+          Row(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  width: 120,
+                  child: ElevatedButton(
+                    child: Text(
+                      'ถ่ายรูป',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 122, 45), fontSize: 12),
+                    ),
+                    onPressed: () => chooseImage(ImageSource.camera),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 1,
+                      primary: Color.fromARGB(255, 239, 239, 239),
+                    ),
+                  ),
+                ),
               ),
-              onPressed: () => chooseImage(ImageSource.gallery),
-              style: ElevatedButton.styleFrom(
-                elevation: 1,
-                primary: Color.fromARGB(255, 239, 239, 239),
+              SizedBox(
+                width: 20,
               ),
-            ),
+                  Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(width: 120,
+                  child: ElevatedButton(
+                    child: Text(
+                      'แกลอรี่',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 122, 45), fontSize: 12),
+                    ),
+                    onPressed: () => chooseImage(ImageSource.gallery),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 1,
+                      primary: Color.fromARGB(255, 239, 239, 239),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -472,26 +501,19 @@ class _EditProfileUserState extends State<EditProfileUser> {
       child: DropdownButton2(
         isExpanded: true,
         hint: Row(
-          children: const [
-            Icon(
-              Icons.list,
-              size: 23,
-              color: Color.fromARGB(255, 255, 155, 135),
-            ),
+          children: [
+            // Icon(
+            //   Icons.list,
+            //   size: 23,
+            //   color: Color.fromARGB(255, 255, 155, 135),
+            // ),
             SizedBox(
-              width: 4,
+              width: 5,
             ),
-            Expanded(
-              child: Text(
-                ' เลือกเขต',
-                // style: TextStyle(
-                //   fontSize: 14,
-                //   fontWeight: FontWeight.bold,
-                //   color: Color.fromARGB(255, 119, 119, 119),
-                // ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            Text(
+              '$county (ค่าส่ง+$transportบาท)',
+              style: TextStyle(color: Colors.black),
+            )
           ],
         ),
         items: items
@@ -500,9 +522,9 @@ class _EditProfileUserState extends State<EditProfileUser> {
                   child: Text(
                     item,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       // fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 60, 60, 60),
+                      color: Colors.black,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -518,7 +540,7 @@ class _EditProfileUserState extends State<EditProfileUser> {
           Icons.arrow_forward_ios_outlined,
         ),
         iconSize: 16,
-        iconEnabledColor: Color.fromARGB(195, 255, 155, 135),
+        iconEnabledColor: Color.fromARGB(255, 217, 217, 217),
         // iconDisabledColor: Colors.grey,
         buttonHeight: 65,
         buttonWidth: 300,
@@ -526,15 +548,16 @@ class _EditProfileUserState extends State<EditProfileUser> {
         buttonDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: Color.fromARGB(166, 255, 155, 135),
+            color: Color.fromARGB(255, 217, 217, 217),
           ),
           color: Color.fromARGB(255, 255, 255, 255),
         ),
         buttonElevation: 0,
-        itemHeight: 40,
+        itemHeight: 50,
+        
         itemPadding: const EdgeInsets.only(left: 14, right: 14),
         dropdownMaxHeight: 300,
-        dropdownWidth: 200,
+        dropdownWidth: 300,
         dropdownPadding: null,
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -596,7 +619,7 @@ class _EditProfileUserState extends State<EditProfileUser> {
   }
 
   Future<Null> checkTransport() async {
-   if (selectedValue == 'เขตพระนคร(ค่าส่ง+160บาท)') {
+    if (selectedValue == 'เขตพระนคร(ค่าส่ง+160บาท)') {
       transport = '160';
       county = 'เขตพระนคร';
     } else if (selectedValue == 'เขตดุสิต(ค่าส่ง+170บาท)') {
@@ -746,11 +769,12 @@ class _EditProfileUserState extends State<EditProfileUser> {
     } else if (selectedValue == 'เขตบางบอน(ค่าส่ง+120บาท)') {
       transport = '120';
       county = 'เขตบางบอน';
-    } 
- 
-    else {
+    } else if (selectedValue == 'เขตอื่น(ค่าส่ง+350บาท)') {
       transport = '350';
       county = 'เขตอื่น';
+    } else {
+      transport = userModel?.transport;
+      county = userModel?.county;
     }
   }
 
@@ -795,38 +819,80 @@ class _EditProfileUserState extends State<EditProfileUser> {
   }
 
   Future<Null> editThread() async {
-    Random random = Random();
-    int i = random.nextInt(100000);
-    String nameFile = 'editAvatar$i.jpg';
+    print(file);
 
-    Map<String, dynamic> map = Map();
-    map['file'] = await MultipartFile.fromFile(file!.path, filename: nameFile);
-    FormData formData = FormData.fromMap(map);
-
-    String urlUpload = '${MyConstant().domain}/champshop/saveUser.php';
-    print('### $nameFile');
-
-    await Dio().post(urlUpload, data: formData).then((value) async {
-      urlPicture = '/champshop/Avatar/$nameFile';
-
+    if (file == null) {
       String? id = userModel!.id!;
-
+      print(id);
       checkTransport();
-      String sumAddress = '$address $district $county กทม. $zipcode';
-
-      print('$sumAddress');
+      print('ไมมีรูปใหม่');
       print(
-          '## name = $nameUser, nickname = $nickname, address = $address $district $county $zipcode, transport = $transport, phone = $phone, avatar = $urlPicture');
-
+          'name = $nameUser, nickname = $nickname, address = $address $district $county $zipcode, transport = $transport, phone = $phone, avatar = $urlPicture');
+      checkTransport();
+      String sumAddress = '$address แขวง$district $county กทม. $zipcode';
+      print(sumAddress);
       String url =
           '${MyConstant().domain}/champshop/editBuyerWhereId.php?isAdd=true&id=$id&Name=$nameUser&Nickname=$nickname&Address=$address&Phone=$phone&UrlPicture=$urlPicture&District=$district&County=$county&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
 
       Response response = await Dio().get(url);
       if (response.toString() == 'true') {
+        showToast("บันทึกข้อมูลสำเร็จแล้ว");
         Navigator.pop(context);
       } else {
         normalDialog(context, 'ยังอัพเดทไม่ได้ กรุณาลองใหม่');
       }
-    });
+    } else {
+      print('มีรูปใหม่');
+      Random random = Random();
+      int i = random.nextInt(100000);
+      String nameFile = 'editAvatar$i.jpg';
+
+      Map<String, dynamic> map = Map();
+      map['file'] =
+          await MultipartFile.fromFile(file!.path, filename: nameFile);
+      FormData formData = FormData.fromMap(map);
+
+      String urlUpload = '${MyConstant().domain}/champshop/saveUser.php';
+      print('### $nameFile');
+      urlPicture = '/champshop/Avatar/$nameFile';
+      print('### $urlPicture');
+
+      await Dio().post(urlUpload, data: formData).then((value) async {
+        urlPicture = '/champshop/Avatar/$nameFile';
+
+        String? id = userModel!.id!;
+
+        checkTransport();
+        String sumAddress = '$address แขวง$district $county กทม. $zipcode';
+
+        print('$sumAddress');
+        print(
+            '## name = $nameUser, nickname = $nickname, address = $address $district $county $zipcode, transport = $transport, phone = $phone, avatar = $urlPicture');
+
+        String url =
+            '${MyConstant().domain}/champshop/editBuyerWhereId.php?isAdd=true&id=$id&Name=$nameUser&Nickname=$nickname&Address=$address&Phone=$phone&UrlPicture=$urlPicture&District=$district&County=$county&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
+
+        Response response = await Dio().get(url);
+        if (response.toString() == 'true') {
+          showToast("บันทึกข้อมูลสำเร็จแล้ว");
+          Navigator.pop(context);
+        } else {
+          normalDialog(context, 'ยังอัพเดทไม่ได้ กรุณาลองใหม่');
+        }
+      });
+    }
+  }
+
+  void showToast(String? string) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 1),
+        content: Text(string!),
+        // action: SnackBarAction(
+
+        //     label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

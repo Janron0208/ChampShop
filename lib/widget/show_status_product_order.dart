@@ -159,6 +159,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
         itemBuilder: (context, index) => Card(
           child: Column(
             children: [
+              
               Container(
                 width: MediaQuery.of(context).size.width * 1,
                 height: 40,
@@ -207,71 +208,74 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
                 width: MediaQuery.of(context).size.width * 1,
                 // height: 80,
                 color: Color.fromARGB(255, 255, 241, 227),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('สถานะการชำระ',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          orderModels[index].slip! == 'none'
-                              ? Text('เก็บเงินปลายทาง',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 64, 216, 224)))
-                              : Text('โอนเงิน',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 29, 172, 36)))
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('สถานะการชำระ',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                            Spacer(),
+                            orderModels[index].slip! == 'none'
+                                ? Text('เก็บเงินปลายทาง',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 64, 216, 224)))
+                                : Text('โอนเงิน',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 29, 172, 36)))
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('สถานะการจัดส่ง',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          buildStatus(index),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('สถานะการจัดส่ง',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                            Spacer(),
+                            buildStatus(index),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('ค่าจัดส่ง',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                          Spacer(),
-                          Text('${orderModels[index].transport!} บาท',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 105, 105, 105))),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('ค่าจัดส่ง',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                            Spacer(),
+                            Text('${orderModels[index].transport!} บาท',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 105, 105, 105))),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Text('ยอดชำระเงินทั้งหมด',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 33, 33, 33))),
-                          Spacer(),
-                          showTotalBath(index),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Text('ยอดชำระเงินทั้งหมด',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color.fromARGB(255, 33, 33, 33))),
+                            Spacer(),
+                            showTotalBath(index),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -634,7 +638,7 @@ class _ShowStatusProductOrderState extends State<ShowStatusProductOrder> {
         Text('วันที่สั่งซื้อ ${orderModels[index].orderDateTime!}',
             style: TextStyle(
               fontSize: 16,
-              color: Color.fromARGB(255, 255, 173, 41),
+              color: Color.fromARGB(255, 36, 154, 205),
               fontWeight: FontWeight.bold,
             ))
       ],

@@ -3,12 +3,12 @@ import 'package:champshop/model/user_model.dart';
 import 'package:champshop/screens/show_cart.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/cart_model.dart';
 import '../../model/product_model.dart';
-import '../../utility/my_api.dart';
+
 import '../../utility/my_constant.dart';
 import '../../utility/my_style.dart';
 import '../../utility/normal_dialog.dart';
@@ -27,7 +27,7 @@ class _ShowShopTypeAllState extends State<ShowShopTypeAll> {
   String? idShop = '1';
   List<ProductModel> productModels = [];
   int amount = 1;
-  double? lat1, lng1, lat2, lng2;
+  // double? lat1, lng1, lat2, lng2;
   Location location = Location();
   String? county;
 
@@ -36,7 +36,7 @@ class _ShowShopTypeAllState extends State<ShowShopTypeAll> {
     super.initState();
     userModel = widget.userModel;
     readProductMenu();
-    findLocation();
+    // findLocation();
     readTransport();
   }
 
@@ -64,12 +64,12 @@ class _ShowShopTypeAllState extends State<ShowShopTypeAll> {
     }
   }
 
-  Future<Null> findLocation() async {
-    location.onLocationChanged.listen((event) {
-      lat1 = event.latitude;
-      lng1 = event.longitude;
-    });
-  }
+  // Future<Null> findLocation() async {
+  //   location.onLocationChanged.listen((event) {
+  //     lat1 = event.latitude;
+  //     lng1 = event.longitude;
+  //   });
+  // }
 
   Future<Null> readProductMenu() async {
     idShop = '1';
@@ -742,47 +742,47 @@ class _ShowShopTypeAllState extends State<ShowShopTypeAll> {
     String? model = productModels[index].model;
 
     if (productModels[index].brand == '-') {
-      brand = '(';
+      brand = '';
     } else {
-      brand = '(${productModels[index].brand},';
+      brand = '${productModels[index].brand} ';
     }
 
     if (productModels[index].model == '-') {
       model = '';
     } else {
-      model = '${productModels[index].model},';
+      model = '${productModels[index].model} ';
     }
 
     if (productModels[index].color == '-') {
       color = '';
     } else {
-      color = '${productModels[index].color},';
+      color = '${productModels[index].color} ';
     }
     if (productModels[index].size == '-') {
-      size = ')';
+      size = '';
     } else {
-      size = '${productModels[index].size})';
+      size = '${productModels[index].size}';
     }
 
     String? nameProduct =
-        '${productModels[index].nameProduct}$brand$model$color$size';
+        '${productModels[index].nameProduct}\n- $brand$model$color$size';
 
     int priceInt = int.parse(price!);
     int sumInt = priceInt * amount;
 
-    lat2 = double.parse(userModel!.lat!);
-    lng2 = double.parse(userModel!.lng!);
-    double distance = MyAPI().calculateDistance(lat1!, lng1!, lat2!, lng2!);
+    // lat2 = double.parse(userModel!.lat!);
+    // lng2 = double.parse(userModel!.lng!);
+    // double distance = MyAPI().calculateDistance(lat1!, lng1!, lat2!, lng2!);
 
-    var myFormat = NumberFormat('##0.0#', 'en_US');
-    String distanceString = myFormat.format(distance);
+    // var myFormat = NumberFormat('##0.0#', 'en_US');
+    // String distanceString = myFormat.format(distance);
 
     // int transport = MyAPI().calculateTransport(distance);
 
 // , distance = $distanceString, transport = $transport
 
     print(
-        'idShop = $idShop, nameShop = $nameShop, idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sumInt, distance = $distanceString, transport = $county, pathImage = $pathImage');
+        'idShop = $idShop, nameShop = $nameShop, idProduct = $idProduct, nameProduct = $nameProduct, price = $price, amount = $amount, sum = $sumInt, transport = $county, pathImage = $pathImage');
 
     Map<String, dynamic> map = Map();
 
@@ -793,7 +793,7 @@ class _ShowShopTypeAllState extends State<ShowShopTypeAll> {
     map['price'] = price;
     map['amount'] = amount.toString();
     map['sum'] = sumInt.toString();
-    map['distance'] = distanceString;
+    // map['distance'] = distanceString;
     map['transport'] = county.toString();
     map['pathImage'] = pathImage;
 

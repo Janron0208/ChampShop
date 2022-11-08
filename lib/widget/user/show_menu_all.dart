@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:champshop/widget/product/show_detail_product.dart';
 import 'package:champshop/widget/product/show_shop_type_I.dart';
 import 'package:champshop/widget/product/show_shop_type_J.dart';
 import 'package:champshop/widget/product/show_shop_type_c.dart';
@@ -88,6 +89,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
     }
   }
 
+  String? type;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +120,60 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 40),
         crossAxisCount: 2,
         children: <Widget>[
+          // InkWell(
+          //   onTap: () {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) =>
+          //                 ShowDetailProduct(userModel: userModels[0] , title: 'B',)));
+          //   },
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(10.0),
+          //     child: Container(
+                
+          //       child: Column(
+          //         children: [
+          //           ClipRRect(
+          //             borderRadius: BorderRadius.circular(10),
+          //             child: Image.network(
+          //               'https://cdn-cms.pgimgs.com/static/2020/07/shutterstock_777733171.jpg',
+          //               width: double.infinity,
+          //               height: 120,
+          //               fit: BoxFit.cover,
+          //             ),
+          //           ),
+          //           Padding(
+          //             padding: const EdgeInsets.only(top: 5),
+          //             child: Text(
+          //               'E',
+          //               style: TextStyle(
+          //                   fontSize: 16,
+          //                   fontWeight: FontWeight.bold,
+          //                   color: Color.fromARGB(255, 73, 73, 73)),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       decoration: BoxDecoration(
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+          //             spreadRadius: 1,
+          //             blurRadius: 2,
+          //             offset: Offset(3, 3), // changes position of shadow
+          //           ),
+          //         ],
+          //         borderRadius: BorderRadius.circular(10),
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+
+
+
+
           
           InkWell(
             onTap: () {
@@ -124,7 +181,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeAll(userModel: userModels[0])));
+                          ShowDetailProduct(userModel: userModels[0] , title: 'All',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -168,13 +225,14 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               ),
             ),
           ),
+          
           InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeSale(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'Sale',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -217,13 +275,14 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               ),
             ),
           ),
+          
           InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeA(userModel: userModels[0])));
+                          ShowDetailProduct(userModel: userModels[0] , title: 'A',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -272,7 +331,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeB(userModel: userModels[0])));
+                          ShowDetailProduct(userModel: userModels[0] , title: 'B',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -321,7 +380,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeC(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'C',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -370,7 +429,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeD(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'D',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -419,7 +478,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeE(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'E',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -468,7 +527,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeF(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'F',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -517,7 +576,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeG(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'G',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -566,7 +625,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeH(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'H',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -615,7 +674,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeI(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'I',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -664,7 +723,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeJ(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'J',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -713,7 +772,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeK(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'K',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -762,7 +821,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeL(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'L',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -811,7 +870,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeM(userModel: userModels[0])));
+                          ShowDetailProduct(userModel: userModels[0] , title: 'M',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -860,7 +919,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeZ(userModel: userModels[0])));
+                           ShowDetailProduct(userModel: userModels[0] , title: 'Z',)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

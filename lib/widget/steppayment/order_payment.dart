@@ -152,6 +152,23 @@ class _OrderPaymentState extends State<OrderPayment> {
 
   String? selectedValue = 'เก็บเงินปลายทาง';
 
+  Text buildSumTotal1() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text(myFormat.format(sumtotal),
+        style: TextStyle(
+            color: Color.fromARGB(255, 255, 173, 41),
+            fontSize: 18,
+            fontWeight: FontWeight.bold));
+  }
+
+  Text buildSumTotal2() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text(myFormat.format(sumtotal),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Color.fromARGB(255, 33, 33, 33)));
+  }
+
   @override
   Widget build(BuildContext context) {
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
@@ -179,12 +196,6 @@ class _OrderPaymentState extends State<OrderPayment> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        // Container(
-                        //   width: MediaQuery.of(context).size.width * 1,
-                        //   color: Colors.amber,
-                        //   height: 5,
-                        // ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Container(
@@ -222,10 +233,22 @@ class _OrderPaymentState extends State<OrderPayment> {
                                                   255, 83, 83, 83))),
                                     ],
                                   ),
-                                  Text('${address}',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 83, 83, 83))),
+                                  Row(
+                                    children: [
+                                      Text('ที่อยู่รับสินค้า : ',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 173, 41),
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('${sumAddress}',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 83, 83, 83))),
+                                  ),
                                 ],
                               ),
                             ),
@@ -241,7 +264,7 @@ class _OrderPaymentState extends State<OrderPayment> {
                           child: Column(
                             children: [
                               Text(
-                                'เลือกประเภทการชำระเงิน',
+                                'เลือกการชำระเงิน',
                                 style: TextStyle(fontSize: 20),
                               ),
                               ListTile(
@@ -425,7 +448,7 @@ class _OrderPaymentState extends State<OrderPayment> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      buildSumTotal(),
+                                      buildSumTotal1(),
                                       Text(' บาท',
                                           style: TextStyle(
                                               color: Color.fromARGB(
@@ -577,7 +600,7 @@ class _OrderPaymentState extends State<OrderPayment> {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
-                    Text('ค่าจัดส่ง',
+                    Text('ค่าจัดส่ง($county)',
                         style: TextStyle(
                             color: Color.fromARGB(255, 105, 105, 105))),
                     Spacer(),
@@ -596,7 +619,11 @@ class _OrderPaymentState extends State<OrderPayment> {
                             fontSize: 15,
                             color: Color.fromARGB(255, 33, 33, 33))),
                     Spacer(),
-                    showTotal2(),
+                    buildSumTotal2(),
+                       Text(' บาท',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Color.fromARGB(255, 33, 33, 33))),
                   ],
                 ),
               ),
@@ -769,11 +796,16 @@ class _OrderPaymentState extends State<OrderPayment> {
                                     fontSize: 13,
                                     color: Color.fromARGB(255, 170, 170, 170))),
                             Spacer(),
-                            Text('x ${cartModels[index].amount!} ชิ้น',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: Color.fromARGB(255, 170, 170, 170))),
+                            Row(
+                              children: [
+                                Text('x ${cartModels[index].amount!} ชิ้น',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: Color.fromARGB(255, 170, 170, 170))),
+                                         showsum1(index),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -1265,5 +1297,31 @@ class _OrderPaymentState extends State<OrderPayment> {
         file = File(object!.path);
       });
     } catch (e) {}
+  }
+  
+   Text showsum1(int index) {
+    String formatAmount() {
+      String price = cartModels[index].sum!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+
+    return Text(' (${formatAmount()} บาท)',
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Color.fromARGB(255, 170, 170, 170)));
   }
 }

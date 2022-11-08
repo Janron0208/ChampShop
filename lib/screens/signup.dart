@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:champshop/utility/my_style.dart';
 import 'package:dio/dio.dart';
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +19,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final String chooseType = 'User';
-  String? name,nickname, user, password, address, phone, urlpicture;
+  String? name, nickname, user, password, address, phone, urlpicture;
   String? district, county, zipcode, transport, sumAddress;
   String avatar = '';
   File? file;
@@ -77,7 +76,6 @@ class _SignUpState extends State<SignUp> {
     'เขตทุ่งครุ(ค่าส่ง+140บาท)',
     'เขตบางบอน(ค่าส่ง+120บาท)',
     'เขตอื่น(ค่าส่ง+350บาท)'
-
   ];
   String? selectedValue;
 
@@ -103,7 +101,6 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     buildAvatar(),
-                
                     MyStyle().mySizebox0(),
                     nameForm(),
                     MyStyle().mySizebox0(),
@@ -151,7 +148,6 @@ class _SignUpState extends State<SignUp> {
             Expanded(
               child: Text(
                 ' เลือกเขต',
-               
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -211,8 +207,8 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
-  
-Future<Null> checkTransport() async {
+
+  Future<Null> checkTransport() async {
     if (selectedValue == 'เขตพระนคร(ค่าส่ง+160บาท)') {
       transport = '160';
       county = 'เขตพระนคร';
@@ -363,14 +359,12 @@ Future<Null> checkTransport() async {
     } else if (selectedValue == 'เขตบางบอน(ค่าส่ง+120บาท)') {
       transport = '120';
       county = 'เขตบางบอน';
-    } 
- 
-    else {
+    } else {
       transport = '350';
       county = 'เขตอื่น';
     }
   }
-  
+
   Row buildAvatar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -431,102 +425,6 @@ Future<Null> checkTransport() async {
     );
   }
 
-  Widget registerButton() => Container(
-        margin: EdgeInsets.only(bottom: 20, top: 50),
-        width: 280,
-        height: 50,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          color: Color.fromARGB(255, 255, 155, 135),
-          onPressed: () {
-            checkTransport();
-            print('$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
-            print(
-                '## name = $name($nickname), address = $address $district $county $zipcode, transport = $transport, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
-            if (name == null ||
-                name!.isEmpty ||
-                user == null ||
-                user!.isEmpty ||
-                password == null ||
-                password!.isEmpty ||
-                address == null ||
-                address!.isEmpty ||
-                phone == null ||
-                phone!.isEmpty) {
-              print('Have Space');
-              normalDialog(context, 'กรุณากรอกข้อมูลให้ครบ');
-            } else {
-              if (chooseType == null) {
-                normalDialog(context, 'โปรด เลือกชนิดของผู้สมัคร');
-              } else {
-                // uploadpictureThread();
-                checkUser();
-              }
-            }
-          },
-          child: Text('สมัครสมาชิก',
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
-        ),
-      );
-
-  Future<Null> uploadpictureThread() async {
-    String apiSaveAvatar = '${MyConstant().domain}/champshop/saveAvatar.php';
-    int i = Random().nextInt(100000);
-    String nameAvatar = 'avatar$i.jpg';
-    Map<String, dynamic> map = Map();
-    map['file'] =
-        await MultipartFile.fromFile(file!.path, filename: nameAvatar);
-    FormData data = FormData.fromMap(map);
-    await Dio().post(apiSaveAvatar, data: data).then((value) {
-      avatar = '/champshop/Avatar/$nameAvatar';
-    });
-    print(
-        '## name = $name($nickname), address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
-    // print('### process Upload Avatar ==> $avatar');
-    
-    // print('$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
-    registerThread();
-  }
-
-  Future<Null> checkUser() async {
-    String url =
-        '${MyConstant().domain}/champshop/getUserWhereUser.php?isAdd=true&User=$user';
-    try {
-      Response response = await Dio().get(url);
-      if (response.toString() == 'null') {
-        uploadpictureThread();
-     
-      } else {
-        normalDialog(
-            context, 'User นี่ $user มีคนอื่นใช้ไปแล้ว กรุณาเปลี่ยน User ใหม่');
-      }
-    } catch (e) {}
-  }
-
-  Future<Null> registerThread() async {
-
-      String sumAddress = '$address $district $county กทม. $zipcode';
-
-    String url =
-        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&Nickname=$nickname&User=$user&Password=$password&ChooseType=$chooseType&Address=$address&Phone=$phone&UrlPicture=$avatar&District=$district&County=$county&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
-
-    try {
-      Response response = await Dio().get(url);
-      print('res = $response');
-
-      if (response.toString() == 'true') {
-        Navigator.pop(context);
-      } else {
-        normalDialog(context, 'ไม่สามารถ สมัครได้ กรุณาลองใหม่ คะ');
-      }
-    } catch (e) {}
-  }
-
   Widget nameForm() => Container(
         width: 300.0,
         child: TextField(
@@ -557,13 +455,13 @@ Future<Null> checkTransport() async {
         ),
       );
 
-      Widget nameForm2() => Container(
+  Widget nameForm2() => Container(
         width: 300.0,
         child: TextField(
           onChanged: (value) => nickname = value.trim(),
           decoration: InputDecoration(
-            prefixIcon:
-                Icon(Icons.person_pin, color: Color.fromARGB(255, 255, 181, 146)),
+            prefixIcon: Icon(Icons.person_pin,
+                color: Color.fromARGB(255, 255, 181, 146)),
             labelStyle: TextStyle(color: MyStyle().fontColor1),
             labelText: 'ชื่อผู้ใช้',
             filled: true,
@@ -804,5 +702,108 @@ Future<Null> checkTransport() async {
         file = File(result!.path);
       });
     } catch (e) {}
+  }
+
+  Widget registerButton() => Container(
+        margin: EdgeInsets.only(bottom: 20, top: 50),
+        width: 280,
+        height: 50,
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          color: Color.fromARGB(255, 255, 155, 135),
+          onPressed: () {
+            checkTransport();
+            print(
+                '$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
+            print(
+                '## name = $name($nickname), address = $address $district $county $zipcode, transport = $transport, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+            if (name == null ||
+                name!.isEmpty ||
+                user == null ||
+                user!.isEmpty ||
+                password == null ||
+                password!.isEmpty ||
+                address == null ||
+                address!.isEmpty ||
+                phone == null ||
+                phone!.isEmpty) {
+              print('Have Space');
+              normalDialog(context, 'กรุณากรอกข้อมูลให้ครบ');
+            } else {
+              if (chooseType == null) {
+                normalDialog(context, 'โปรด เลือกชนิดของผู้สมัคร');
+              } else {
+                checkUser();
+              }
+            }
+          },
+          child: Text('สมัครสมาชิก',
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
+        ),
+      );
+
+  Future<Null> checkUser() async {
+    String url =
+        '${MyConstant().domain}/champshop/getUserWhereUser.php?isAdd=true&User=$user';
+    try {
+      Response response = await Dio().get(url);
+      if (response.toString() == 'null') {
+        uploadpictureThread();
+      } else {
+        normalDialog(
+            context, 'User นี่ $user มีคนอื่นใช้ไปแล้ว กรุณาเปลี่ยน User ใหม่');
+      }
+    } catch (e) {}
+  }
+
+  Future<Null> uploadpictureThread() async {
+    String apiSaveAvatar = '${MyConstant().domain}/champshop/saveAvatar.php';
+    int i = Random().nextInt(100000);
+    String nameAvatar = 'avatar$i.jpg';
+    Map<String, dynamic> map = Map();
+    map['file'] =
+        await MultipartFile.fromFile(file!.path, filename: nameAvatar);
+    FormData data = FormData.fromMap(map);
+    await Dio().post(apiSaveAvatar, data: data).then((value) {
+      avatar = '/champshop/Avatar/$nameAvatar';
+    });
+    print(
+        '## name = $name($nickname), address = $address, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+
+    registerThread();
+  }
+
+  Future<Null> registerThread() async {
+    String sumAddress = '$address $district $county กทม. $zipcode';
+
+    String url =
+        '${MyConstant().domain}/champshop/addUser.php?isAdd=true&Name=$name&Nickname=$nickname&User=$user&Password=$password&ChooseType=$chooseType&Address=$address&Phone=$phone&UrlPicture=$avatar&District=$district&County=$county&Zipcode=$zipcode&Transport=$transport&SumAddress=$sumAddress';
+
+    try {
+      Response response = await Dio().get(url);
+      print('res = $response');
+
+      if (response.toString() == 'true') {
+        showToast('สมัครสมาชิกสำเร็จ');
+        Navigator.pop(context);
+      } else {
+        normalDialog(context, 'ไม่สามารถ สมัครได้ กรุณาลองใหม่ คะ');
+      }
+    } catch (e) {}
+  }
+
+  void showToast(String? string) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content: Text(string!),
+      ),
+    );
   }
 }

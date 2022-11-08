@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -29,7 +30,8 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
   List<List<String>> listIdOrders = [];
   int amount = 1;
   String? id;
-
+  late Timer timer;
+  bool switchValue = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -120,196 +122,318 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-    color: Color.fromARGB(255, 255, 173, 41)
-  ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text('ประวัติการสั่งซื้อ',
-                style: TextStyle(
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 255, 173, 41))),Text('')
-          ],
-        ),
-      ),
+      backgroundColor: Color.fromARGB(255, 237, 237, 237),
       body: statusOrder
-          ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text(
-        'ไม่มีรายการสั่งซื้อ',
-        style:
-            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
-      )],
-                  ),
-                )
-          : haveData!
-              ? buildContent()
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text(
-        'ไม่มีรายการสั่งซื้อ',
-        style:
-            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
-      )],
+          ? buildNonOrder()
+          : Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 55, bottom: 20),
+                  child: RefreshIndicator(
+                      color: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 255, 173, 41),
+                      onRefresh: () async {
+                        Future<void>.delayed(const Duration(seconds: 3));
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const OrderHistoryShop(),
+                          ),
+                        );
+                        // Navigator.pop(context);
+                      },
+                      child: buildContent()),
+                ),
+                Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            size: 25,
+                          ),
+                          color: Color.fromARGB(255, 255, 173, 41),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        Text('         ประวัติการสั่งซื้อ   ',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 255, 173, 41))),
+                        // Switch(
+                        //   value: switchValue,
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       switchValue = value;
+                        //       print(switchValue);
+                        //     });
+                        //   },
+                        //   activeTrackColor: Color.fromARGB(255, 255, 147, 89),
+                        //   activeColor: Color.fromARGB(255, 175, 97, 76),
+                        // ),
+                        Text('               ')
+                      ],
+                    ),
                   ),
                 ),
+              ],
+            ),
     );
   }
 
   Widget buildContent() => ListView.builder(
-        // padding: EdgeInsets.only(),
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: orderModels.length,
-        itemBuilder: (context, index) => GestureDetector(
-          onTap: () {
-            amount = 1;
-          },
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  // buildNameShop(index),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      buildDateTimeOrder(index),
+        itemBuilder: (context, index) => Card(
+          child: Column(
+            children: [
+
+              ExpansionTile(title: buildDateTimeOrder(index),children: [
+                 Card(
+                child: Container(
+                  color: Color.fromARGB(255, 224, 224, 224),
+                  child: ExpansionTile(
+                    title: Text(
+                      'คำสั่งซื้อทั้งหมด ${listMenuProducts[index].length} รายการ',
+                      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+                    ),
+                    children: <Widget>[
+                      buildListVireMenuProduct(index)
                     ],
                   ),
-                  // buildTranSport(index),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: buildHead(),
-                  ),
-
-                  buildListVireMenuProduct(index),
-                  Divider(),
-                  buildTotal(index),
-                  // Divider(),
-                  // MyStyle().mySizebox(),
-                  // buildStepIndicator(statusInts[index]),
-                  // showStatus(index),
-                  // MyStyle().mySizebox(),
-                ],
+                ),
               ),
-            ),
+              showDetail1(context),
+              showDetail2(context, index),
+              ],),
+              // Container(
+              //   width: MediaQuery.of(context).size.width * 1,
+              //   height: 40,
+              //   color: Colors.white,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Row(
+           
+              //       children: [
+              //         buildDateTimeOrder(index),
+              //         Spacer(),
+              //         // Switch(
+              //         //   value: switchValue,
+              //         //   onChanged: (value) {
+              //         //     setState(() {
+              //         //       switchValue = value;
+              //         //       print(index);
+              //         //     });
+              //         //   },
+              //         //   activeTrackColor: Color.fromARGB(255, 255, 147, 89),
+              //         //   activeColor: Color.fromARGB(255, 175, 97, 76),
+              //         // ),
+              //         // Container(
+              //         //   height: 30,
+              //         //   child: Row(
+              //         //     mainAxisAlignment: MainAxisAlignment.end,
+              //         //     children: [],
+              //         //   ),
+              //         // ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+           
+             
+            ],
           ),
         ),
       );
 
-  Row showStatus(int index) {
-    return Row(
+  Container showDetail2(BuildContext context, int index) {
+    return Container(
+              width: MediaQuery.of(context).size.width * 1,
+              // height: 120,
+              color: Color.fromARGB(255, 255, 241, 227),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('สถานะ : '),
-                   
-                    orderModels[index].status! == 'ส่งสำเร็จ'
-                        ? Text(
-                            'ส่งสำเร็จ',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 86, 221, 71)),
-                          )
-                        : Text(
-                            orderModels[index].status!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 244, 177, 54)),
-                          ),
-
-                    Spacer(),
-
-                    // Text((() {
-                    //   if (orderModels[index].slip! == 'none') {
-                    //     return 'ยังไม่ได้ส่งสลิป';
-                    //   }
-
-                    //   return 'ส่งสลิปแล้ว';
-                    // })()),
-
-                    orderModels[index].slip! == 'none'
-                        ? Text('ยังไม่ได้ส่งสลิป',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 224, 64, 64)))
-                        : Text('ส่งสลิปแล้ว',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 29, 172, 36)))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        children: [
+                          Text('สถานะการชำระ',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 105, 105, 105))),
+                          Spacer(),
+                          orderModels[index].slip! == 'none'
+                              ? Text('เก็บเงินปลายทาง',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Color.fromARGB(255, 64, 216, 224)))
+                              : Text('โอนเงิน',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Color.fromARGB(255, 29, 172, 36)))
+                        ],
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 20, right: 20),
+                    //   child: Row(
+                    //     children: [
+                    //       Text('สถานะการจัดส่ง',
+                    //           style: TextStyle(
+                    //               color: Color.fromARGB(255, 105, 105, 105))),
+                    //       Spacer(),
+                    //       buildStatus(index),
+                    //     ],
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        children: [
+                          Text('ค่าจัดส่ง',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 105, 105, 105))),
+                          Spacer(),
+                          Text('${orderModels[index].transport!} บาท',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 105, 105, 105))),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        children: [
+                          Text('ยอดชำระเงินทั้งหมด',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(255, 33, 33, 33))),
+                          Spacer(),
+                          showTotalBath(index),
+                        ],
+                      ),
+                    ),
                   ],
-                );
+                ),
+              ),
+            );
   }
 
-  Widget buildTotal(int index) => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Row(
-            children: [
-              Text('ราคารวม ',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 64, 64, 64), fontSize: 16)),
-              Text(totalInts[index].toString(),
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 230, 125, 125),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-              Text(' บาท',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 230, 125, 125),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-            ],
-          ),
-        ],
-      );
+  Container showDetail1(BuildContext context) {
+    return Container(
+              width: MediaQuery.of(context).size.width * 1,
+              height: 30,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.list_alt,
+                          color: Color.fromARGB(255, 255, 173, 41),
+                        ),
+                        Text(' ข้อมูลการจัดส่ง'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+  }
+
+  Text showTotalBath(int index) {
+    String formatAmount() {
+      String price = orderModels[index].idRider!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+
+    return Text('${formatAmount()} บาท',
+        style: TextStyle(
+          fontSize: 16,
+          color: Color.fromARGB(255, 255, 173, 41),
+          fontWeight: FontWeight.bold,
+        ));
+  }
+
+  Container buildStatus(int index) {
+    return Container(
+      child: orderModels[index].status! == 'รอยืนยัน'
+          ? Text(
+              'รอยืนยัน',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 221, 71, 71)),
+            )
+          : Text(
+              'กำลังจัดส่ง',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 244, 177, 54)),
+            ),
+    );
+  }
 
   ListView buildListVireMenuProduct(int index) => ListView.builder(
         shrinkWrap: true,
         physics: ScrollPhysics(),
         itemCount: listMenuProducts[index].length,
-        itemBuilder: (context, index2) => Padding(
-          padding: const EdgeInsets.only(left: 10, right: 5),
+        itemBuilder: (context, index2) => Container(
+          color: Color.fromARGB(255, 239, 239, 239),
+          width: MediaQuery.of(context).size.width * 1,
           child: Row(
             children: [
               Expanded(
-                flex: 3,
-                child: Text(listMenuProducts[index][index2]),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(listPrices[index][index2]),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(listAmounts[index][index2]),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(listSums[index][index2]),
-                  ],
+                flex: 8,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 5, top: 2),
+                  child: Column(
+                    children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(listMenuProducts[index][index2],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ))),
+                      Row(
+                        children: [
+                          showProductBath(index, index2),
+                          Spacer(),
+                          Text('x ${listAmounts[index][index2]} ชิ้น',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color.fromARGB(255, 170, 170, 170))),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -317,78 +441,57 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
         ),
       );
 
-  Container buildHead() {
-    return Container(
-      padding: EdgeInsets.only(left: 8),
-      decoration: BoxDecoration(color: Color.fromARGB(255, 235, 183, 183)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Text(
-                'รายการ',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'ราคา',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'จำนวน',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'รวม',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+  Text showProductBath(int index, int index2) {
+    String formatAmount() {
+      String price = listPrices[index][index2];
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+
+    return Text('${formatAmount()} บาท.',
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Color.fromARGB(255, 170, 170, 170)));
+  }
+
+  Row buildTranSport(int index) {
+    return Row(
+      children: [
+        Text('ค่าส่ง ${orderModels[index].transport!} บาท'),
+      ],
     );
   }
 
   Row buildDateTimeOrder(int index) {
     return Row(
-      children: [Text('วันที่สั่งซื้อ ${orderModels[index].orderDateTime!}')],
+      children: [
+        Text('วันที่สั่งซื้อ ${orderModels[index].orderDateTime!}',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 36, 154, 205),
+              fontWeight: FontWeight.bold,
+            ))
+      ],
     );
   }
+
+  Center buildNonOrder() => Center(
+          child: Text(
+        'ไม่มีรายการสั่งซื้อ',
+        style:
+            TextStyle(fontSize: 30, color: Color.fromARGB(255, 137, 137, 137)),
+      ));
 }

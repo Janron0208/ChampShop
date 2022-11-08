@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:champshop/widget/steporder/order_list_shop_await.dart';
+import 'package:champshop/screens/admin/order_list_shop_await.dart';
 import 'package:champshop/widget/steporder/order_list_shop_finish.dart';
 import 'package:champshop/widget/steporder/order_list_shop_rider.dart';
 import 'package:flutter/material.dart';

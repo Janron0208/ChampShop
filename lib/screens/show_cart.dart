@@ -1,5 +1,4 @@
 import 'dart:convert';
-// import 'dart:html';
 import 'package:champshop/utility/my_style.dart';
 import 'package:champshop/widget/steppayment/order_payment.dart';
 import 'package:dio/dio.dart';
@@ -119,8 +118,6 @@ class _ShowCartState extends State<ShowCart> {
           sumtotal = total + sumtran;
           var formatter = NumberFormat('#,##,000');
           print(formatter.format(sumtotal));
-
-          // ignore: unused_local_variable
         });
       }
     } else {
@@ -132,6 +129,21 @@ class _ShowCartState extends State<ShowCart> {
     }
   }
 
+  Text buildSumTotal1() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text(myFormat.format(sumtotal),
+        style: TextStyle(
+            color: Color.fromARGB(255, 255, 173, 41),
+            fontSize: 18,
+            fontWeight: FontWeight.bold));
+  }
+
+  Text buildSumTotal2() {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+    return Text(myFormat.format(sumtotal),
+        style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 33, 33, 33)));
+  }
+
   @override
   Widget build(BuildContext context) {
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
@@ -140,20 +152,21 @@ class _ShowCartState extends State<ShowCart> {
         iconTheme: IconThemeData(color: Color.fromARGB(255, 255, 173, 41)),
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text('ตะกร้าสินค้า',
                 style: TextStyle(
                     fontSize: 20, color: Color.fromARGB(255, 255, 173, 41))),
-                    Text('')
+            Text('')
           ],
         ),
       ),
       body: status
           ? buildNonOrder()
           : Stack(
-            children: [
-              SingleChildScrollView(
+              children: [
+                SingleChildScrollView(
                   child: Column(
                     children: [
                       Padding(
@@ -162,144 +175,77 @@ class _ShowCartState extends State<ShowCart> {
                       ),
                       // Spacer(),
                       MyStyle().mySizebox0(),
-                      // Container(
-                      //   height: 60,
-                      //   color: Color.fromARGB(255, 255, 255, 255),
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(left: 20),
-                      //     child: Row(
-                      //       children: [
-                      //         Container(
-                      //           width: 215,
-                      //           child: Column(
-                      //             mainAxisAlignment: MainAxisAlignment.center,
-                      //             children: [
-                      //               Row(
-                      //                 mainAxisAlignment: MainAxisAlignment.end,
-                      //                 children: [
-                      //                   Text('ยอดชำระเงินทั้งหมด'),
-                      //                 ],
-                      //               ),
-                      //               Row(
-                      //                 mainAxisAlignment: MainAxisAlignment.end,
-                      //                 children: [
-                      //                   buildSumTotal(),
-                      //                   Text(' บาท',
-                      //                       style: TextStyle(
-                      //                           color: Color.fromARGB(
-                      //                               255, 255, 173, 41),
-                      //                           fontSize: 18,
-                      //                           fontWeight: FontWeight.bold))
-                      //                 ],
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //         Spacer(),
-                      //         InkWell(
-                      //           onTap: () {
-                      //             // orderThread();
-                      //             // confirmOrderThread();
-                      //              Navigator.push(context,
-                      //   MaterialPageRoute(builder: (context) => OrderPayment()));
-                      //           },
-                      //           child: Container(
-                      //             width: 150,
-                      //             height: 60,
-                      //             color: Color.fromARGB(255, 255, 173, 41),
-                      //             child: Center(
-                      //                 child: Text('ชำระเงิน',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 19,
-                      //                         color: Color.fromARGB(
-                      //                             255, 255, 255, 255)))),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
-                ),Column(mainAxisAlignment: MainAxisAlignment.end,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                            height: 60,
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Row(
+                      height: 60,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 215,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    width: 215,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text('ยอดชำระเงินทั้งหมด'),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            buildSumTotal(),
-                                            Text(' บาท',
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 255, 173, 41),
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold))
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text('ยอดชำระเงินทั้งหมด'),
+                                    ],
                                   ),
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      // orderThread();
-                                      // confirmOrderThread();
-                                       Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => OrderPayment()));
-                                    },
-                                    child: Container(
-                                      width: 150,
-                                      height: 60,
-                                      color: Color.fromARGB(255, 255, 173, 41),
-                                      child: Center(
-                                          child: Text('ชำระเงิน',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 19,
-                                                  color: Color.fromARGB(
-                                                      255, 255, 255, 255)))),
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      buildSumTotal1(),
+                                      Text(' บาท',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 173, 41),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold))
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          ),
+                            Spacer(),
+                            InkWell(
+                              onTap: () {
+                                // orderThread();
+                                // confirmOrderThread();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OrderPayment()));
+                              },
+                              child: Container(
+                                width: 150,
+                                height: 60,
+                                color: Color.fromARGB(255, 255, 173, 41),
+                                child: Center(
+                                    child: Text('ชำระเงิน',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255)))),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-            ],
-          ),
+              ],
+            ),
     );
-  }
-
-  Text buildSumTotal() {
-    int total1 = int.parse('$total');
-    int total2 = int.parse('$transport');
-
-    int total3 = total1 + total2;
-    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
-    return Text(myFormat.format(total3),
-        style: TextStyle(
-            color: Color.fromARGB(255, 255, 173, 41),
-            fontSize: 18,
-            fontWeight: FontWeight.bold));
   }
 
   Center buildNonOrder() => Center(
@@ -313,7 +259,7 @@ class _ShowCartState extends State<ShowCart> {
     return Column(
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 1,
+          // width: MediaQuery.of(context).size.width * 1,
           height: 45,
           color: Colors.white,
           child: Column(
@@ -421,7 +367,7 @@ class _ShowCartState extends State<ShowCart> {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
-                    Text('ค่าจัดส่ง',
+                    Text('ค่าจัดส่ง($county)',
                         style: TextStyle(
                             color: Color.fromARGB(255, 105, 105, 105))),
                     Spacer(),
@@ -440,7 +386,8 @@ class _ShowCartState extends State<ShowCart> {
                             fontSize: 15,
                             color: Color.fromARGB(255, 33, 33, 33))),
                     Spacer(),
-                    showTotal2(),
+                    buildSumTotal2(),
+                    Text(' บาท')
                   ],
                 ),
               ),
@@ -685,11 +632,17 @@ class _ShowCartState extends State<ShowCart> {
                                     fontSize: 13,
                                     color: Color.fromARGB(255, 170, 170, 170))),
                             Spacer(),
-                            Text('x ${cartModels[index].amount!} ชิ้น',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: Color.fromARGB(255, 170, 170, 170))),
+                            Row(
+                              children: [
+                                Text('x ${cartModels[index].amount!} ชิ้น',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: Color.fromARGB(
+                                            255, 170, 170, 170))),
+                                showsum1(index),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -708,11 +661,11 @@ class _ShowCartState extends State<ShowCart> {
                             .then((value) {
                           print('Success Delete id = $id');
                           readSQLite();
-                           Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const ShowCart(),
-                  ),
-                );
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const ShowCart(),
+                            ),
+                          );
                         });
                       },
                     ),
@@ -724,6 +677,32 @@ class _ShowCartState extends State<ShowCart> {
           ],
         ),
       );
+
+  Text showsum1(int index) {
+    String formatAmount() {
+      String price = cartModels[index].sum!;
+      String priceInText = "";
+      int counter = 0;
+      for (int i = (price.length - 1); i >= 0; i--) {
+        counter++;
+        String str = price[i];
+        if ((counter % 3) != 0 && i != 0) {
+          priceInText = "$str$priceInText";
+        } else if (i == 0) {
+          priceInText = "$str$priceInText";
+        } else {
+          priceInText = ",$str$priceInText";
+        }
+      }
+      return priceInText.trim();
+    }
+
+    return Text(' (${formatAmount()} บาท)',
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Color.fromARGB(255, 170, 170, 170)));
+  }
 
   Widget buildListProduct() => ListView.builder(
         shrinkWrap: true,

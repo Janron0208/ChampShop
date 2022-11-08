@@ -48,7 +48,7 @@ Future<void> normalDialog2(
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            FlatButton(
+            RaisedButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',

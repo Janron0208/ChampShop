@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:champshop/screens/admin/step_order.dart';
 import 'package:champshop/widget/user/order_history_shop.dart';
 import 'package:champshop/widget/infomation_shop.dart';
 import 'package:champshop/widget/list_product_menu_shop.dart';
@@ -22,7 +23,7 @@ class MainShop extends StatefulWidget {
 }
 
 class _MainShopState extends State<MainShop> {
-  Widget currentWidget = OrderHome();
+  Widget currentWidget = StepOrder();
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class _MainShopState extends State<MainShop> {
         // subtitle: Text('รายการอาหารที่ยังไม่ได้ ทำส่งลูกค้า'),
         onTap: () {
           setState(() {
-            currentWidget = OrderHome();
+            currentWidget = StepOrder();
           });
           Navigator.pop(context);
         },
