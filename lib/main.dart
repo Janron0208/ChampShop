@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color.fromARGB(255, 246, 241, 233),
       ),
       title: 'ChampShop ร้านจำหน่ายอุปกรณ์ก่อสร้าง',
-      home: Home(),
+      home: SplashPage(),
     );
   }
 }

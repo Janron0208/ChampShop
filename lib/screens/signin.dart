@@ -23,7 +23,6 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
- 
   String? user, password;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -64,9 +63,7 @@ class _SignInState extends State<SignIn> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              
-                            ],
+                            children: [],
                           ),
                         ],
                       ),
@@ -74,10 +71,10 @@ class _SignInState extends State<SignIn> {
                     Padding(
                       padding: EdgeInsets.all(1),
                       child: Container(
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             MyStyle().showLogo(),
-                            
                             Column(
                               children: [
                                 Text(
@@ -128,7 +125,6 @@ class _SignInState extends State<SignIn> {
                                                 255, 140, 140, 140)),
                                       ),
                                     ),
-                                   
                                   ],
                                 ),
                               ),
@@ -139,10 +135,8 @@ class _SignInState extends State<SignIn> {
                                     20, 12, 30, 16),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                   
                                     newLoginBtn(context),
                                   ],
                                 ),
@@ -393,8 +387,10 @@ class _SignInState extends State<SignIn> {
           String? chooseType = userModel.chooseType;
           if (chooseType == 'User') {
             routeTuService(MainBuyer(), userModel);
+            showToast('เข้าสู่ระบบสำเร็จ');
           } else if (chooseType == 'Shop') {
             routeTuService(MainShop(), userModel);
+            showToast('เข้าสู่ระบบสำเร็จ');
           } else if (chooseType == 'Rider') {
             // routeTuService(MainRider(), userModel);
           } else {
@@ -494,4 +490,15 @@ class _SignInState extends State<SignIn> {
           ),
         ),
       );
+
+  void showToast(String? string) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(string!),
+        action: SnackBarAction(
+            label: 'ปิด', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
 }

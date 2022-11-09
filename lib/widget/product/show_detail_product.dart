@@ -33,13 +33,14 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
   // double? lat1, lng1, lat2, lng2;
   Location location = Location();
   String? county, showtext;
+  late bool _isLoading;
+  bool searchon = false;
 
   @override
   void initState() {
     super.initState();
     userModel = widget.userModel;
     readProductMenu();
-    // findLocation();
     readTransport();
   }
 
@@ -78,7 +79,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
     idShop = '1';
     String type = '${widget.title}';
     print(type);
-
+    _list = [];
     if (type == 'Sale') {
       String url =
           '${MyConstant().domain}/champshop/apishowproducttype/getProductTypeSale.php?isAdd=true';
@@ -94,6 +95,11 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
+          _list;
+
+          _list.add(productModel.nameProduct);
+
+          print(_list);
         });
       }
     } else if (type == 'All') {
@@ -106,6 +112,11 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
+          _list;
+
+          _list.add(productModel.nameProduct);
+
+          print(_list);
         });
       }
     } else {
@@ -117,6 +128,11 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
+          _list;
+
+          _list.add(productModel.nameProduct);
+
+          print(_list);
         });
       }
     }
@@ -163,10 +179,35 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         backgroundColor: Color.fromARGB(255, 255, 214, 157),
         elevation: 0,
         iconTheme: IconThemeData(color: Color.fromARGB(255, 246, 157, 63)),
-        title: Text(showtext == null ? '' : '$showtext',
-            style: TextStyle(
-                fontSize: 20, color: Color.fromARGB(255, 224, 141, 63))),
+        title: searchon == true
+            ? TextField(
+                controller: _controller,
+                style: new TextStyle(
+                  color: Colors.white,
+                ),
+                decoration: new InputDecoration(
+                    hintText: "ค้นหา...",
+                    hintStyle: new TextStyle(color: Colors.white)),
+                onChanged: searchOperation,
+              )
+            : Text(showtext == null ? '' : '$showtext',
+                style: TextStyle(
+                    fontSize: 20, color: Color.fromARGB(255, 224, 141, 63))),
         actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    searchon = true;
+                  });
+                },
+                child: Icon(
+                  Icons.search,
+                  size: 32,
+                  color: Colors.white,
+                ),
+              )),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
@@ -193,8 +234,28 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                 height: 300,
                 color: Color.fromARGB(255, 255, 214, 157),
               ),
-              showGridview()
+              Flexible(child: searchresult.length != 0 || _controller.text.isNotEmpty
+                      ? showGridview2() : showGridview())
             ]),
+    );
+  }
+
+   GridView showGridview2() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        childAspectRatio: 3 / 5.4,
+        crossAxisCount: 2,
+      ),
+      itemCount: productModels.length,
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () {
+          amount = 1;
+          confirmOrder(index);
+        },
+        child: Card(
+          child: showContent(context, index),
+        ),
+      ),
     );
   }
 
@@ -949,4 +1010,23 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
       ),
     );
   }
+
+
+   void searchOperation(String searchText) {
+    searchresult.clear();
+    if (_isSearching != null) {
+      for (int i = 0; i < _list.length; i++) {
+        String data = _list[i];
+        if (data.toLowerCase().contains(searchText.toLowerCase())) {
+          searchresult.add(data);
+        }
+      }
+    }
+  }
+   final globalKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController _controller = new TextEditingController();
+  late List<dynamic> _list;
+  bool? _isSearching;
+  String _searchText = "";
+  List searchresult = [];
 }

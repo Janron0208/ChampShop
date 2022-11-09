@@ -1,6 +1,7 @@
 import 'package:champshop/screens/signin.dart';
 import 'package:champshop/screens/signup.dart';
 import 'package:champshop/screens/user/main_buyer.dart';
+import 'package:champshop/utility/my_api.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,6 +21,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String? idLogin;
+  String? chooseType;
+
   @override
   void initState() {
     super.initState();
@@ -28,9 +32,6 @@ class _HomeState extends State<Home> {
 
   Future<void> checkPreferance() async {
     try {
-      // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-      // String? token = await firebaseMessaging.getToken();
-      // print('token ====>>> $token');
       await Firebase.initializeApp();
       FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       String? token = await firebaseMessaging.getToken();
@@ -47,7 +48,11 @@ class _HomeState extends State<Home> {
         await Dio()
             .get(url)
             .then((value) => print('###### Update Token Success #####'));
+      } else {
+         routeToService(SignIn());
       }
+
+
 
       if (chooseType != null && chooseType.isNotEmpty) {
         if (chooseType == 'User') {
@@ -60,7 +65,9 @@ class _HomeState extends State<Home> {
           normalDialog(context, 'Error User Type');
         }
       }
-    } catch (e) {}
+    } catch (e) {
+  
+    }
   }
 
   void routeToService(Widget myWidget) {
@@ -73,10 +80,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
-      // drawer: showDrawer(),
-      body: SignIn(),
-    );
+        // appBar: AppBar(),
+        // drawer: showDrawer(),
+        body: MyStyle().showProgress()
+        // MyStyle().showProgress(),
+        );
   }
 
   Drawer showDrawer() => Drawer(

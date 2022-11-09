@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:champshop/screens/show_cart.dart';
+import 'package:champshop/utility/my_style.dart';
 import 'package:champshop/widget/about_shop.dart';
 import 'package:champshop/widget/show_status_product_order.dart';
 import 'package:champshop/widget/steppayment/show_wait_payment.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/user_model.dart';
+import '../../test_search.dart';
 import '../../utility/my_constant.dart';
 import '../../utility/signout_process.dart';
 import 'edit_profile_user.dart';
@@ -31,13 +33,16 @@ class _ShowSettingState extends State<ShowSetting> {
   String? urlPicture;
   String? address, phone;
   List<UserModel> userModels = [];
+  late bool _isLoading;
+
   @override
   void initState() {
     super.initState();
     checkPreferance();
     readCurrentInfo();
   }
- Future<Null> readCurrentInfo() async {
+
+  Future<Null> readCurrentInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? idUSer = preferences.getString('id');
     print('idUser ==>> $idUSer');
@@ -53,6 +58,8 @@ class _ShowSettingState extends State<ShowSetting> {
 
     for (var map in result) {
       print('map ==>> $map');
+      
+
       setState(() {
         userModel = UserModel.fromJson(map);
         nameUser = userModel?.name;
@@ -62,6 +69,7 @@ class _ShowSettingState extends State<ShowSetting> {
       });
     }
   }
+
   Future<void> checkPreferance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -94,6 +102,7 @@ class _ShowSettingState extends State<ShowSetting> {
       body: Column(
         children: [
           showCol1(),
+
           showText1(),
           showEditProfile(),
           showCart(),
@@ -102,6 +111,7 @@ class _ShowSettingState extends State<ShowSetting> {
 
           // showEditProfile1(),
           showEditProfile2(),
+          showWaitPayment(),
           Spacer(),
           Padding(
             padding: EdgeInsetsDirectional.only(bottom: 30),
@@ -109,7 +119,7 @@ class _ShowSettingState extends State<ShowSetting> {
               width: 300,
               height: 55,
               child: ElevatedButton(
-                  onPressed:() => signOutProcess(context),
+                  onPressed: () => signOutProcess(context),
                   child: Text('ออกจากระบบ',
                       style: TextStyle(
                           fontSize: 20,
@@ -190,7 +200,7 @@ class _ShowSettingState extends State<ShowSetting> {
     );
   }
 
-   Padding showCart() {
+  Padding showCart() {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: InkWell(
@@ -255,7 +265,7 @@ class _ShowSettingState extends State<ShowSetting> {
     );
   }
 
-   Padding showWaitPayment() {
+  Padding showWaitPayment() {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: InkWell(
@@ -263,7 +273,7 @@ class _ShowSettingState extends State<ShowSetting> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ShowWaitPayMent(),
+              builder: (context) => SearchListExample(),
             ),
           );
         },
@@ -320,7 +330,7 @@ class _ShowSettingState extends State<ShowSetting> {
     );
   }
 
-   Padding showStatus() {
+  Padding showStatus() {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
       child: InkWell(
@@ -551,20 +561,18 @@ class _ShowSettingState extends State<ShowSetting> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-  padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(60),
-    child: Image.network(
-      '${MyConstant().domain}$urlPicture',
-      width: 80,
-      height: 80,
-      fit: BoxFit.cover,
-    ),
-  ),
-),
-                
-                
-                
+                padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child:  Image.network(
+                    '${MyConstant().domain}$urlPicture',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
               //   Padding(
               //     padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
               //     child: ClipRRect(

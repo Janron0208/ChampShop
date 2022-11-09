@@ -39,7 +39,7 @@ class _ShowCartState extends State<ShowCart> {
   String? transport;
   String? nameUser, urlPicture;
   String? district, county, zipcode;
-
+  late bool _isLoading;
   @override
   void initState() {
     super.initState();

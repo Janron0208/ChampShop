@@ -58,7 +58,7 @@ dependencies:
   buddhist_datetime_dateformat_sns: ^1.0.7
   auto_reload: ^1.1.0
   js: ^0.6.4
-  # splashscreen: any
+  splashscreen: any
   
 
 

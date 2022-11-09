@@ -38,13 +38,23 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
   List<ProductModel> productModels = [];
   double? lat1, lng1, lat2, lng2;
   Location location = Location();
+  late bool _isLoading;
 
   @override
   void initState() {
+    _isLoading = true;
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        readShop();
+        readProductMenu();
+        findLocation();
+        _isLoading = false;
+      });
+    });
     super.initState();
-    readShop();
-    readProductMenu();
-    findLocation();
+    // readShop();
+    // readProductMenu();
+    // findLocation();
   }
 
   Future<Null> findLocation() async {
@@ -94,21 +104,16 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   toolbarHeight: 0,
-      //   backgroundColor: Color.fromARGB(255, 251, 191, 108),
-      //   title: Text('หมวดหมู่'),
-      //   elevation: 0,
-      // ),
-      body: Stack(children: [
-        Container(
-          width: 392.5,
-          height: 300,
-          color: Color.fromARGB(255, 251, 191, 108),
-        ),
-        
-        showCategories(context)
-      ]),
+      body: _isLoading
+          ? MyStyle().showProgress()
+          : Stack(children: [
+              Container(
+                width: 392.5,
+                height: 300,
+                color: Color.fromARGB(255, 251, 191, 108),
+              ),
+              showCategories(context)
+            ]),
     );
   }
 
@@ -117,7 +122,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
       margin: EdgeInsets.only(top: 10),
       child: GridView.count(
         primary: false,
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 40),
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 40),
         crossAxisCount: 2,
         children: <Widget>[
           // InkWell(
@@ -131,7 +137,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
           //   child: Padding(
           //     padding: const EdgeInsets.all(10.0),
           //     child: Container(
-                
+
           //       child: Column(
           //         children: [
           //           ClipRRect(
@@ -171,22 +177,19 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
           //   ),
           // ),
 
-
-
-
-          
           InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ShowDetailProduct(userModel: userModels[0] , title: 'All',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'All',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                
                 child: Column(
                   children: [
                     ClipRRect(
@@ -213,7 +216,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -225,14 +229,16 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               ),
             ),
           ),
-          
+
           InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'Sale',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'Sale',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -263,7 +269,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -275,14 +282,16 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               ),
             ),
           ),
-          
+
           InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ShowDetailProduct(userModel: userModels[0] , title: 'A',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'A',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -313,7 +322,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -330,8 +340,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ShowDetailProduct(userModel: userModels[0] , title: 'B',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'B',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -362,7 +374,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -379,8 +392,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'C',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'C',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -411,7 +426,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -428,8 +444,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'D',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'D',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -460,7 +478,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -477,8 +496,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'E',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'E',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -509,7 +530,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -526,8 +548,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'F',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'F',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -558,7 +582,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -575,8 +600,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'G',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'G',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -607,7 +634,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -624,8 +652,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'H',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'H',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -656,7 +686,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -673,8 +704,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'I',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'I',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -705,7 +738,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -722,8 +756,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'J',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'J',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -754,7 +790,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -771,8 +808,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'K',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'K',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -803,7 +842,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -820,8 +860,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'L',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'L',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -852,7 +894,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -869,8 +912,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ShowDetailProduct(userModel: userModels[0] , title: 'M',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'M',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -901,7 +946,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
@@ -918,8 +964,10 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                           ShowDetailProduct(userModel: userModels[0] , title: 'Z',)));
+                      builder: (context) => ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'Z',
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -950,7 +998,8 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
+                      color:
+                          Color.fromARGB(255, 204, 204, 204).withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(3, 3), // changes position of shadow
