@@ -66,6 +66,8 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -89,7 +91,8 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
       itemBuilder: (context, index) => Column(
             children: [
               MyStyle().mySizebox1(),
-              Container(color: Colors.white,
+              Container(
+                color: Colors.white,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -110,7 +113,8 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
                         child: Column(
                           // mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Align(alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
                                 productModels[index].nameProduct!,
                                 style: TextStyle(fontSize: 13),
@@ -119,107 +123,133 @@ class _ListProductMenuListState extends State<ListProductMenuList> {
                                 softWrap: false,
                               ),
                             ),
-                             Align(alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
                                   Text(
                                     'ยี่ห้อ : ',
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 194, 117, 23)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 194, 117, 23)),
                                   ),
                                   Text(
                                     productModels[index].brand!,
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 106, 106, 106)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 106, 106, 106)),
                                   ),
                                 ],
                               ),
                             ),
-                               Align(alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
                                   Text(
                                     'รุ่น/รหัส : ',
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 194, 117, 23)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 194, 117, 23)),
                                   ),
                                   Text(
                                     productModels[index].model!,
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 106, 106, 106)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 106, 106, 106)),
                                   ),
                                 ],
                               ),
                             ),
-                              Align(alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'ขนาด/ปริมาณ : ',
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 194, 117, 23)),
-                                  
-                                  ),
-                                  Text(
-                                    productModels[index].size!,
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 106, 106, 106)),
-                                  
-                                  ),
-                                ],
+                            // Row(
+                            //   children: [
+                            // Text(
+                            //   'ขนาด/ปริมาณ : ',
+                            //   style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 194, 117, 23)),
+
+                            // ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'ขนาด/ปริมาณ : ${productModels[index].size!}',
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Color.fromARGB(255, 106, 106, 106)),
                               ),
                             ),
-                             Align(alignment: Alignment.centerLeft,
+                            // ],
+                            // ),
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Row(
                                 children: [
                                   Text(
                                     'สี : ',
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 194, 117, 23)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 194, 117, 23)),
                                   ),
                                   Text(
                                     productModels[index].color!,
-                                    style: TextStyle(fontSize: 11,color: Color.fromARGB(255, 106, 106, 106)),
-                                  
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            Color.fromARGB(255, 106, 106, 106)),
                                   ),
                                 ],
                               ),
                             ),
                             Row(
                               children: [
-
-                                  productModels[index].sale! == productModels[index].price! ?  Text(
-                                  'ราคา ${productModels[index].sale} บาท',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color.fromARGB(255, 249, 91, 91)),
-                                ) : 
-                                Row(
-                                  children: [
-                                    Text(
-                                      'ราคา ${productModels[index].sale} บาท ',
-                                      style: TextStyle(
-                                         decoration: TextDecoration.lineThrough,
-                                          fontSize: 9,
-                                         color: Color.fromARGB(255, 249, 91, 91)),
-                                    ),
-                                    Text(
-                                      'ราคา ${productModels[index].price} บาท',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                         color: Color.fromARGB(255, 81, 185, 43)),
-                                    ),
-                                  ],
-                                ),
+                                productModels[index].sale! ==
+                                        productModels[index].price!
+                                    ? Text(
+                                        'ราคา ${productModels[index].sale} บาท',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color.fromARGB(
+                                                255, 249, 91, 91)),
+                                      )
+                                    : Row(
+                                        children: [
+                                          Text(
+                                            'ราคา ${productModels[index].sale} บาท ',
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                fontSize: 9,
+                                                color: Color.fromARGB(
+                                                    255, 249, 91, 91)),
+                                          ),
+                                          Text(
+                                            'ราคา ${productModels[index].price} บาท',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                color: Color.fromARGB(
+                                                    255, 81, 185, 43)),
+                                          ),
+                                        ],
+                                      ),
                               ],
                             ),
-                            Align(alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(productModels[index].detail!,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: false,
                                   style: TextStyle(
                                       fontSize: 11,
-                                      color: Color.fromARGB(255, 139, 139, 139))),
+                                      color:
+                                          Color.fromARGB(255, 139, 139, 139))),
                             ),
                           ],
                         ),

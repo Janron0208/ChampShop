@@ -123,8 +123,44 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 237, 237, 237),
-      body: statusOrder
-          ? buildNonOrder()
+      body: 
+
+      statusOrder
+          ? Stack(
+            children: [
+              
+              buildNonOrder(),
+                Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            size: 25,
+                          ),
+                          color: Color.fromARGB(255, 255, 173, 41),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        Text('         ประวัติการสั่งซื้อ   ',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 255, 173, 41))),
+                      
+                        Text('               ')
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          )
           : Stack(
               children: [
                 Padding(
@@ -166,17 +202,7 @@ class _OrderHistoryShopState extends State<OrderHistoryShop> {
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Color.fromARGB(255, 255, 173, 41))),
-                        // Switch(
-                        //   value: switchValue,
-                        //   onChanged: (value) {
-                        //     setState(() {
-                        //       switchValue = value;
-                        //       print(switchValue);
-                        //     });
-                        //   },
-                        //   activeTrackColor: Color.fromARGB(255, 255, 147, 89),
-                        //   activeColor: Color.fromARGB(255, 175, 97, 76),
-                        // ),
+                      
                         Text('               ')
                       ],
                     ),

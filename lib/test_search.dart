@@ -18,12 +18,10 @@ class _SearchListExampleState extends State<SearchListExample> {
     style: new TextStyle(color: Colors.white),
   );
 
-
   Icon icon = new Icon(
     Icons.search,
     color: Colors.white,
   );
-
 
   final globalKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
@@ -31,7 +29,6 @@ class _SearchListExampleState extends State<SearchListExample> {
   bool? _isSearching;
   String _searchText = "";
   List searchresult = [];
-
 
   _SearchListExampleState() {
     _controller.addListener(() {
@@ -92,7 +89,7 @@ class _SearchListExampleState extends State<SearchListExample> {
         setState(() {
           productModels.add(productModel);
 
-          // print(productModel.nameProduct);
+         
           _list;
 
           _list.add(productModel.nameProduct);

@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 // import 'dart:html';
+import 'package:champshop/model/product_model.dart';
 import 'package:champshop/screens/user/main_buyer.dart';
+import 'package:champshop/utility/my_api.dart';
 import 'package:champshop/utility/my_style.dart';
 import 'package:champshop/widget/show_status_product_order.dart';
 import 'package:champshop/widget/user/show_information_shop.dart';
@@ -62,8 +64,86 @@ class _OrderPaymentState extends State<OrderPayment> {
   void initState() {
     super.initState();
     readSQLite();
-    findLat1Lng1();
     readCurrentInfo();
+    // checkAmountProduct();
+  }
+
+  List<ProductModel> productModels = [];
+  String? stock, namep;
+  int editamount = 0;
+
+  Future<Null> checkAmountProduct() async {
+    List<String> idProducts = [];
+
+    List<String> amounts = [];
+
+    List<int> checkupdate = [];
+    List<int> resultstocks = [];
+    for (var model in cartModels) {
+      idProducts.add(model.idProduct!);
+      amounts.add(model.amount!);
+    }
+
+    for (var i = 0; i < idProducts.length; i++) {
+      int idP = int.parse(idProducts[i]);
+      print('id : $idP');
+
+      String url =
+          '${MyConstant().domain}/champshop/getproductapi/getProductWhereIdProduct.php?isAdd=true&id=$idP';
+      Response response = await Dio().get(url);
+      var result = json.decode(response.data);
+      for (var map in result) {
+        ProductModel productModel = ProductModel.fromJson(map);
+        setState(() {
+          productModels.add(productModel);
+          stock = productModel.stock;
+          namep = productModel.nameProduct;
+        });
+      }
+
+      print('มีสินค้า : $stock ชิ้น');
+
+      print('ซื้อไป : ${amounts[i]} ชิ้น');
+
+      int sto = int.parse(stock!);
+      int amo = int.parse(amounts[i]);
+
+      int resultstock = sto - amo;
+
+      print('เหลือ : ${resultstock} ชิ้น');
+
+      print('------------------------------');
+
+      if (resultstock >= 0) {
+        editamount = 0;
+      } else {
+        editamount = 1;
+      }
+
+      checkupdate.add(editamount);
+      resultstocks.add(resultstock);
+    }
+
+    print(resultstocks);
+
+    print(checkupdate);
+    if (checkupdate.contains(1)) {
+      showToast('การสั่งซื้อผิดพลาด กรุณาตรวจสอบจำนวนสินค้าอีกครั้ง');
+    } else {
+      print('ทำงาน');
+
+      for (var i = 0; i < idProducts.length; i++) {
+        int idP = int.parse(idProducts[i]);
+        print('id : $idP');
+        print(resultstocks[i]);
+
+        String url1 =
+            '${MyConstant().domain}/champshop/getproductapi/editStockWhereIdProduct.php?isAdd=true&id=$idP&Stock=${resultstocks[i]}';
+        await Dio().get(url1);
+
+        orderThread();
+      }
+    }
   }
 
   Future<Null> readCurrentInfo() async {
@@ -96,26 +176,6 @@ class _OrderPaymentState extends State<OrderPayment> {
         sumAddress = userModel?.sumAddress;
         print('$transport');
       });
-    }
-  }
-
-  Future<Null> findLat1Lng1() async {
-    LocationData? locationData = await findLocationData();
-    setState(() {
-      lat = locationData!.latitude!;
-      lng = locationData.longitude!;
-      // lat2 = double.parse(userModel.lat);
-      // lng2 = double.parse(userModel.lng);
-      print('lat1 = $lng, lng1 = $lng');
-    });
-  }
-
-  Future<LocationData?> findLocationData() async {
-    Location location = Location();
-    try {
-      return await location.getLocation();
-    } catch (e) {
-      return null;
     }
   }
 
@@ -164,9 +224,7 @@ class _OrderPaymentState extends State<OrderPayment> {
   Text buildSumTotal2() {
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
     return Text(myFormat.format(sumtotal),
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 33, 33, 33)));
+        style: TextStyle(fontSize: 15, color: Color.fromARGB(255, 33, 33, 33)));
   }
 
   @override
@@ -183,7 +241,14 @@ class _OrderPaymentState extends State<OrderPayment> {
             Text('ชำระเงิน',
                 style: TextStyle(
                     fontSize: 20, color: Color.fromARGB(255, 255, 173, 41))),
-            Text('')
+            Text(''),
+            // IconButton(
+            //     onPressed: () {
+            //       // print('คลัง : ');
+            //       // print('สั่งซื้อ : ');
+            //       checkAmountProduct();
+            //     },
+            //     icon: Icon(Icons.ac_unit_rounded))
           ],
         ),
       ),
@@ -620,7 +685,7 @@ class _OrderPaymentState extends State<OrderPayment> {
                             color: Color.fromARGB(255, 33, 33, 33))),
                     Spacer(),
                     buildSumTotal2(),
-                       Text(' บาท',
+                    Text(' บาท',
                         style: TextStyle(
                             fontSize: 15,
                             color: Color.fromARGB(255, 33, 33, 33))),
@@ -802,8 +867,9 @@ class _OrderPaymentState extends State<OrderPayment> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
-                                        color: Color.fromARGB(255, 170, 170, 170))),
-                                         showsum1(index),
+                                        color: Color.fromARGB(
+                                            255, 170, 170, 170))),
+                                showsum1(index),
                               ],
                             ),
                           ],
@@ -1049,8 +1115,8 @@ class _OrderPaymentState extends State<OrderPayment> {
                     borderRadius: BorderRadius.circular(30)),
                 color: Colors.white,
                 onPressed: () async {
-                  orderThread();
-
+                  // orderThread();
+                  checkAmountProduct();
                   Navigator.pop(context);
                 },
                 icon: Icon(
@@ -1223,12 +1289,9 @@ class _OrderPaymentState extends State<OrderPayment> {
         await Dio().get(url).then((value) {
           if (value.toString() == 'true') {
             clearAllSQLite();
-            // showToast('ทำการสั่งซื้อสำเร็จ');
+
             notificationToShop(idShop!);
-            //    Navigator.pushAndRemoveUntil(
-            // context,
-            // MaterialPageRoute(builder: (context) => OrderSuccess()),
-            // (Route<dynamic> route) => false);
+
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => const OrderSuccess(),
@@ -1298,8 +1361,8 @@ class _OrderPaymentState extends State<OrderPayment> {
       });
     } catch (e) {}
   }
-  
-   Text showsum1(int index) {
+
+  Text showsum1(int index) {
     String formatAmount() {
       String price = cartModels[index].sum!;
       String priceInText = "";

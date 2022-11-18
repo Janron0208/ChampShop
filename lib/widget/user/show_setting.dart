@@ -111,7 +111,7 @@ class _ShowSettingState extends State<ShowSetting> {
 
           // showEditProfile1(),
           showEditProfile2(),
-          showWaitPayment(),
+          // showWaitPayment(),
           Spacer(),
           Padding(
             padding: EdgeInsetsDirectional.only(bottom: 30),

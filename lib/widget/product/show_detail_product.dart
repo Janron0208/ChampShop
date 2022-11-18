@@ -16,9 +16,12 @@ import '../../utility/sqlite_helper.dart';
 
 class ShowDetailProduct extends StatefulWidget {
   final UserModel userModel;
-  final String title;
+  final String title, guild;
   const ShowDetailProduct(
-      {Key? key, required this.userModel, required this.title})
+      {Key? key,
+      required this.userModel,
+      required this.title,
+      required this.guild})
       : super(key: key);
 
   @override
@@ -34,7 +37,6 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
   Location location = Location();
   String? county, showtext;
   late bool _isLoading;
-  bool searchon = false;
 
   @override
   void initState() {
@@ -79,7 +81,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
     idShop = '1';
     String type = '${widget.title}';
     print(type);
-    _list = [];
+
     if (type == 'Sale') {
       String url =
           '${MyConstant().domain}/champshop/apishowproducttype/getProductTypeSale.php?isAdd=true';
@@ -95,11 +97,6 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
-          _list;
-
-          _list.add(productModel.nameProduct);
-
-          print(_list);
         });
       }
     } else if (type == 'All') {
@@ -112,11 +109,20 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
-          _list;
+        });
+      }
+    } else if (type == 'guild') {
+      String guild = '${widget.guild}';
+      print('$guild');
 
-          _list.add(productModel.nameProduct);
-
-          print(_list);
+      String url =
+          '${MyConstant().domain}/champshop/getproductapi/getProductWhereIdShopAndGuild.php?isAdd=true&idShop=1&Guild=$guild';
+      Response response = await Dio().get(url);
+      var result = json.decode(response.data);
+      for (var map in result) {
+        ProductModel productModel = ProductModel.fromJson(map);
+        setState(() {
+          productModels.add(productModel);
         });
       }
     } else {
@@ -128,11 +134,6 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ProductModel productModel = ProductModel.fromJson(map);
         setState(() {
           productModels.add(productModel);
-          _list;
-
-          _list.add(productModel.nameProduct);
-
-          print(_list);
         });
       }
     }
@@ -167,8 +168,10 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
       showtext = 'อื่นๆ';
     } else if (type == 'All') {
       showtext = 'สินค้าทั้งหมด';
-    } else {
+    } else if (type == 'Sale') {
       showtext = 'สินค้าลดราคา';
+    } else {
+      showtext = '';
     }
   }
 
@@ -179,35 +182,10 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         backgroundColor: Color.fromARGB(255, 255, 214, 157),
         elevation: 0,
         iconTheme: IconThemeData(color: Color.fromARGB(255, 246, 157, 63)),
-        title: searchon == true
-            ? TextField(
-                controller: _controller,
-                style: new TextStyle(
-                  color: Colors.white,
-                ),
-                decoration: new InputDecoration(
-                    hintText: "ค้นหา...",
-                    hintStyle: new TextStyle(color: Colors.white)),
-                onChanged: searchOperation,
-              )
-            : Text(showtext == null ? '' : '$showtext',
-                style: TextStyle(
-                    fontSize: 20, color: Color.fromARGB(255, 224, 141, 63))),
+        title: Text(showtext == null ? '' : '$showtext',
+            style: TextStyle(
+                fontSize: 20, color: Color.fromARGB(255, 224, 141, 63))),
         actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    searchon = true;
-                  });
-                },
-                child: Icon(
-                  Icons.search,
-                  size: 32,
-                  color: Colors.white,
-                ),
-              )),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
@@ -234,44 +212,25 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                 height: 300,
                 color: Color.fromARGB(255, 255, 214, 157),
               ),
-              Flexible(child: searchresult.length != 0 || _controller.text.isNotEmpty
-                      ? showGridview2() : showGridview())
+              showGridview()
             ]),
-    );
-  }
-
-   GridView showGridview2() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 3 / 5.4,
-        crossAxisCount: 2,
-      ),
-      itemCount: productModels.length,
-      itemBuilder: (context, index) => GestureDetector(
-        onTap: () {
-          amount = 1;
-          confirmOrder(index);
-        },
-        child: Card(
-          child: showContent(context, index),
-        ),
-      ),
     );
   }
 
   GridView showGridview() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 3 / 5.4,
+        childAspectRatio: 3 / 5.6,
         crossAxisCount: 2,
       ),
       itemCount: productModels.length,
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           amount = 1;
-          confirmOrder(index);
+          productModels[index].stock == '0' ? '' : confirmOrder(index);
         },
         child: Card(
+          color: Colors.white,
           child: showContent(context, index),
         ),
       ),
@@ -279,19 +238,66 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
   }
 
   Container showProductImage(BuildContext context, int index) {
-    return Container(
-      margin: EdgeInsets.only(top: 8),
-      width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.width * 0.45,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(0),
-        image: DecorationImage(
-          image: NetworkImage(
-              '${MyConstant().domain}${productModels[index].pathImage!}'),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
+    return productModels[index].stock == '0'
+        ? Container(
+            child: Stack(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 8),
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  height: MediaQuery.of(context).size.width * 0.45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          '${MyConstant().domain}${productModels[index].pathImage!}'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 8),
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  height: MediaQuery.of(context).size.width * 0.45,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(172, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(0),
+                    // image: DecorationImage(
+                    //   image: NetworkImage(
+                    //       '${MyConstant().domain}${productModels[index].pathImage!}'),
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                ),
+                Container(
+                  
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  height: MediaQuery.of(context).size.width * 0.45,
+                  child: Center(
+                    child: Text(
+                      'สินค้าหมด',
+                      style: TextStyle(
+                          fontSize: 26.0,
+                          color: Color.fromARGB(255, 255, 255, 255)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.only(top: 8),
+            width: MediaQuery.of(context).size.width * 0.45,
+            height: MediaQuery.of(context).size.width * 0.45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(0),
+              image: DecorationImage(
+                image: NetworkImage(
+                    '${MyConstant().domain}${productModels[index].pathImage!}'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
   }
 
   Future<Null> confirmOrder(int index) async {
@@ -333,7 +339,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                     Text('ยี่ห้อ : ',
                         style: TextStyle(
                           fontSize: 11.0,
-                          color: Color.fromARGB(255, 132, 132, 132),
+                          color: Color.fromARGB(255, 161, 161, 161),
                         )),
                     Text('${productModels[index].brand!}',
                         style: TextStyle(
@@ -355,26 +361,24 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                     Text('${productModels[index].model!}',
                         style: TextStyle(
                             fontSize: 11.0,
-                            color: Color.fromARGB(255, 122, 122, 122),
+                            color: Color.fromARGB(255, 161, 161, 161),
                             fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8),
-                child: Row(
-                  children: [
-                    Text('ขนาด/ปริมาณ : ',
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('ขนาด/ปริมาณ : ${productModels[index].size!}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 11.0,
-                          color: Color.fromARGB(255, 132, 132, 132),
-                        )),
-                    Text('${productModels[index].size!}',
-                        style: TextStyle(
-                            fontSize: 12.0,
-                            color: Color.fromARGB(255, 255, 132, 32),
+                            fontSize: 10.0,
+                            color: Color.fromARGB(255, 161, 161, 161),
                             fontWeight: FontWeight.bold)),
-                  ],
+                  ),
                 ),
               ),
               Padding(
@@ -384,7 +388,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                     Text('สี : ',
                         style: TextStyle(
                           fontSize: 12.0,
-                          color: Color.fromARGB(255, 132, 132, 132),
+                          color: Color.fromARGB(255, 161, 161, 161),
                         )),
                     Text('${productModels[index].color!}',
                         style: TextStyle(
@@ -626,19 +630,33 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                           ],
                         ),
                       ),
-                      productModels[index].sale! == productModels[index].price!
-                          ? Row(
-                              children: [
-                                showSale3(index),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                showPrice2(index),
-                                Text(' '),
-                                showSale4(index),
-                              ],
-                            )
+                      Row(
+                        children: [
+                          productModels[index].sale! ==
+                                  productModels[index].price!
+                              ? Row(
+                                  children: [
+                                    showSale3(index),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    showPrice2(index),
+                                    Text(' '),
+                                    showSale4(index),
+                                  ],
+                                ),
+                          Spacer(),
+                          SizedBox(
+                              height: 30,
+                              child: RaisedButton(
+                                onPressed: () {},
+                                child: Text(
+                                    'สินค้าที่มีทั้งหมด ${productModels[index].stock} ชิ้น'),
+                              )),
+                              Text(' ')
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -740,10 +758,17 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                     // color: Colors.green,
                   ),
                   onPressed: () {
-                    setState(() {
-                      amount++;
-                      // print('amount = $amount');
-                    });
+                    int stockcount = int.parse(productModels[index].stock!);
+
+                    if (amount < stockcount) {
+                      setState(() {
+                        amount++;
+                      });
+                    }
+                    // setState(() {
+                    //   amount++;
+
+                    // });
                   },
                 ),
                 Spacer(),
@@ -1010,23 +1035,4 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
       ),
     );
   }
-
-
-   void searchOperation(String searchText) {
-    searchresult.clear();
-    if (_isSearching != null) {
-      for (int i = 0; i < _list.length; i++) {
-        String data = _list[i];
-        if (data.toLowerCase().contains(searchText.toLowerCase())) {
-          searchresult.add(data);
-        }
-      }
-    }
-  }
-   final globalKey = new GlobalKey<ScaffoldState>();
-  final TextEditingController _controller = new TextEditingController();
-  late List<dynamic> _list;
-  bool? _isSearching;
-  String _searchText = "";
-  List searchresult = [];
 }

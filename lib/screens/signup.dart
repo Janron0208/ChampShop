@@ -719,8 +719,21 @@ class _SignUpState extends State<SignUp> {
                 '$address $district $county กทม. $zipcode ค่าส่ง $transport บาท');
             print(
                 '## name = $name($nickname), address = $address $district $county $zipcode, transport = $transport, phone = $phone, user = $user, password = $password, type = $chooseType, avatar = $avatar');
+
+           
+
             if (name == null ||
                 name!.isEmpty ||
+                nickname == null ||
+                nickname!.isEmpty ||
+                address == null ||
+                address!.isEmpty ||
+                district == null ||
+                district!.isEmpty ||
+                county == null ||
+                county!.isEmpty ||
+                zipcode == null ||
+                zipcode!.isEmpty ||
                 user == null ||
                 user!.isEmpty ||
                 password == null ||
@@ -728,7 +741,9 @@ class _SignUpState extends State<SignUp> {
                 address == null ||
                 address!.isEmpty ||
                 phone == null ||
-                phone!.isEmpty) {
+                phone!.isEmpty 
+                
+                ) {
               print('Have Space');
               normalDialog(context, 'กรุณากรอกข้อมูลให้ครบ');
             } else {

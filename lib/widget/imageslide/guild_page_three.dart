@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../model/product_model.dart';
 import '../../utility/my_constant.dart';
+import '../product/show_detail_product.dart';
 
 class GuildPageThree extends StatefulWidget {
   const GuildPageThree({Key? key}) : super(key: key);
@@ -133,10 +134,13 @@ class _GuildPageThreeState extends State<GuildPageThree> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ShowShopTypeThree(userModel: userModels[0])));
+                            ShowDetailProduct(
+                            userModel: userModels[0],
+                            title: 'guild', guild: '3',
+                          )));
             },
                     child: Text(
-                      'ไปร้านค้า',
+                      'ไปยังร้านค้า',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     )),
               ),

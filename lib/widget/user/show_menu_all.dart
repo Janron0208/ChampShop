@@ -1,18 +1,9 @@
 import 'dart:convert';
 import 'package:champshop/widget/product/show_detail_product.dart';
-import 'package:champshop/widget/product/show_shop_type_I.dart';
-import 'package:champshop/widget/product/show_shop_type_J.dart';
-import 'package:champshop/widget/product/show_shop_type_c.dart';
-import 'package:champshop/widget/product/show_shop_type_d.dart';
-import 'package:champshop/widget/product/show_shop_type_e.dart';
-import 'package:champshop/widget/product/show_shop_type_f.dart';
-import 'package:champshop/widget/product/show_shop_type_g.dart';
-import 'package:champshop/widget/product/show_shop_type_h.dart';
-import 'package:champshop/widget/product/show_shop_type_k.dart';
-import 'package:champshop/widget/product/show_shop_type_l.dart';
-import 'package:champshop/widget/product/show_shop_type_m.dart';
+
+
 import 'package:champshop/widget/product/show_shop_type_sale.dart';
-import 'package:champshop/widget/product/show_shop_type_z.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -21,9 +12,7 @@ import '../../model/user_model.dart';
 import '../../screens/show_shop_product_menu.dart';
 import '../../utility/my_constant.dart';
 import '../../utility/my_style.dart';
-import '../product/show_shop_type_a.dart';
-import '../product/show_shop_type_all.dart';
-import '../product/show_shop_type_b.dart';
+
 
 class ShowMenuAll extends StatefulWidget {
   const ShowMenuAll({Key? key}) : super(key: key);
@@ -47,7 +36,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
       setState(() {
         readShop();
         readProductMenu();
-        findLocation();
+        // findLocation();
         _isLoading = false;
       });
     });
@@ -57,12 +46,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
     // findLocation();
   }
 
-  Future<Null> findLocation() async {
-    location.onLocationChanged.listen((event) {
-      lat1 = event.latitude;
-      lng1 = event.longitude;
-    });
-  }
+ 
 
   Future<Null> readShop() async {
     String url =
@@ -185,6 +169,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
                             title: 'All',
+                            guild: '',
                           )));
             },
             child: Padding(
@@ -237,7 +222,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'Sale',
+                            title: 'Sale', guild: '',
                           )));
             },
             child: Padding(
@@ -290,7 +275,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'A',
+                            title: 'A', guild: '',
                           )));
             },
             child: Padding(
@@ -342,7 +327,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'B',
+                            title: 'B', guild: '',
                           )));
             },
             child: Padding(
@@ -394,7 +379,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'C',
+                            title: 'C', guild: '',
                           )));
             },
             child: Padding(
@@ -446,7 +431,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'D',
+                            title: 'D', guild: '',
                           )));
             },
             child: Padding(
@@ -498,7 +483,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'E',
+                            title: 'E', guild: '',
                           )));
             },
             child: Padding(
@@ -550,7 +535,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'F',
+                            title: 'F', guild: '',
                           )));
             },
             child: Padding(
@@ -602,7 +587,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'G',
+                            title: 'G', guild: '',
                           )));
             },
             child: Padding(
@@ -654,7 +639,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'H',
+                            title: 'H', guild: '',
                           )));
             },
             child: Padding(
@@ -706,7 +691,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'I',
+                            title: 'I', guild: '',
                           )));
             },
             child: Padding(
@@ -758,7 +743,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'J',
+                            title: 'J', guild: '',
                           )));
             },
             child: Padding(
@@ -810,7 +795,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'K',
+                            title: 'K', guild: '',
                           )));
             },
             child: Padding(
@@ -862,7 +847,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'L',
+                            title: 'L', guild: '',
                           )));
             },
             child: Padding(
@@ -914,7 +899,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'M',
+                            title: 'M', guild: '',
                           )));
             },
             child: Padding(
@@ -966,7 +951,7 @@ class _ShowMenuAllState extends State<ShowMenuAll> {
                   MaterialPageRoute(
                       builder: (context) => ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'Z',
+                            title: 'Z', guild: '',
                           )));
             },
             child: Padding(

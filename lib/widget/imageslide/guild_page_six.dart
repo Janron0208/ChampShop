@@ -9,14 +9,14 @@ import '../../model/user_model.dart';
 import '../../utility/my_constant.dart';
 import '../product/show_detail_product.dart';
 
-class GuildPageFive extends StatefulWidget {
-  const GuildPageFive({Key? key}) : super(key: key);
+class GuildPageSix extends StatefulWidget {
+  const GuildPageSix({Key? key}) : super(key: key);
 
   @override
-  State<GuildPageFive> createState() => _GuildPageFiveState();
+  State<GuildPageSix> createState() => _GuildPageSixState();
 }
 
-class _GuildPageFiveState extends State<GuildPageFive> {
+class _GuildPageSixState extends State<GuildPageSix> {
    List<UserModel> userModels = [];
   String? idShop = '1';
   List<ProductModel> productModels = [];
@@ -82,7 +82,7 @@ class _GuildPageFiveState extends State<GuildPageFive> {
                         }),
                         icon: Icon(Icons.arrow_back_ios_new)),
                   ),
-                  Text('ทำห้องเก็บเสียงทำง่ายด้วยสิ่งของใกล้ตัว',
+                  Text('สีทาห้องน้ำ ยี่ห้อไหนดี ?',
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -93,42 +93,47 @@ class _GuildPageFiveState extends State<GuildPageFive> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Image.network(
-                  'https://www.naibann.com/wp-content/uploads/2018/10/DIY3-793x420.png'),
+                  'https://s359.thaibuffer.com/pagebuilder/825831fb-63c4-4db5-839e-105c4f5b2cf4.jpg'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                  '       สำหรับครอบครัวที่ชื่นชอบความบันเทิงภายในบ้านก็มักจัมีเครื่องเสียง เครื่องดนตรีคุณภาพสูงที่ให้เสียงกระหึ่ม สร้างความบันเทิง และความสนุกสนานภายในบ้านได้เป็นอย่างดี แต่อย่างไรก็ตามเสียงที่ดังออกมาก็อาจจะรบกวนกับเพื่อนบ้านใกล้เคียง จนเกิดปัญหากันได้'),
+                  '       ผลิตภัณฑ์สีสำหรับทากระเบื้องในห้องน้ำ จะมีลักษณะพิเศษที่แตกต่างไปจากสีทาบ้านทั่วไป นั่นคือ ต้องทนต่อความชื้น และมีเนื้อสีที่เกาะแน่น เพราะจะต้องสัมผัสกับความชื้นหรือเปียกน้ำอยู่บ่อยครั้ง และอาจจะมีคุณสมบัติอื่น ๆ ดังนี้'),
             ),
             // Padding(
             //   padding: const EdgeInsets.all(8.0),
             //   child: Image.network(
             //       'https://img.thaibuffer.com/u/2022/Jarosphan/Home/Garden/122581/40.jpg'),
             // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                  '       1. ติดตั้งผ้าม่าน หรือผ้าห่มผืนหนาๆ คุณสามารถดูดซับเสียงเล็กๆ น้อยๆ จากการทำกิจกรรมต่างๆ ภายในห้องได้โดยการติดตั้งผ้าห่มผืนหนาๆ เข้ากับผนังห้อง'),
+            
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                      '       1. ทนต่อความเปียกชื้นหรือสภาพการเป็นไอน้ำ'),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                  '       2. ใช้ตู้ หรือชั้นวางหนังสือคุณสามารถทำให้ผนังหนาขึ้นและกันเสียงได้ง่ายขึ้นโดยการใช้ชั้นวางหรือตู้หนังสือ โดยจัดวางให้ชิดแนวผนัง ซึ่งหนังสือที่วางในชั้นก็จะช่วยเป็นชนวนกันเสียงได้ด้วย'),
+                  '       2.เนื้อสีเกาะติดแน่น ไม่หลุด ลอก ล่อน แม้ต้องโดนน้ำเปียกตลอดเวลา'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                  '       3. วางเบาะเพื่อกันการสั่นสะเทือนเลือกใช้เบาะผ้า หรือเบาะโฟมมารองเครื่องเสียงภายในห้องเพื่อนกันการสั่นสะเทือน ก็จะสามารถลดเสียงจากแรงสั่นสะเทือนได้ในระดับหนึ่ง'),
+                  '       3. ทนสารที่มีอยู่ในน้ำยาทำความสะอาด เช่น สบู่ ยาสระผม ครีมนวดผม และน้ำยาล้างห้องน้ำ เป็นต้น'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                  '       4. ปิดช่องว่างใต้ประตูช่องว่างใต้ประตูมักจะเป็นจุดที่เสียงสามารถเล็ดลอดออกมาได้ ซึ่งสามารถปิดช่องนี้ได้ด้วยวัสดุจำพวกแผ่นยาง ก็จะช่วยลดเสียงที่เล็ดลอดได้'),
+                  '  4. บำรุงรักษาง่าย เช่น ใช้ผ้าชุบน้ำเช็ดทำความสะอาดได้'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                  '       5. ติดแผ่นดูดซับเสียงเราสามารถติดตั้งแผ่นดูดซับเสียงได้ด้วยตัวเองง่ายๆ ซึ่งแผ่นดูดซับเสียงจะมีส่วนที่โค้งมนที่ช่วยการดูดซับเสียงได้ดี ซึ่งวิธีนี้ถือว่าเป็นวิธีที่นิยมกันมากที่สุด เพราะให้ประสิทธิภาพการเก็บเสียงได้ดี'),
+                  '       5. ทนต่อเชื้อราและแบคทีเรียที่เกิดขึ้นในห้องน้ำเนื่องจากเป็นบริเวณที่เปียกชื้น'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40),
@@ -145,9 +150,9 @@ class _GuildPageFiveState extends State<GuildPageFive> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                            ShowDetailProduct(
+                           ShowDetailProduct(
                             userModel: userModels[0],
-                            title: 'guild', guild: '5',
+                            title: 'guild', guild: '6',
                           )));
             },
                     child: Text(

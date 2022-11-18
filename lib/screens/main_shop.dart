@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:champshop/screens/admin/step_order.dart';
+import 'package:champshop/screens/admin/stock_page.dart';
 import 'package:champshop/widget/user/order_history_shop.dart';
 import 'package:champshop/widget/infomation_shop.dart';
 import 'package:champshop/widget/list_product_menu_shop.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import '../test_search.dart';
 import '../utility/my_style.dart';
 import '../utility/normal_dialog.dart';
 import '../utility/signout_process.dart';
@@ -85,9 +87,9 @@ class _MainShopState extends State<MainShop> {
               children: [
                 showHead(),
                 homeMenu(),
-                // historyMenu(),
                 productMenu(),
-                infomationMenu(),
+                stockMenu()
+                
               ],
             ),
             Column(mainAxisAlignment: MainAxisAlignment.end,
@@ -130,6 +132,18 @@ class _MainShopState extends State<MainShop> {
         onTap: () {
           setState(() {
             currentWidget = ListProductMenuList();
+          });
+          Navigator.pop(context);
+        },
+      );
+
+       ListTile stockMenu() => ListTile(
+        leading: Icon(Icons.add_home_outlined),
+        title: Text('เช็คคลังสินค้า'),
+        // subtitle: Text('รายการอาหาร ของร้าน'),
+        onTap: () {
+          setState(() {
+            currentWidget = StockPage();
           });
           Navigator.pop(context);
         },
