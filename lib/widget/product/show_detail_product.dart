@@ -37,6 +37,8 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
   Location location = Location();
   String? county, showtext;
   late bool _isLoading;
+  List<CartModel> cartModels = [];
+  int objectleng = 0; 
 
   @override
   void initState() {
@@ -44,6 +46,27 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
     userModel = widget.userModel;
     readProductMenu();
     readTransport();
+    readSQLite();
+  }
+
+  Future<Null> readSQLite() async {
+    var object = await SQLiteHelper().readAllDataFromSQLite();
+    print('object length ==> ${object.length}');
+    if (object.length != 0) {
+      for (var model in object) {
+        String? sumString = model.sum;
+        int sumInt = int.parse(sumString!);
+        String? transport = model.transport;
+        int sumtran = int.parse(transport!);
+        setState(() {
+       
+          cartModels = object;
+        
+        });
+      }
+    } else {
+     
+    }
   }
 
   Future<Null> readTransport() async {
@@ -196,10 +219,31 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                     ),
                   );
                 },
-                child: Icon(
-                  Icons.shopping_cart,
-                  size: 32,
-                  color: Colors.white,
+                child: Align(alignment: Alignment.centerRight,
+                  child: Container(
+                  width: 50,
+                  height: 50,
+                    child: Center(
+                      child: Stack(children: [
+                        Icon(
+                          Icons.shopping_cart,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                        // Positioned(
+                        //   top: -3,
+                        //   right: 0,
+                        //   child: Container(
+                        //     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        //     decoration: BoxDecoration(
+                        //         shape: BoxShape.circle, color: Colors.red),
+                        //     alignment: Alignment.center,
+                        //     child: Text(''),
+                        //   ),
+                        // )
+                      ]),
+                    ),
+                  ),
                 ),
               )),
         ],
@@ -270,7 +314,6 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                   ),
                 ),
                 Container(
-                  
                   width: MediaQuery.of(context).size.width * 0.45,
                   height: MediaQuery.of(context).size.width * 0.45,
                   child: Center(
@@ -654,7 +697,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                                 child: Text(
                                     'สินค้าที่มีทั้งหมด ${productModels[index].stock} ชิ้น'),
                               )),
-                              Text(' ')
+                          Text(' ')
                         ],
                       )
                     ],
@@ -975,6 +1018,7 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
           print('Insert Success');
           showToast("เพิ่มลงในตะกร้าแล้ว");
+          readSQLite();
         });
       } else {
         normalDialog(context,

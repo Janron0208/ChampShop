@@ -96,23 +96,7 @@ class _ShowInfarmationShopState extends State<ShowInfarmationShop> {
           showEditProfile(),
           showEditProfile1(),
           Spacer(),
-          Padding(
-            padding: EdgeInsetsDirectional.only(bottom: 30),
-            child: SizedBox(
-              width: 300,
-              height: 55,
-              child: ElevatedButton(
-                  onPressed:() => signOutProcess(context),
-                  child: Text('ออกจากระบบ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 255, 255, 255))),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 2,
-                    primary: Color.fromARGB(255, 255, 97, 97),
-                  )),
-            ),
-          )
+        
         ],
       ),
     );
