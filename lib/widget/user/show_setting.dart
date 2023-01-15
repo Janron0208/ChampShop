@@ -13,6 +13,7 @@ import '../../model/user_model.dart';
 import '../../test_search.dart';
 import '../../utility/my_constant.dart';
 import '../../utility/signout_process.dart';
+import '../../utility/sqlite_helper.dart';
 import 'edit_profile_user.dart';
 import 'order_history_shop.dart';
 
@@ -119,7 +120,11 @@ class _ShowSettingState extends State<ShowSetting> {
               width: 300,
               height: 55,
               child: ElevatedButton(
-                  onPressed: () => signOutProcess(context),
+                  onPressed: () {
+                    // signOutProcess(context);
+                    SQLiteHelper().deleteAllData;
+                    
+                  },
                   child: Text('ออกจากระบบ',
                       style: TextStyle(
                           fontSize: 20,
